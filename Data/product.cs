@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace e_commerce_server.Modes
+namespace e_commerce_server.Data
 {
-    public class productModels
+    public class product
     {
+        [Key]
+        public int id { get; set; }
         [Required]
         public int user_id { get; set; }
         [Required]
@@ -18,5 +20,6 @@ namespace e_commerce_server.Modes
         public int price { get; set; }
         [Required]
         public string thumbnail_url { get; set; }
+        public string created_at { get; set; }
     }
 }

@@ -17,22 +17,26 @@ namespace e_commerce_server.Controllers
         [HttpGet]
         public IActionResult getAllProduct()
         {
-            var data = _context.HangHoas.ToList();
+            var data = _context.Products.ToList();
             return Ok(data);
         }
         [HttpPost]
-        public IActionResult putProduct(productModels item)
+        public IActionResult postProduct(productModels item)
         {
-            var hang = new HangHoa
+            var newProduct = new product
             {
-                TenHh= item.TenHh,
-                MoTa = item.MoTa,
-                DonGia = item.DonGia,
-                MaLoai = item.MaLoai,
+                user_id = item.user_id,
+                name= item.name,
+                description= item.description,
+                category_id= item.category_id,
+                discount = item.discount,
+                created_at= DateTime.Now.ToString("yyyyMMdd"),
+                price = item.price,
+                thumbnail_url= item.thumbnail_url,
             };
-            _context.Add(hang);
+            _context.Add(newProduct);
             _context.SaveChanges();
-            return Ok(hang);
+            return Ok(newProduct);
         }
     }
 }

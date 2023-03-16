@@ -1,13 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace e_commerce_server.Data
+namespace e_commerce_server.Modes
 {
-    [Table("user")]
-    public class user
+    public class registerModel
     {
-        [Key]
-        public int user_id { get; set; }
+       
         [Required]
         [StringLength(20)]
         public string phone_number { get; set; }
@@ -24,7 +21,6 @@ namespace e_commerce_server.Data
         public string created_at { get; set; }
         public int roleID { get; set; }
         public string avatar_url { get; set; }
-
 
     }
 }

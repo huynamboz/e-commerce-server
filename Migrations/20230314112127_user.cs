@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace e_commerce_server.Migrations
 {
     /// <inheritdoc />
-    public partial class dbInit : Migration
+    public partial class user : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,7 +18,11 @@ namespace e_commerce_server.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Content = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
+                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ContentType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Size = table.Column<long>(type: "bigint", nullable: false),
+                    created_at = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    deleted_at = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -39,6 +43,26 @@ namespace e_commerce_server.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "user",
+                columns: table => new
+                {
+                    user_id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    phone_number = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    email = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    password = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    active_status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    name = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    created_at = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    roleID = table.Column<int>(type: "int", nullable: false),
+                    avatar_url = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_user", x => x.user_id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "HangHoa",
                 columns: table => new
                 {
@@ -47,7 +71,7 @@ namespace e_commerce_server.Migrations
                     MoTa = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DonGia = table.Column<double>(type: "float", nullable: false),
                     GiamGia = table.Column<byte>(type: "tinyint", nullable: false),
-                    idFile = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    thumbnail = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MaLoai = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -64,6 +88,12 @@ namespace e_commerce_server.Migrations
                 name: "IX_HangHoa_MaLoai",
                 table: "HangHoa",
                 column: "MaLoai");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_user_user_id",
+                table: "user",
+                column: "user_id",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -74,6 +104,9 @@ namespace e_commerce_server.Migrations
 
             migrationBuilder.DropTable(
                 name: "HangHoa");
+
+            migrationBuilder.DropTable(
+                name: "user");
 
             migrationBuilder.DropTable(
                 name: "Loai");

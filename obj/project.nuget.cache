@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "eyX/Y5O8fcTTI421LFJgooOz64xFZNb2KN9hT1/2RowRHwvT/KqMoPvWFdpunJ+BnnMxtg7+Iy0GDkJT5Tzmbg==",
+  "dgSpecHash": "pq+BK+ZQQigkrEBovbQ3BaCgs+3QULLyz+xTt2dXJBnTIRZvkCM18mztUcRaeXopzJj5VWLpqJ/QT8El+im/FQ==",
   "success": true,
   "projectFilePath": "D:\\code\\github\\e-commerce-server\\e-commerce-server.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\teahu\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\teahu\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",
     "C:\\Users\\teahu\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
+    "C:\\Users\\teahu\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\6.0.14\\microsoft.aspnetcore.authentication.jwtbearer.6.0.14.nupkg.sha512",
     "C:\\Users\\teahu\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "C:\\Users\\teahu\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
     "C:\\Users\\teahu\\.nuget\\packages\\microsoft.data.sqlclient\\5.0.1\\microsoft.data.sqlclient.5.0.1.nupkg.sha512",

@@ -1,5 +1,6 @@
 ﻿using e_commerce_server.Data;
 using e_commerce_server.Modes;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,6 +31,7 @@ namespace e_commerce_server.Controllers
             else return NotFound();
         }
         [HttpPost]
+        [Authorize]
         public IActionResult Createnew(LoaiModels model)
         {
             try

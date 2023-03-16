@@ -19,31 +19,40 @@ namespace e_commerce_server.Controllers
         [HttpPost("upload")]
         public async Task<IActionResult> UploadFile(IFormFile file)
         {
-            if (file == null || file.Length == 0)
-                return BadRequest("Invalid file");
-
-            var fileName = Path.GetFileName(file.FileName);
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "uploads", fileName);
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
+            try
             {
-                await file.CopyToAsync(stream);
+                if (file == null || file.Length == 0)
+                    return BadRequest("Invalid file");
+                Guid guid= Guid.NewGuid();
+                var fileName = guid + Path.GetFileName(file.FileName);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "uploads", fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+
+                var fileModel = new FileModel
+                {
+                    FileName = fileName,
+                    FilePath = "/uploads/" + fileName,
+                    ContentType = file.ContentType,
+                    Size = file.Length
+                    // các thuộc tính khác liên quan đến file
+                };
+
+                // Lưu fileModel vào database
+                _context.Files.Add(fileModel);
+                await _context.SaveChangesAsync();
+
+                return Ok(fileModel.FilePath);
+            } catch(Exception ex)
+            {
+                return NotFound( new
+                {
+                    message = ex.ToString()
+                });
             }
-
-            var fileModel = new FileModel
-            {
-                FileName = fileName + DateTime.Now,
-                FilePath = "/uploads/" + file.FileName,
-                ContentType = file.ContentType,
-                Size = file.Length
-                // các thuộc tính khác liên quan đến file
-            };
-
-            // Lưu fileModel vào database
-            _context.Files.Add(fileModel);
-            await _context.SaveChangesAsync();
-
-            return Ok(fileModel.FilePath);
         }
 
         [HttpGet("{id}")]

@@ -12,9 +12,22 @@ namespace e_commerce_server.Data
         public DbSet<HangHoa> HangHoas { get; set;}
         public DbSet<Loai> Loais { get; set;}
         public DbSet<FileModel> Files { get; set;}
-
+        public DbSet<user> Users { get; set;}
+        public DbSet<product> Products { get; set;}
         #endregion
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            //Write Fluent API configurations here
 
+            //Property Configurations
+            modelBuilder.Entity<user>(entity =>
+            {
+                entity.HasIndex(e => e.user_id).IsUnique();
+                entity.Property(e => e.name).IsRequired().HasMaxLength(250);
+                entity.Property(e => e.email).IsRequired().HasMaxLength(250);
+
+            });
+        }
     }
     //public class YourDbContextFactory : IDesignTimeDbContextFactory<MyDbContext>
     //{

@@ -15,7 +15,7 @@ namespace e_commerce_server.Data
         [Range(0, double.MaxValue)]
         public double DonGia { get; set; }
         public byte GiamGia { get; set; }
-        public string thubnail { get; set; }
+        public string thumbnail { get; set; }
         public int? MaLoai { get; set; }
         [ForeignKey("MaLoai")]
         public Loai Loai { get; set; }
