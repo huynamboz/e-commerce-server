@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using e_commerce_server.Modes;
+using e_commerce_server.Model;
 using System.IO;
 
 namespace e_commerce_server.Controllers

@@ -1,5 +1,5 @@
 using e_commerce_server.Data;
-using e_commerce_server.Modes;
+using e_commerce_server.Model;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -27,22 +27,21 @@ builder.Services.AddDbContext<MyDbContext>(option=>
     option.UseSqlServer(connectionString);
 });
 
+
 //builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
 //policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: MyAllowSpecificOrigins,
-                      policy =>
-                      {
-                          policy.WithOrigins("http://192.168.91.1:3000/",
-                                              "http://www.contoso.com"); // add the allowed origins  
-                      });
-options.AddDefaultPolicy(policy =>
-policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
-});
+
+
+
+
 var settings = builder.Configuration.GetSection("AppSettings").Get<AppSettings>();
+
+builder.Services.AddCors(options => options.AddPolicy("ApiCorsPolicy", builder =>
+{
+    builder.WithOrigins("http://192.168.91.1:3000").AllowAnyMethod().AllowAnyHeader();
+}));
+
 
 var secrectKey = settings.SecrectKey;
 var secrectkeybytes = Encoding.UTF8.GetBytes(secrectKey);
@@ -64,7 +63,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 
 var app = builder.Build();
-
+app.UseHttpsRedirection();
+app.UseCors("ApiCorsPolicy");
 
 // 
 // Configure the HTTP request pipeline.
@@ -80,8 +80,7 @@ app.UseStaticFiles(new StaticFileOptions()
         Path.Combine(Directory.GetCurrentDirectory(), "uploads")),
     RequestPath = new PathString("/uploads")
 });
-app.UseHttpsRedirection();
-app.UseCors(MyAllowSpecificOrigins);
+
 app.UseAuthentication();
 
 app.UseAuthorization();

@@ -1,4 +1,4 @@
-﻿namespace e_commerce_server.Modes
+﻿namespace e_commerce_server.Model
 {
     public class ApiResponse
     {

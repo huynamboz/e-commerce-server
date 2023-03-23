@@ -1,5 +1,5 @@
 ﻿using e_commerce_server.Data;
-using e_commerce_server.Modes;
+using e_commerce_server.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -31,7 +31,7 @@ namespace e_commerce_server.Controllers
             model.email && pass == p.password);
             if(user == null)
             {
-                return NotFound(new ApiResponse
+                return NotFound(new 
                 {
                     Success = false,
                     message = "Invalid username/password"
@@ -42,6 +42,7 @@ namespace e_commerce_server.Controllers
             return Ok(new
             {
                 success = true,
+                user_id = user.user_id,
                 message = "login dc roi con mẹ nó",
                 token = GenerateToken(user)
             });
@@ -107,8 +108,20 @@ namespace e_commerce_server.Controllers
         {
             var user = _context.Users.SingleOrDefault(userItem =>
             userItem.user_id.ToString() == id);
+            var dataUser = new userInfoModel
+            {
+                phone_number = user.phone_number,
+                email = user.email,
+                user_id= user.user_id,
+                active_status= user.active_status,
+                name = user.name,
+                created_at = user.created_at,
+                roleID = user.roleID,
+                avatar_url = user.avatar_url,
+
+            };
             if (user != null)
-                return Ok(user);
+                return Ok(dataUser);
             else return NotFound();
         }
     }

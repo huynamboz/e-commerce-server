@@ -1,4 +1,4 @@
-﻿using e_commerce_server.Modes;
+﻿using e_commerce_server.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

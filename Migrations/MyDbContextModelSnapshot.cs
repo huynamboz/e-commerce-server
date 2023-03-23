@@ -120,8 +120,8 @@ namespace e_commerce_server.Migrations
 
                     b.Property<string>("description")
                         .IsRequired()
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
+                        .HasMaxLength(5000)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("discount")
                         .HasColumnType("int");
@@ -144,6 +144,27 @@ namespace e_commerce_server.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("e_commerce_server.Data.thumbnail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("product_id")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("thumbnail");
                 });
 
             modelBuilder.Entity("e_commerce_server.Data.user", b =>

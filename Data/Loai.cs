@@ -1,4 +1,4 @@
-﻿using e_commerce_server.Modes;
+﻿using e_commerce_server.Model;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 

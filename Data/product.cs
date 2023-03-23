@@ -12,7 +12,7 @@ namespace e_commerce_server.Data
         [MaxLength(250)]
         public string name { get; set; }
         [Required]
-        [MaxLength(2000)]
+        [MaxLength(5000)]
         public string description { get; set; }
         [Required]
         public int category_id { get; set; }

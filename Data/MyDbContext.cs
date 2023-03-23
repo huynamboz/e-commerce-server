@@ -1,4 +1,4 @@
-﻿using e_commerce_server.Modes;
+﻿using e_commerce_server.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using System.IO;
@@ -14,6 +14,7 @@ namespace e_commerce_server.Data
         public DbSet<FileModel> Files { get; set;}
         public DbSet<user> Users { get; set;}
         public DbSet<product> Products { get; set;}
+        public DbSet<thumbnail> Thumbnails { get; set;}
         #endregion
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
