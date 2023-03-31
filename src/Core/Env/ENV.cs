@@ -1,4 +1,4 @@
-﻿namespace e_commerce_server.src.Core.Env
+﻿namespace e_commerce_server.Src.Core.Env
 {
     public class ENV
     {

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace e_commerce_server.src.Core.Database.Data
+namespace e_commerce_server.Src.Core.Database.Data
 {
     [Table("users")]
     public class UserData

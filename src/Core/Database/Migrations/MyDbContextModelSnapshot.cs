@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using e_commerce_server.src.Core.Database.Data;
+using e_commerce_server.Src.Core.Database.Data;
 
 #nullable disable
 
-namespace e_commerce_server.src.Core.Database.Migrations
+namespace e_commerce_server.Src.Core.Database.Migrations
 {
     [DbContext(typeof(MyDbContext))]
     partial class MyDbContextModelSnapshot : ModelSnapshot
