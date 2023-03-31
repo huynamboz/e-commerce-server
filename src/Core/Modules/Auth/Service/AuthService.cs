@@ -1,14 +1,14 @@
-﻿using e_commerce_server.src.Core.Database.Data;
-using e_commerce_server.src.Core.Modules.Auth.Dto;
-using e_commerce_server.src.Core.Modules.User;
-using e_commerce_server.src.Core.Utils;
-using e_commerce_server.src.Packages.HttpException;
+﻿using e_commerce_server.Src.Core.Database.Data;
+using e_commerce_server.Src.Core.Modules.Auth.Dto;
+using e_commerce_server.Src.Core.Modules.User;
+using e_commerce_server.Src.Core.Utils;
+using e_commerce_server.Src.Packages.HttpException;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Runtime.Serialization;
 
-namespace e_commerce_server.src.Core.Modules.Auth.Service
+namespace e_commerce_server.Src.Core.Modules.Auth.Service
 {
     public class AuthService
     {

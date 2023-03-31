@@ -1,4 +1,4 @@
-﻿namespace e_commerce_server.src.Core.Modules.Auth.Service
+﻿namespace e_commerce_server.Src.Core.Modules.Auth.Service
 {
     public static class AuthEnum
     {

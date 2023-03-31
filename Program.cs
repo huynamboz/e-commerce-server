@@ -1,5 +1,5 @@
-using e_commerce_server.src.Core.Database.Data;
-using e_commerce_server.src.Core.Env;
+using e_commerce_server.Src.Core.Database.Data;
+using e_commerce_server.Src.Core.Env;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -65,12 +65,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     
 }
-app.UseStaticFiles(new StaticFileOptions()
-{
-    FileProvider = new PhysicalFileProvider(
-        Path.Combine(Directory.GetCurrentDirectory(), "uploads")),
-    RequestPath = new PathString("/uploads")
-});
+//app.UseStaticFiles(new StaticFileOptions()
+//{
+//    FileProvider = new PhysicalFileProvider(
+//        Path.Combine(Directory.GetCurrentDirectory(), "uploads")),
+//    RequestPath = new PathString("/uploads")
+//});
 
 app.UseAuthentication();
 

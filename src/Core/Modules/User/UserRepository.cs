@@ -1,7 +1,7 @@
-﻿using e_commerce_server.src.Packages.HttpException;
-using e_commerce_server.src.Core.Database.Data;
+﻿using e_commerce_server.Src.Packages.HttpException;
+using e_commerce_server.Src.Core.Database.Data;
 
-namespace e_commerce_server.src.Core.Modules.User
+namespace e_commerce_server.Src.Core.Modules.User
 {
     public class UserRepository
     {

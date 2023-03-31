@@ -1,7 +1,7 @@
-﻿using e_commerce_server.src.Packages.HttpException;
+﻿using e_commerce_server.Src.Packages.HttpException;
 using System.Net;
 
-namespace e_commerce_server.src.Packages.HttpException
+namespace e_commerce_server.Src.Packages.HttpException
 {
     public class InternalException : HttpException
     {

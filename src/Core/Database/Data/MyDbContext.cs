@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Design;
 using System.IO;
 
-namespace e_commerce_server.src.Core.Database.Data
+namespace e_commerce_server.Src.Core.Database.Data
 {
     public class MyDbContext : DbContext
     {
