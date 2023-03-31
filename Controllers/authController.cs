@@ -75,7 +75,7 @@ namespace e_commerce_server.Controllers
 
                     new Claim("TokenId", Guid.NewGuid().ToString())
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(1),
+                Expires = DateTime.UtcNow.AddMinutes(30),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secrectkeybytes), SecurityAlgorithms.HmacSha256Signature)
                 
             };

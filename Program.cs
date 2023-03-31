@@ -39,7 +39,7 @@ var settings = builder.Configuration.GetSection("AppSettings").Get<AppSettings>(
 
 builder.Services.AddCors(options => options.AddPolicy("ApiCorsPolicy", builder =>
 {
-    builder.WithOrigins("http://192.168.91.1:3000").AllowAnyMethod().AllowAnyHeader();
+    builder.WithOrigins("http://192.168.91.1:3000","https://hinam.one", "https://deploy--capable-taiyaki-728941.netlify.app").AllowAnyMethod().AllowAnyHeader();
 }));
 
 
