@@ -68,6 +68,12 @@ namespace e_commerce_server.Src.Core.Database.Data
                     .HasOne(u => u.city)
                     .WithMany(r => r.districts)
                     .HasForeignKey(u => u.city_id);
+
+                modelBuilder.Entity<UserData>(entity =>
+                {
+                    entity.HasIndex(e => e.email).IsUnique();
+
+                });
             }).GetAwaiter().GetResult();
         }
     }

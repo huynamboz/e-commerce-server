@@ -760,12 +760,6 @@ namespace e_commerce_server.Src.Core.Database.Migrations
         {
             migrationBuilder.DropTable(
                 name: "districts");
-
-            migrationBuilder.DropTable(
-                name: "users");
-
-            migrationBuilder.DropTable(
-                name: "cities");
         }
     }
 }
