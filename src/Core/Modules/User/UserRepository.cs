@@ -21,5 +21,18 @@ namespace e_commerce_server.Src.Core.Modules.User
             }
         }
 
+        public void Create(UserData user)
+        {
+            try
+            {
+                _context.Users.Add(user);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            }
+        }
+
     }
 }

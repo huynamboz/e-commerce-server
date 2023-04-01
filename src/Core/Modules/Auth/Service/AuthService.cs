@@ -2,11 +2,17 @@
 using e_commerce_server.Src.Core.Modules.Auth.Dto;
 using e_commerce_server.Src.Core.Modules.User;
 using e_commerce_server.Src.Core.Utils;
+using e_commerce_server.src.Packages.HttpExceptions;
 using e_commerce_server.Src.Packages.HttpException;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Runtime.Serialization;
+using BCrypt.Net;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace e_commerce_server.Src.Core.Modules.Auth.Service
 {
@@ -21,6 +27,7 @@ namespace e_commerce_server.Src.Core.Modules.Auth.Service
             jwtService = new JwtService();
             userRepository = new UserRepository(context);
         }
+
         public object Login(LoginModel model)
         {
             var user = userRepository.FindByEmail(model.email);
@@ -34,6 +41,32 @@ namespace e_commerce_server.Src.Core.Modules.Auth.Service
             {
                 message = AuthEnum.LOGIN_SUCCESS,
                 accessToken = jwtService.Sign(user)
+            };
+        }
+ 
+        public object Register(RegisterModel model)
+        {
+            var existingUser = userRepository.FindByEmail(model.email);
+
+            if (existingUser != null)
+            {
+                throw new DuplicateException(AuthEnum.REGISTER_INCORRECT);
+            }
+
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(model.password); 
+
+            var user = new UserData 
+            { 
+                email = model.email,
+                password = hashedPassword,
+                name = model.name, 
+            };    
+
+            userRepository.Create(user);
+
+            return new
+            {
+                message = AuthEnum.REGISTER_SUCCESS,
             };
         }
     }
