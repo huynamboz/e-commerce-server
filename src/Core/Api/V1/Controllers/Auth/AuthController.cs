@@ -45,7 +45,7 @@ namespace e_commerce_server.Src.Core.Api.V1.Controllers.Auth
             try
             {
                 authService.Register(model);
-                return Ok(new { message = AuthEnum.REGISTER_SUCCESS });
+                return Ok(authService.Register(model));
             }
             catch (HttpException ex)
             {
