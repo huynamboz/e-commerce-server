@@ -43,8 +43,7 @@ namespace e_commerce_server.Src.Core.Api.V1.Controllers.Auth
         public IActionResult Register(RegisterModel model)
         {
             try
-            {
-                authService.Register(model);
+            { 
                 return Ok(authService.Register(model));
             }
             catch (HttpException ex)
