@@ -7,5 +7,6 @@
         public const string UNAUTHORIZED = "UNAUTHORIZED";
         public const string FORBIDDEN = "FORBIDDEN";
         public const string INTERNAL = "INTERNAL";
+        public const string DUPLICATE = "DUPLICATE";
     }
 }

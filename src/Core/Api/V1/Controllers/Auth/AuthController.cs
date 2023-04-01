@@ -8,6 +8,8 @@ using e_commerce_server.Src.Packages.HttpException;
 using e_commerce_server.Src.Core.Modules.Auth.Dto;
 using e_commerce_server.Src.Core.Modules.Auth.Service;
 using e_commerce_server.Src.Core.Database.Data;
+using e_commerce_server.Src.Core.Modules.User;
+using Microsoft.EntityFrameworkCore.Design;
 
 namespace e_commerce_server.Src.Core.Api.V1.Controllers.Auth
 {
@@ -35,7 +37,19 @@ namespace e_commerce_server.Src.Core.Api.V1.Controllers.Auth
             {
                 return StatusCode((int)ex.StatusCode, ex.Response);
             }
+        }
 
+        [HttpPost("register")]
+        public IActionResult Register(RegisterModel model)
+        {
+            try
+            { 
+                return Ok(authService.Register(model));
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Response);
+            }
         }
     }
 }
