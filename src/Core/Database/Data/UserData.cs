@@ -25,6 +25,7 @@ namespace e_commerce_server.Src.Core.Database.Data
         public string? avatar { get; set; }
         public string? reset_token { get; set; }
         public DateTime? reset_token_expiration_date { get; set; }
-        public DateTime created_at { get; set; } = DateTime.Now;
+        public DateTime created_at { get; set; }
+        public int? district_id { get; set; }
     }
 }
