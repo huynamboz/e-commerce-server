@@ -38,11 +38,6 @@ namespace e_commerce_server.Src.Core.Modules.Auth.Service
                 throw new BadRequestException(AuthEnum.LOGIN_INCORRECT);
             }
 
-            //if (user == null || user.password != model.password)
-            //{
-            //    throw new BadRequestException(AuthEnum.LOGIN_INCORRECT); 
-            //}
-
             return new
             {
                 message = AuthEnum.LOGIN_SUCCESS,
