@@ -33,10 +33,15 @@ namespace e_commerce_server.Src.Core.Modules.Auth.Service
         {
             var user = userRepository.FindByEmail(model.email);
 
-            if (user == null || user.password != model.password)
+            if (user == null || !BCrypt.Net.BCrypt.Verify(model.password, user.password))
             {
                 throw new BadRequestException(AuthEnum.LOGIN_INCORRECT);
             }
+
+            //if (user == null || user.password != model.password)
+            //{
+            //    throw new BadRequestException(AuthEnum.LOGIN_INCORRECT); 
+            //}
 
             return new
             {
@@ -66,7 +71,7 @@ namespace e_commerce_server.Src.Core.Modules.Auth.Service
 
         public object Register(RegisterModel model)
         {
-            var existingUser = userRepository.FindByEmail(model.email);
+            var existingUser = userRepository.FindByEmail(model.email); 
 
             if (existingUser != null)
             {
