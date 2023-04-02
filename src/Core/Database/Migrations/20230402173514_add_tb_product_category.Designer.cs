@@ -12,8 +12,8 @@ using e_commerce_server.Src.Core.Database.Data;
 namespace e_commerce_server.Src.Core.Database.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20230402081717_create_tb_product_category")]
-    partial class create_tb_product_category
+    [Migration("20230402173514_add_tb_product_category")]
+    partial class add_tb_product_category
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -4749,9 +4749,8 @@ namespace e_commerce_server.Src.Core.Database.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<string>("active_status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("active_status")
+                        .HasColumnType("bit");
 
                     b.Property<int>("category_id")
                         .HasColumnType("int");
@@ -4781,7 +4780,6 @@ namespace e_commerce_server.Src.Core.Database.Migrations
 
                     b.Property<string>("product_status")
                         .IsRequired()
-                        .HasMaxLength(5000)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("thumbnail_url")
@@ -4806,9 +4804,9 @@ namespace e_commerce_server.Src.Core.Database.Migrations
                         new
                         {
                             id = 1,
-                            active_status = "not_active",
+                            active_status = false,
                             category_id = 1,
-                            created_at = new DateTime(2023, 4, 2, 15, 17, 16, 716, DateTimeKind.Local).AddTicks(9446),
+                            created_at = new DateTime(2023, 4, 3, 0, 35, 14, 12, DateTimeKind.Local).AddTicks(7231),
                             description = "Chuột Gaming Không Dây LOGITECH G304 Lightspeed Chuột Chơi Game\r\n❌❌  Lưu ý: Sản phẩm là OEM, không phải hàng chính hãng! Do đó không thể kết nối với APP Logitech (OEM, viết tắt của Original Equipment Manufacturer, được hiểu là Nhà sản xuất thiết bị gốc, dùng để chỉ công ty, đối tác gia công, lắp ráp sản phẩm cho một công ty sở hữu thương hiệu và công nghệ khác). Ngoài ra đèn led của chuột cũng không mượt như đèn led chính hàng, còn lại cảm giác khi chơi game, độ bền, thông số kỹ thuật và mọi thứ khác đều rất tốt, phù hợp cho các bạn không muốn bỏ ra một khoản tiền lớn mà vẫn được trải nghiệm cảm giác chơi game tuyệt vời của chuột G304.\r\n- Bảo Hành 12 tháng cho sản Phẩm nhằm tạo uy tín và chất lượng của shop\r\n- 1 ĐỔI 1 trong vòng 07 ngày nếu có lỗi từ NSX\r\n- G304 là chuột chơi game không dây LIGHTSPEED được thiết kế cho hiệu suất thực sự với các đột phá công nghệ mới nhất ở mức giá thành phù hợp. Đó là chơi game không dây thế hệ mới, hiện đã sẵn sàng cho mọi game thủ.\r\n-Các phím chính của G304, cả ở bên trái và phải, được đánh giá 10 triệu lần nhấp. G304 cũng có nút giữa,\r\n- Nó đem lại tới 250 giờ hoạt động chỉ trên một quả pin AA\r\n\r\nThông số kĩ thuật\r\n- Độ phân giải: 200 - 12.000 DPI\r\n- Làm mịn/tăng tốc/lọc\r\n- Tăng tốc tối đa: > 40 G5\r\n- Tốc độ tối đa: > 400 IPS6\r\n- Kết nối: USB\r\n- Tốc độ báo cáo không dây: 1000 Hz (1ms)\r\n- Công nghệ không dây: LIGHTSPEED không dây\r\n- Chiều cao: 116,6 mm\r\n- Chiều rộng: 62,15 mm\r\n- Chiều dày: 38,2 mm\r\n- Trọng lượng: 99 g\r\n- Tuổi thọ PIN: 250 giờ\r\n- Sản phẩm là Hàng Công ty loại 1 cần hỗ trợ liên hệ shop nhé !!\r\n-CAM KẾT--------> BẢO HÀNH 6 THÁNG - 1 ĐỔI 1 TRONG VÒNG 3 NGÀY NẾU DO LỖI CỦA NHÀ SẢN XUẤT\r\n-Chuột Gaming Không Dây LOGITECH G304 Lightspeed Chuột Chơi Game kiểm tra kỹ lưỡng trước khi gửi đi nhằm tránh sản phẩm lỗi đến tay khách hàng\r\n- Quy trình đóng gói cẩn thận bằng túi bóng khí chống sốc nhằm hạn chế tối đa trường hợp lỗi do quá trình vận chuyển.\r\nBộ phận Kĩ Thuật sẽ kiểm tra trước khi gửi đi cho quý khách \r\n\r\n#chuotgaming #chuotgame #gaming #game #chuotchoigame #chuotkhongday #chuotUSB #chuotchuyengame #chuotlogitech #chuotsieure #G304 #chuotlogitech304 #chuotkhongday #chuotUSB #chuotchuyengame #chuotlogitech #chuotsieure #chuotG304",
                             discount = 10,
                             keyword = "điện thoại",
@@ -4816,7 +4814,7 @@ namespace e_commerce_server.Src.Core.Database.Migrations
                             price = 120000,
                             product_status = "Đã qua sử dụng",
                             thumbnail_url = "https://i0.wp.com/thatnhucuocsong.com.vn/wp-content/uploads/2022/04/Anh-cute.jpg?ssl=1",
-                            updated_at = new DateTime(2023, 4, 2, 15, 17, 16, 716, DateTimeKind.Local).AddTicks(9456),
+                            updated_at = new DateTime(2023, 4, 3, 0, 35, 14, 12, DateTimeKind.Local).AddTicks(7236),
                             user_id = 1
                         });
                 });

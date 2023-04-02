@@ -6,8 +6,6 @@ namespace e_commerce_server.src.Core.Modules.Product.Dto
 {
     public class ProductDto
     {
-        [Key]
-        public int id { get; set; }
         [Required]
         [StringLength(50)]
         public string name { get; set; }
@@ -20,23 +18,13 @@ namespace e_commerce_server.src.Core.Modules.Product.Dto
         [Required]
         public int discount { get; set; }
         [Required]
-        public DateTime created_at { get; set; }
-        [Required]
-        public DateTime updated_at { get; set; }
+        public string product_status { get; set; }
         [Required]
         public string thumbnail_url { get; set; }
         [Required]
-        [StringLength(5000)]
-        public string product_status { get; set; }
-        [Required]
-        public string active_status { get; set; }
-        [Required]
         public string keyword { get; set; }
 
-        public int user_id { get; set; }
-        public UserData user { get; set; }
         [Required]
         public int category_id { get; set; }
-        public CategoryData category { get; set; }
     }
 }

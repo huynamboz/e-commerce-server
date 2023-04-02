@@ -27,10 +27,9 @@ namespace e_commerce_server.src.Core.Database.Data
         [Required]
         public string thumbnail_url { get; set; }
         [Required]
-        [StringLength(5000)]
         public string product_status { get; set; }
         [Required]
-        public string active_status { get; set; }
+        public bool active_status { get; set; }
         [Required]
         public string keyword { get; set; }
 
