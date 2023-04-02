@@ -1,4 +1,5 @@
-﻿using e_commerce_server.Src.Core.Database.Model;
+﻿using e_commerce_server.src.Core.Database.Data;
+using e_commerce_server.Src.Core.Database.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace e_commerce_server.Src.Core.Database.Data
@@ -10,6 +11,8 @@ namespace e_commerce_server.Src.Core.Database.Data
         public DbSet<UserData> Users { get; set; }
         public DbSet<CityData> Cities { get; set; }
         public DbSet<DistrictData> Districts { get; set; }
+        public DbSet<ProductData> Products { get; set; }
+        public DbSet<CategoryData> Categories { get; set; }
         #endregion
 
 
