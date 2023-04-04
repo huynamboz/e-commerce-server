@@ -28,6 +28,6 @@ namespace e_commerce_server.Src.Core.Database.Data
         public DateTime created_at { get; set; }
         public int? district_id { get; set; }
         public string? refresh_token { get; set; }
-        public ICollection<ProductData> products { get; set; }
+        public virtual ICollection<ProductData> products { get; set; }
     }
 }

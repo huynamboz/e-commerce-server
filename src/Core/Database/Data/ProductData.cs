@@ -8,6 +8,7 @@ namespace e_commerce_server.src.Core.Database.Data
     public class ProductData
     {
         [Key]
+        [Required]
         public int id { get; set; }
         [Required]
         [StringLength(50)]
@@ -30,13 +31,12 @@ namespace e_commerce_server.src.Core.Database.Data
         public string product_status { get; set; }
         [Required]
         public bool active_status { get; set; }
-        [Required]
-        public string keyword { get; set; }
+        public virtual ICollection<ThumbnailData> thumbnails { get; set; }
 
         public int user_id { get; set; }
         public UserData user { get; set; }
         [Required]
         public int category_id { get; set; }
-        public CategoryData category { get; set; }
+        public virtual CategoryData category { get; set; }
     }
 }

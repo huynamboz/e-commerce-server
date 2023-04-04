@@ -26,7 +26,6 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                 product.name = productDto.name;
                 product.updated_at = DateTime.Now;
                 product.category_id = productDto.category_id;
-                product.keyword = productDto.keyword;
                 product.discount = productDto.discount;
                 product.thumbnail_url = productDto.thumbnail_url;
                 _dbContext.SaveChanges();
@@ -47,7 +46,6 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                     updated_at = DateTime.Now,
                     thumbnail_url = productDto.thumbnail_url,
                     product_status = productDto.product_status,
-                    keyword = productDto.keyword,
                     user_id = idUser,
                     category_id = productDto.category_id,
                 };
@@ -76,7 +74,6 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                     p.thumbnail_url,
                     p.active_status,
                     p.product_status,
-                    p.keyword,
                     p.user_id,
                     p.category_id,
                     category = p.category.name,

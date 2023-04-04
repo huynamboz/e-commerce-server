@@ -7,13 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace e_commerce_server.src.Core.Api.V1.Controllers.Product
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
-    public class productController : ControllerBase
+    public class productsController : ControllerBase
     {
         private readonly MyDbContext _dbContext;
         private ProductService productService;
-        public productController(MyDbContext dbContext)
+        public productsController(MyDbContext dbContext)
         {
             _dbContext = dbContext;
             productService = new ProductService(dbContext);
