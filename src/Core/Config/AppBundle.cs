@@ -38,7 +38,7 @@ namespace e_commerce_server.Src.Core.Config
         {
             SwaggerBuilder
                 .Builder()
-                .ApplyBuilder(_builder)
+                .ApplyBuilderContext(_builder)
                 .ApplyEndPoint()
                 .ApplyConfig();
             return this;

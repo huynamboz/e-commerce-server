@@ -12,7 +12,7 @@ namespace e_commerce_server.Src.Packages.Swagger.Core
             return new SwaggerBuilder();
         }
 
-        public SwaggerBuilder ApplyBuilder(WebApplicationBuilder builder)
+        public SwaggerBuilder ApplyBuilderContext(WebApplicationBuilder builder)
         {
             this._builder = builder;
             return this;
