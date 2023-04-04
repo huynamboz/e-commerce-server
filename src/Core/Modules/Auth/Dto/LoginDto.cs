@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace e_commerce_server.Src.Core.Modules.Auth.Dto
 {
@@ -6,6 +7,7 @@ namespace e_commerce_server.Src.Core.Modules.Auth.Dto
     {
         [Required]
         [MaxLength(100)]
+        [DefaultValue("string@gmail.com")]
         public string email { get; set; }
         [Required]
         [MaxLength(250)]
