@@ -47,7 +47,7 @@ namespace e_commerce_server.Src.Core.Config
         {
             _builder = DatabaseConnect
                 .Builder()
-                .ApplyBuilderC(_builder)
+                .ApplyBuilderContext(_builder)
                 .ApplyDbContext()
                 .ReturnBuilder();
             return this;

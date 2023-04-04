@@ -13,7 +13,7 @@ public class DatabaseConnect {
     public static DatabaseConnect Builder() {
         return new DatabaseConnect();
     }
-    public DatabaseConnect ApplyBuilderC(WebApplicationBuilder builder) {
+    public DatabaseConnect ApplyBuilderContext(WebApplicationBuilder builder) {
         this._builder = builder;
         return this;
     }
