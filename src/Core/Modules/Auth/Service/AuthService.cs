@@ -14,6 +14,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Security.Cryptography;
+using e_commerce_server.Src.Core.Env;
 
 namespace e_commerce_server.Src.Core.Modules.Auth.Service
 {
@@ -27,13 +28,13 @@ namespace e_commerce_server.Src.Core.Modules.Auth.Service
             bCryptService = new BCryptService();
             jwtService = new JwtService();
             userRepository = new UserRepository(context);
-        }
+        } 
 
         public object Login(LoginModel model)
         {
             var user = userRepository.FindByEmail(model.email);
 
-            if (user == null || !BCrypt.Net.BCrypt.Verify(model.password, user.password))
+            if (user == null || !bCryptService.Verify(model.password, user.password))
             {
                 throw new BadRequestException(AuthEnum.LOGIN_INCORRECT);
             }
@@ -45,43 +46,23 @@ namespace e_commerce_server.Src.Core.Modules.Auth.Service
             };
         }
 
-        public static string HashPassword(string password)
-        {
-            string salt = Environment.GetEnvironmentVariable("PASSWORD_SALT");
-
-            if (salt == null)
-            {
-                salt = "default_salt_value";
-            }
-            byte[] saltedPassword = new byte[password.Length + salt.Length];
-            Array.Copy(Encoding.UTF8.GetBytes(password), saltedPassword, password.Length);
-            Array.Copy(Encoding.UTF8.GetBytes(salt), 0, saltedPassword, password.Length, salt.Length);
-
-            HashAlgorithm algorithm = new SHA256Managed(); 
-            byte[] hashedPassword = algorithm.ComputeHash(saltedPassword);
-
-            return Convert.ToBase64String(hashedPassword);
-
-        }
-
         public object Register(RegisterModel model)
         {
-            var existingUser = userRepository.FindByEmail(model.email); 
+            var existingUser = userRepository.FindByEmail(model.email);
 
             if (existingUser != null)
             {
                 throw new DuplicateException(AuthEnum.REGISTER_INCORRECT);
             }
 
-            string hashedPassword = HashPassword(model.password);
-            //string hashedPassword = BCrypt.Net.BCrypt.HashPassword(model.password); 
+            string hashedPassword = bCryptService.Hash(model.password);
 
-            var user = new UserData 
-            { 
+            var user = new UserData
+            {
                 email = model.email,
                 password = hashedPassword,
-                name = model.name, 
-            };    
+                name = model.name,
+            };
 
             userRepository.Create(user);
 
@@ -91,5 +72,4 @@ namespace e_commerce_server.Src.Core.Modules.Auth.Service
             };
         }
     }
-
 }
