@@ -13,7 +13,6 @@ namespace e_commerce_server.Src.Core.Database.Data
         public string email { get; set; }
         [MaxLength(250)]
         public string password { get; set; }
-        public bool active_status { get; set; }
         [MaxLength(250)]
         public string name { get; set; }
         public int role_id { get; set; }
@@ -27,5 +26,6 @@ namespace e_commerce_server.Src.Core.Database.Data
         public DateTime? reset_token_expiration_date { get; set; }
         public DateTime created_at { get; set; }
         public int? district_id { get; set; }
+        public string? refresh_token { get; set; }
     }
 }

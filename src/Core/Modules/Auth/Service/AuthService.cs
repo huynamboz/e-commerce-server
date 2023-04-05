@@ -1,20 +1,8 @@
 ﻿using e_commerce_server.Src.Core.Database.Data;
 using e_commerce_server.Src.Core.Modules.Auth.Dto;
 using e_commerce_server.Src.Core.Modules.User;
-using e_commerce_server.Src.Core.Utils;
 using e_commerce_server.src.Packages.HttpExceptions;
 using e_commerce_server.Src.Packages.HttpException;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Net;
-using System.Runtime.Serialization;
-using BCrypt.Net;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using System.Security.Cryptography;
-using e_commerce_server.Src.Core.Env;
 
 namespace e_commerce_server.Src.Core.Modules.Auth.Service
 {
@@ -28,9 +16,9 @@ namespace e_commerce_server.Src.Core.Modules.Auth.Service
             bCryptService = new BCryptService();
             jwtService = new JwtService();
             userRepository = new UserRepository(context);
-        } 
+        }
 
-        public object Login(LoginModel model)
+        public object Login(LoginDto model)
         {
             var user = userRepository.FindByEmail(model.email);
 
@@ -39,20 +27,29 @@ namespace e_commerce_server.Src.Core.Modules.Auth.Service
                 throw new BadRequestException(AuthEnum.LOGIN_INCORRECT);
             }
 
+            var accessToken = jwtService.GenerateAccessToken(user);
+
+            var refreshToken = jwtService.generateRefreshToken(user);
+
+            user.refresh_token = refreshToken;
+
+            userRepository.UpdateUser(user);
+
             return new
             {
                 message = AuthEnum.LOGIN_SUCCESS,
-                accessToken = jwtService.Sign(user)
+                accessToken,
+                refreshToken,
             };
         }
 
-        public object Register(RegisterModel model)
+        public object Register(RegisterDto model)
         {
             var existingUser = userRepository.FindByEmail(model.email);
 
             if (existingUser != null)
             {
-                throw new DuplicateException(AuthEnum.REGISTER_INCORRECT);
+                throw new DuplicateException(AuthEnum.DUPLICATE_EMAIL);
             }
 
             string hashedPassword = bCryptService.Hash(model.password);
@@ -70,6 +67,36 @@ namespace e_commerce_server.Src.Core.Modules.Auth.Service
             {
                 message = AuthEnum.REGISTER_SUCCESS,
             };
+        }
+
+        public object GenerateRefreshToken(RefreshTokenDto model) {
+            var user = userRepository.FindByRefreshToken(model.refresh_token);
+
+            if (user != null) {
+                var TokenPayload = jwtService.Verify(model.refresh_token);
+
+                if (TokenPayload != null) {
+                    string? id = TokenPayload.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+
+                    if (id == user.id.ToString()) {
+                        var accessToken = jwtService.GenerateAccessToken(user);
+
+                        var refreshToken = jwtService.generateRefreshToken(user);
+
+                        user.refresh_token = refreshToken;
+
+                        userRepository.UpdateUser(user);
+
+                        return new
+                        {
+                            accessToken,
+                            refreshToken,
+                        };
+                    }
+                }
+            }
+
+            throw new UnAuthorizedException("Refresh token is invalid");
         }
     }
 }
