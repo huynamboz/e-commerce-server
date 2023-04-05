@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using e_commerce_server.Src.Core.Database.Data;
 
@@ -11,9 +12,11 @@ using e_commerce_server.Src.Core.Database.Data;
 namespace e_commerce_server.Src.Core.Database.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230404064452_init_data_tb_thumbnail")]
+    partial class init_data_tb_thumbnail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4644,6 +4647,9 @@ namespace e_commerce_server.Src.Core.Database.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
+                    b.Property<bool>("active_status")
+                        .HasColumnType("bit");
+
                     b.Property<string>("address")
                         .HasColumnType("nvarchar(max)");
 
@@ -4681,9 +4687,6 @@ namespace e_commerce_server.Src.Core.Database.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<string>("refresh_token")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("reset_token")
                         .HasColumnType("nvarchar(max)");
 
@@ -4704,6 +4707,7 @@ namespace e_commerce_server.Src.Core.Database.Migrations
                         new
                         {
                             id = 1,
+                            active_status = false,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             email = "string@gmail.com",
                             name = "John Doe",

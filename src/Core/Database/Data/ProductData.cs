@@ -26,8 +26,6 @@ namespace e_commerce_server.src.Core.Database.Data
         [Required]
         public DateTime updated_at { get; set;}
         [Required]
-        public string thumbnail_url { get; set; }
-        [Required]
         public string product_status { get; set; }
         [Required]
         public bool active_status { get; set; }

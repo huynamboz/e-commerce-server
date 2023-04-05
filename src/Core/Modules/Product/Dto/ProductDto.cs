@@ -20,8 +20,6 @@ namespace e_commerce_server.src.Core.Modules.Product.Dto
         [Required]
         public string product_status { get; set; }
         [Required]
-        public string thumbnail_url { get; set; }
-        [Required]
         public string keyword { get; set; }
 
         [Required]
