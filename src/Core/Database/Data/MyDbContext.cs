@@ -28,30 +28,30 @@ namespace e_commerce_server.Src.Core.Database.Data
             {
                 var cities = await locationModel.GetApi("https://api.goship.io/api/ext_v1/cities");
 
-                foreach (var city in cities)
-                {
-                    modelBuilder.Entity<CityData>().HasData(
-                        new CityData
-                        {
-                            id = city.id,
-                            name = city.name,
-                        }
-                    );
+                //foreach (var city in cities)
+                //{
+                //    modelBuilder.Entity<CityData>().HasData(
+                //        new CityData
+                //        {
+                //            id = city.id,
+                //            name = city.name,
+                //        }
+                //    );
 
-                    var districts = await locationModel.GetApi($"https://api.goship.io/api/ext_v1/cities/{city.id}/districts");
+                //    var districts = await locationModel.GetApi($"https://api.goship.io/api/ext_v1/cities/{city.id}/districts");
 
-                    foreach (var district in districts)
-                    {
-                        modelBuilder.Entity<DistrictData>().HasData(
-                            new DistrictData
-                            {
-                                id = district.id,
-                                name = district.name,
-                                city_id = city.id,
-                            }
-                        );
-                    }
-                }
+                //    foreach (var district in districts)
+                //    {
+                //        modelBuilder.Entity<DistrictData>().HasData(
+                //            new DistrictData
+                //            {
+                //                id = district.id,
+                //                name = district.name,
+                //                city_id = city.id,
+                //            }
+                //        );
+                //    }
+                //}
 
                 modelBuilder.Entity<CategoryData>().HasData(
                    new CategoryData

@@ -34,7 +34,7 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                 return new
                 {
                     success = true,
-                    data = ProductRespository.GetProductByIdSpecial(ProductRespository.UpdateProduct(product, productDto).id)
+                    data = ProductRespository.GetProductByProductId(ProductRespository.UpdateProduct(idProduct, productDto).id)
                 };
             }
         }
@@ -45,7 +45,7 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                     return  new
                     {
                         success = true,
-                        data = ProductRespository.GetProductByIdSpecial(ProductRespository.AddNewProduct(productDto, idUser).id)
+                        data = ProductRespository.GetProductByProductId(ProductRespository.AddNewProduct(productDto, idUser).id)
                     };
                 } 
                     throw new BadRequestException(ProductEnum.INSUFFICIENT_CONDITION);
@@ -61,7 +61,7 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
         }
         public object GetProductById(int id)
         {
-            var product = ProductRespository.GetProductByIdSpecial(id);
+            var product = ProductRespository.GetProductByProductId(id);
             if(product == null)
             {
                 throw new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND);
