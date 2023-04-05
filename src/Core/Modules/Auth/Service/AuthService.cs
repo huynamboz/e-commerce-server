@@ -13,6 +13,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Security.Cryptography;
+using e_commerce_server.Src.Core.Env;
 
 namespace e_commerce_server.Src.Core.Modules.Auth.Service
 {
@@ -26,13 +28,13 @@ namespace e_commerce_server.Src.Core.Modules.Auth.Service
             bCryptService = new BCryptService();
             jwtService = new JwtService();
             userRepository = new UserRepository(context);
-        }
+        } 
 
         public object Login(LoginModel model)
         {
             var user = userRepository.FindByEmail(model.email);
 
-            if (user == null || user.password != model.password)
+            if (user == null || !bCryptService.Verify(model.password, user.password))
             {
                 throw new BadRequestException(AuthEnum.LOGIN_INCORRECT);
             }
@@ -43,7 +45,7 @@ namespace e_commerce_server.Src.Core.Modules.Auth.Service
                 accessToken = jwtService.Sign(user)
             };
         }
- 
+
         public object Register(RegisterModel model)
         {
             var existingUser = userRepository.FindByEmail(model.email);
@@ -53,14 +55,14 @@ namespace e_commerce_server.Src.Core.Modules.Auth.Service
                 throw new DuplicateException(AuthEnum.REGISTER_INCORRECT);
             }
 
-            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(model.password); 
+            string hashedPassword = bCryptService.Hash(model.password);
 
-            var user = new UserData 
-            { 
+            var user = new UserData
+            {
                 email = model.email,
                 password = hashedPassword,
-                name = model.name, 
-            };    
+                name = model.name,
+            };
 
             userRepository.Create(user);
 
@@ -70,5 +72,4 @@ namespace e_commerce_server.Src.Core.Modules.Auth.Service
             };
         }
     }
-
 }
