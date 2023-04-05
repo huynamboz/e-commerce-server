@@ -5,7 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 AppBundle
     .Builder()
     .ApplyBuilderContext(builder)
-    .Init()
+    .Init()     
     .ApplyControllers()
     .ApplySwagger()
     .ApplyDbContext()

@@ -13,6 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Security.Cryptography;
 
 namespace e_commerce_server.Src.Core.Modules.Auth.Service
 {
@@ -43,7 +44,26 @@ namespace e_commerce_server.Src.Core.Modules.Auth.Service
                 accessToken = jwtService.Sign(user)
             };
         }
- 
+
+        public static string HashPassword(string password)
+        {
+            string salt = Environment.GetEnvironmentVariable("PASSWORD_SALT");
+
+            if (salt == null)
+            {
+                salt = "default_salt_value";
+            }
+            byte[] saltedPassword = new byte[password.Length + salt.Length];
+            Array.Copy(Encoding.UTF8.GetBytes(password), saltedPassword, password.Length);
+            Array.Copy(Encoding.UTF8.GetBytes(salt), 0, saltedPassword, password.Length, salt.Length);
+
+            HashAlgorithm algorithm = new SHA256Managed(); 
+            byte[] hashedPassword = algorithm.ComputeHash(saltedPassword);
+
+            return Convert.ToBase64String(hashedPassword);
+
+        }
+
         public object Register(RegisterModel model)
         {
             var existingUser = userRepository.FindByEmail(model.email);
@@ -53,7 +73,8 @@ namespace e_commerce_server.Src.Core.Modules.Auth.Service
                 throw new DuplicateException(AuthEnum.REGISTER_INCORRECT);
             }
 
-            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(model.password); 
+            string hashedPassword = HashPassword(model.password);
+            //string hashedPassword = BCrypt.Net.BCrypt.HashPassword(model.password); 
 
             var user = new UserData 
             { 
