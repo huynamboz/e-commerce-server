@@ -1,4 +1,5 @@
 ﻿using e_commerce_server.src.Core.Database.Data;
+using e_commerce_server.Src.Core.Common.Enum;
 using e_commerce_server.Src.Core.Database.Model;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,10 +27,10 @@ namespace e_commerce_server.Src.Core.Database.Data
 
             Task.Run(async () =>
             {
-                var cities = await locationModel.GetApi("https://api.goship.io/api/ext_v1/cities");
+                // var cities = await locationModel.GetApi("https://api.goship.io/api/ext_v1/cities");
 
-                //foreach (var city in cities)
-                //{
+                // foreach (var city in cities)
+                // {
                 //    modelBuilder.Entity<CityData>().HasData(
                 //        new CityData
                 //        {
@@ -51,7 +52,7 @@ namespace e_commerce_server.Src.Core.Database.Data
                 //            }
                 //        );
                 //    }
-                //}
+                // }
 
                 modelBuilder.Entity<CategoryData>().HasData(
                    new CategoryData
@@ -71,8 +72,7 @@ namespace e_commerce_server.Src.Core.Database.Data
                         discount = 10,
                         created_at = DateTime.Now,
                         updated_at = DateTime.Now,
-                        product_status = "Đã qua sử dụng",
-                        active_status = false,
+                        product_status = ProductStatusEnum.USED,
                         user_id = 1,
                         category_id = 1
                     }
@@ -117,11 +117,11 @@ namespace e_commerce_server.Src.Core.Database.Data
                     .WithMany(u => u.products)
                     .HasForeignKey(p => p.user_id)
                     .HasPrincipalKey(u => u.id);
+
                 modelBuilder.Entity<ThumbnailData>()
                     .HasOne(p => p.product)
                     .WithMany(p => p.thumbnails)
                     .HasForeignKey(p => p.product_id);
-
 
                 modelBuilder.Entity<UserData>().HasData(
                     new UserData

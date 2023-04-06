@@ -1,10 +1,8 @@
 ﻿using e_commerce_server.src.Core.Modules.Product.Dto;
 using e_commerce_server.src.Core.Modules.Product.Service;
 using e_commerce_server.Src.Core.Database.Data;
-using e_commerce_server.Src.Core.Modules.User;
 using e_commerce_server.Src.Packages.HttpException;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace e_commerce_server.src.Core.Api.V1.Controllers.Product
@@ -20,20 +18,22 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers.Product
             _dbContext = dbContext;
             productService = new ProductService(dbContext);
         }
+
         //get all product
         [HttpGet]
-        public IActionResult getAllProduct(int page =1)
+        public IActionResult getAllProduct(int page = 1)
         {
             try
             {
-                return Ok(productService.GetAllProduct(page));
+                return Ok(productService.GetAllProducts(page));
             }
             catch (HttpException ex)
             {
                 return StatusCode((int)ex.StatusCode, ex.Response);
             }
         }
-        //edit product by product id
+
+        //edit product by id
         [HttpPut("{id}")]
         [Authorize]
         public IActionResult editProduct(ProductDto productDto, int id)
@@ -41,7 +41,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers.Product
             try
             {
                 var idClaim = HttpContext.User.FindFirst("id");
-                return Ok(productService.editProductByID(productDto, id,Convert.ToInt32(idClaim.Value)));
+                return Ok(productService.editProductById(productDto, id,Convert.ToInt32(idClaim.Value)));
             }
             catch (HttpException ex)
             {
@@ -52,12 +52,13 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers.Product
         //add new product
         [HttpPost]
         [Authorize]
-        public IActionResult addNewProduct(ProductDto product)
+        public IActionResult addProduct(ProductDto product)
         {
             try
             {
                 var idClaim = HttpContext.User.FindFirst("id");
-                return Ok(productService.addNewProduct(product, Convert.ToInt32(idClaim.Value)));
+
+                return Ok(productService.addProduct(product, Convert.ToInt32(idClaim.Value)));
             }
             catch (HttpException ex)
             {

@@ -18,7 +18,6 @@ namespace e_commerce_server.src.Core.Database.Data
         public string description { get; set; }
         [Required]
         public int price { get; set; }
-       
         [Required]
         public int discount { get; set; }
         [Required]
@@ -28,9 +27,7 @@ namespace e_commerce_server.src.Core.Database.Data
         [Required]
         public string product_status { get; set; }
         [Required]
-        public bool active_status { get; set; }
         public virtual ICollection<ThumbnailData> thumbnails { get; set; }
-
         public int user_id { get; set; }
         public UserData user { get; set; }
         [Required]

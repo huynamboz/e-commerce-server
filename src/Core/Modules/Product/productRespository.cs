@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace e_commerce_server.src.Core.Modules.Product
 {
-    public class ProductRespository
+    public class ProductRepository
     {
         private readonly MyDbContext _context;
         private UserRepository userRepository;
-        public ProductRespository(MyDbContext context)
+        public ProductRepository(MyDbContext context)
         {
             _context = context;
             userRepository = new UserRepository(context);
@@ -44,7 +44,6 @@ namespace e_commerce_server.src.Core.Modules.Product
                         p.description,
                         p.created_at,
                         p.updated_at,
-                        p.active_status,
                         p.product_status,
                         thumbnails = _context.Thumbnails.Where(cond => cond.product_id == p.id).Select(data => data.thumbnail_url).ToList(),
                         p.user_id,
@@ -65,20 +64,26 @@ namespace e_commerce_server.src.Core.Modules.Product
             try
             {
                 var product = _context.Products.SingleOrDefault(p => p.id == productID);
+
                 //delete list old thumbnail of product
                 var thumbnailsToDelete = _context.Thumbnails.Where(cond => cond.product_id == productID).ToList();
+
                 _context.Thumbnails.RemoveRange(thumbnailsToDelete);
+
                 //add new list thumbnail for product
                 List<ThumbnailData> thumbnails = new List<ThumbnailData>();
+
                 foreach (var thumbnail in productDto.thumbnails) {
                     ThumbnailData item = new ThumbnailData
                     {
                         thumbnail_url = thumbnail,
                         product_id = productID,
                     };
+
                     thumbnails.Add(item);
                 }
                 _context.AddRange(thumbnails);
+
                 //update detail 
                 product.description = productDto.description;
                 product.price = productDto.price;
@@ -86,19 +91,20 @@ namespace e_commerce_server.src.Core.Modules.Product
                 product.updated_at = DateTime.Now;
                 product.category_id = productDto.category_id;
                 product.discount = productDto.discount;
+
                 _context.SaveChanges();
+
                 return product;
             } catch (Exception ex)
                 {
                     throw new InternalException(ex.Message);
             }
         }
-        public ProductData AddNewProduct(ProductDto productDto,int idUser)
+        public ProductData AddProduct(ProductDto productDto,int idUser)
         {
             try
             {
-
-                var newproduct = new ProductData
+                var newProduct = new ProductData
                 {
                     name = productDto.name,
                     description = productDto.description,
@@ -110,28 +116,31 @@ namespace e_commerce_server.src.Core.Modules.Product
                     user_id = idUser,
                     category_id = productDto.category_id,
                 };
-            //must add newproduct before to db generate new id
-                _context.Add(newproduct);
+
+                _context.Add(newProduct);
                 _context.SaveChanges();
-            foreach (var thumbnail in productDto.thumbnails)
+
+                foreach (var thumbnail in productDto.thumbnails)
                 {
                     ThumbnailData item = new ThumbnailData
                     {
                         thumbnail_url = thumbnail,
-                        product_id = newproduct.id,
+                        product_id = newProduct.id,
                     };
-                _context.Add(item);
-            }
+
+                    _context.Add(item);
+                }
                 
                 _context.SaveChanges();
-                return newproduct;
+
+                return newProduct;
             }
             catch (Exception e)
             {
                 throw new InternalException(e.Message);
             }
         }
-        public List<string> GetListthumbnailByProductId(int id)
+        public List<string> GetThumbnailsByProductId(int id)
         {
             try
             {
@@ -141,18 +150,26 @@ namespace e_commerce_server.src.Core.Modules.Product
                 throw new InternalException(e.Message);
             }
         }
-        public ProductDto GetProductByProductId(int id)
+        public ProductDto? GetProductById(int id)
         {
             try
             {
                 var product = _context.Products.FirstOrDefault(p => p.id == id);
-                if (product == null) return null;
-                var thumbnails = GetListthumbnailByProductId(id);
+
+                if (product == null) 
+                {
+                    return null;
+                }
+
+                var thumbnails = GetThumbnailsByProductId(id);
+
                 var user = userRepository.FindById(product.user_id);
+
                 var address = _context.Districts
                         .Where(a => a.id == user.district_id)
                         .Select(ct => ct.city.name).SingleOrDefault();
-               return new ProductDto
+
+                return new ProductDto
                 {
                     id = product.id,
                     name = product.name,
