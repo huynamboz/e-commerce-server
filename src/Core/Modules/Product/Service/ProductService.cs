@@ -50,13 +50,23 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                 } 
                     throw new BadRequestException(ProductEnum.INSUFFICIENT_CONDITION);
         }
-        public object GetAllProduct()
+        public object GetAllProduct(int page)
         {
-            var listProducts = ProductRespository.GetAllProducts();
+            int pageSize = 20;
+            var listProductDbSet = ProductRespository.GetProducts();
+            var listProducts = 
+                ProductRespository.GetProductByPage(listProductDbSet, page, pageSize);
+            int total = (int)Math.Ceiling((double)listProductDbSet.Count() / pageSize); //caculate total pages
             return new
             {
                 success = true,
-                data = listProducts
+                data = listProducts ,
+                meta = new
+                {
+                    total_pages = total,
+                    total_count = listProductDbSet.Count(),
+                    current_page = page
+                }
             };
         }
         public object GetProductById(int id)

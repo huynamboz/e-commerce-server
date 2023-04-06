@@ -22,11 +22,11 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers.Product
         }
         //get all product
         [HttpGet]
-        public IActionResult getAllProduct()
+        public IActionResult getAllProduct(int page =1)
         {
             try
             {
-                return Ok(productService.GetAllProduct());
+                return Ok(productService.GetAllProduct(page));
             }
             catch (HttpException ex)
             {

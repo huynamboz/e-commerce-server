@@ -16,11 +16,25 @@ namespace e_commerce_server.src.Core.Modules.Product
             _context = context;
             userRepository = new UserRepository(context);
         }
-        public List<object> GetAllProducts()
+        public DbSet<ProductData> GetProducts()
         {
             try
             {
-                return _context.Products.Select(
+                return _context.Products;
+            }
+            catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            }
+        }
+        public List<object> GetProductByPage(DbSet<ProductData> products,int page, int pageSize)
+        {
+            try
+            {
+                return products
+                    .Skip((page -1) * 10)
+                    .Take(pageSize)
+                    .Select(
                     p => new
                     {
                         p.id,
