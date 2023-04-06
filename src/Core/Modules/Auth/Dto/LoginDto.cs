@@ -3,11 +3,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace e_commerce_server.Src.Core.Modules.Auth.Dto
 {
-    public class LoginModel
+    public class LoginDto
     {
         [Required]
         [MaxLength(100)]
-        [DefaultValue("string@gmail.com")]
+        [DefaultValue("user@example.com")]
         public string email { get; set; }
         [Required]
         [MaxLength(250)]

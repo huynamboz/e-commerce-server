@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using e_commerce_server.Src.Core.Database.Data;
 
@@ -11,9 +12,11 @@ using e_commerce_server.Src.Core.Database.Data;
 namespace e_commerce_server.Src.Core.Database.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230405053320_add_refresh_token_column_to_users_table")]
+    partial class add_refresh_token_column_to_users_table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4644,6 +4647,9 @@ namespace e_commerce_server.Src.Core.Database.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
+                    b.Property<bool>("active_status")
+                        .HasColumnType("bit");
+
                     b.Property<string>("address")
                         .HasColumnType("nvarchar(max)");
 
@@ -4704,6 +4710,7 @@ namespace e_commerce_server.Src.Core.Database.Migrations
                         new
                         {
                             id = 1,
+                            active_status = false,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             email = "string@gmail.com",
                             name = "John Doe",

@@ -7,13 +7,13 @@ namespace e_commerce_server.Src.Packages.Auth.Core
 {
     public class JwtBearerOption
     {
-        private readonly string _secrectKey;
-        private readonly byte[] _secrectkeybytes;
+        private readonly string _secretKey;
+        private readonly byte[] _secretKeyBytes;
 
         private JwtBearerOption()
         {
-            this._secrectKey = ENV.JWT_SECRET;
-            this._secrectkeybytes = Encoding.UTF8.GetBytes(_secrectKey);
+            this._secretKey = ENV.JWT_SECRET;
+            this._secretKeyBytes = Encoding.UTF8.GetBytes(_secretKey);
         }
         public static JwtBearerOption Builder()
         {
@@ -27,9 +27,8 @@ namespace e_commerce_server.Src.Packages.Auth.Core
                 {
                     ValidateIssuer = false,
                     ValidateAudience = false,
-
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(this._secrectkeybytes),
+                    IssuerSigningKey = new SymmetricSecurityKey(this._secretKeyBytes),
                     ClockSkew = TimeSpan.Zero
                 };
             };

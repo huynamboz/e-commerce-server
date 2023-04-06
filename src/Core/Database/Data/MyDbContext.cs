@@ -18,10 +18,10 @@ namespace e_commerce_server.Src.Core.Database.Data
             //Write Fluent API configurations here
             base.OnModelCreating(modelBuilder);
 
-            LocationModel locationModel = new LocationModel();
+            // LocationModel locationModel = new LocationModel();
 
-            //Task.Run(async () =>
-            //{
+            // Task.Run(async () =>
+            // {
             //    var cities = await locationModel.GetApi("https://api.goship.io/api/ext_v1/cities");
 
             //    foreach (var city in cities)
@@ -54,9 +54,8 @@ namespace e_commerce_server.Src.Core.Database.Data
             //        {
             //            id = 1,
             //            name = "John Doe",
-            //            email = "string@gmail.com",
-            //            password = "string",
-            //            active_status = false,
+            //            email = "user@example.com",
+            //            password = "$2a$19$PPV4f2D1itfaiHD.cpFSiuze0Xf2PXWBGKCBsPvlePKLN7.v.XTKW", //string
             //            role_id = 1,
             //        }
             //    );
@@ -70,7 +69,7 @@ namespace e_commerce_server.Src.Core.Database.Data
             //        entity.HasIndex(e => e.email).IsUnique();
 
             //    });
-            //}).GetAwaiter().GetResult();
+            // }).GetAwaiter().GetResult();
         }
     }
 }

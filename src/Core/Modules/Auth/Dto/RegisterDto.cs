@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace e_commerce_server.Src.Core.Modules.Auth.Dto
 {
-    public class RegisterModel
+    public class RegisterDto
     {
         [Required]
         [EmailAddress]
