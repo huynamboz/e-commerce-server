@@ -18,18 +18,29 @@ namespace e_commerce_server.src.Core.Modules.Product
             _context = context;
             userRepository = new UserRepository(context);
         }
-        public DbSet<ProductData> GetProducts()
+        public List<ProductData> GetProducts()
         {
             try
             {
-                return _context.Products;
+                return _context.Products.ToList();
             }
             catch (Exception ex)
             {
                 throw new InternalException(ex.Message);
             }
         }
-        public List<object> GetProductsByPage(DbSet<ProductData> products, int page)
+        public List<ProductData> GetProductsByUserId(int userId)
+        {
+            try
+            {
+                return _context.Products.Where(p => p.user_id == userId).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            }
+        }
+        public List<object> GetProductsByPage(List<ProductData> products, int page)
         {
             try
             {
@@ -60,7 +71,7 @@ namespace e_commerce_server.src.Core.Modules.Product
                 throw new InternalException(ex.Message);
             }
         }
-        public ProductData UpdateProduct(int productId, ProductDto productDto)
+        public ProductData UpdateProduct(int productId, AddProductDto productDto)
         {
             try
             {
@@ -106,7 +117,7 @@ namespace e_commerce_server.src.Core.Modules.Product
                 throw new InternalException(ex.Message);
             }
         }
-        public ProductData AddProduct(ProductDto productDto,int idUser)
+        public ProductData AddProduct(AddProductDto productDto,int userId)
         {
             try
             {
@@ -119,7 +130,7 @@ namespace e_commerce_server.src.Core.Modules.Product
                     created_at = DateTime.Now,
                     updated_at = DateTime.Now,
                     status_id = productDto.status_id,
-                    user_id = idUser,
+                    user_id = userId,
                     category_id = productDto.category_id,
                 };
 

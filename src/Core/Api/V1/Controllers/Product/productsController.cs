@@ -33,15 +33,31 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers.Product
             }
         }
 
-        //edit product by id
-        [HttpPut("{id}")]
+
+        [HttpGet("my-products")]
         [Authorize]
-        public IActionResult editProduct(ProductDto productDto, int id)
+        public IActionResult getMyProducts(int page = 1)
         {
             try
             {
                 var idClaim = HttpContext.User.FindFirst("id");
-                return Ok(productService.editProductById(productDto, id,Convert.ToInt32(idClaim.Value)));
+                return Ok(productService.GetProductsByUserId(page, Convert.ToInt32(idClaim.Value)));
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Response);
+            }
+        }
+
+        //edit product by id
+        [HttpPut("{id}")]
+        [Authorize]
+        public IActionResult editProduct(AddProductDto productDto, int id)
+        {
+            try
+            {
+                var idClaim = HttpContext.User.FindFirst("id");
+                return Ok(productService.EditProductById(productDto, id,Convert.ToInt32(idClaim.Value)));
             }
             catch (HttpException ex)
             {
@@ -52,13 +68,13 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers.Product
         //add new product
         [HttpPost]
         [Authorize]
-        public IActionResult addProduct(ProductDto product)
+        public IActionResult AddProduct(AddProductDto product)
         {
             try
             {
                 var idClaim = HttpContext.User.FindFirst("id");
 
-                return Ok(productService.addProduct(product, Convert.ToInt32(idClaim.Value)));
+                return Ok(productService.AddProduct(product, Convert.ToInt32(idClaim.Value)));
             }
             catch (HttpException ex)
             {
