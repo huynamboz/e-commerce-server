@@ -8,7 +8,7 @@ namespace e_commerce_server.Src.Core.Modules.Auth.Service
 {
     public class AuthService
     {
-        public BCryptService bCryptService;
+        private BCryptService bCryptService;
         private UserRepository userRepository;
         private JwtService jwtService;
         public AuthService(MyDbContext context)
@@ -59,6 +59,7 @@ namespace e_commerce_server.Src.Core.Modules.Auth.Service
                 email = model.email,
                 password = hashedPassword,
                 name = model.name,
+                role_id = 1,
             };
 
             userRepository.Create(user);

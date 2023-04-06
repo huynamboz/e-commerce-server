@@ -21,7 +21,17 @@ namespace e_commerce_server.Src.Core.Modules.User
                 throw new InternalException(ex.Message);
             }
         }
-
+        public UserData GetById(int id)
+        {
+            try
+            {
+                return _context.Users.SingleOrDefault(p => p.id == id);
+            }
+            catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            }
+        }
         public void Create(UserData user)
         {
             try
