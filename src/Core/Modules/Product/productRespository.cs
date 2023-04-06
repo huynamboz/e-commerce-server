@@ -18,11 +18,11 @@ namespace e_commerce_server.src.Core.Modules.Product
             _context = context;
             userRepository = new UserRepository(context);
         }
-        public List<ProductData> GetProducts()
+        public DbSet<ProductData> GetProducts()
         {
             try
             {
-                return _context.Products.ToList();
+                return _context.Products;
             }
             catch (Exception ex)
             {
@@ -40,11 +40,43 @@ namespace e_commerce_server.src.Core.Modules.Product
                 throw new InternalException(ex.Message);
             }
         }
-        public List<object> GetProductsByPage(List<ProductData> products, int page)
+        public List<object> GetProductsByPage(DbSet<ProductData> products, int page)
         {
             try
             {
                 return products
+                    .Skip((page -1) * 10)
+                    .Take(PageSizeEnum.PAGE_SIZE)
+                    .Select(
+                    p => new
+                    {
+                        p.id,
+                        p.name,
+                        p.price,
+                        p.discount,
+                        p.description,
+                        p.created_at,
+                        p.updated_at,
+                        product_status = p.product_status.status,
+                        thumbnails = _context.Thumbnails.Where(cond => cond.product_id == p.id).Select(data => data.thumbnail_url).ToList(),
+                        p.user_id,
+                        category = p.category.name,
+                        address = _context.Districts
+                            .Where(a => a.id == p.user.district_id)
+                            .Select(ct => ct.city.name).SingleOrDefault()
+                    }
+                ).Cast<object>().ToList();
+            } catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            }
+        }
+        public List<object> GetProductsByUserIdByPage(int page, int userId)
+        {
+            try
+            {
+                return _context.Products
+                    .Where(p => p.user_id == userId)
                     .Skip((page -1) * 10)
                     .Take(PageSizeEnum.PAGE_SIZE)
                     .Select(
@@ -163,12 +195,12 @@ namespace e_commerce_server.src.Core.Modules.Product
             {
                 var product = _context.Products.FirstOrDefault(p => p.id == id);
 
-                var user = userRepository.GetById(product.user_id);
-
                 if (product == null) 
                 {
                     return null;
                 }
+
+                var user = userRepository.GetUserById(product.user_id);
 
                 return new ProductDto
                 {
