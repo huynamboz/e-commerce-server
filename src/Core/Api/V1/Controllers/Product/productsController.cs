@@ -33,6 +33,19 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers.Product
             }
         }
 
+        //get product by id
+        [HttpGet("{id}")]
+        public IActionResult getProductById(int id)
+        {
+            try
+            {
+                return Ok(productService.GetProductById(id));
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Response);
+            }
+        }
 
         [HttpGet("my-products")]
         [Authorize]
@@ -49,24 +62,8 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers.Product
             }
         }
 
-        //edit product by id
-        [HttpPut("{id}")]
-        [Authorize]
-        public IActionResult editProduct(AddProductDto productDto, int id)
-        {
-            try
-            {
-                var idClaim = HttpContext.User.FindFirst("id");
-                return Ok(productService.EditProductById(productDto, id,Convert.ToInt32(idClaim.Value)));
-            }
-            catch (HttpException ex)
-            {
-                return StatusCode((int)ex.StatusCode, ex.Response);
-            }
-        }
-
         //add new product
-        [HttpPost]
+        [HttpPost("my-products")]
         [Authorize]
         public IActionResult AddProduct(AddProductDto product)
         {
@@ -81,13 +78,16 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers.Product
                 return StatusCode((int)ex.StatusCode, ex.Response);
             }
         }
-        //get product by product id
-        [HttpGet("{id}")]
-        public IActionResult getProductById(int id)
+
+        //edit product by id
+        [HttpPut("my-products/{id}")]
+        [Authorize]
+        public IActionResult editProduct(AddProductDto productDto, int id)
         {
             try
             {
-                return Ok(productService.GetProductById(id));
+                var idClaim = HttpContext.User.FindFirst("id");
+                return Ok(productService.EditProductById(productDto, id,Convert.ToInt32(idClaim.Value)));
             }
             catch (HttpException ex)
             {

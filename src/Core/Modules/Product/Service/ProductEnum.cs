@@ -5,6 +5,8 @@
         public const string PRODUCT_NOT_FOUND = "Product not found";
         public const string INSUFFICIENT_CONDITION = "Insufficient conditions";
         public const string NOT_HAVE_PERMISSION = "Not have permission to update this product";
+        public const string ADD_PRODUCT_SUCCESS = "Added product successfully";
+        public const string UPDATE_PRODUCT_SUCCESS = "Updated product successfully";
 
     }
 }

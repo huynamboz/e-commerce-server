@@ -20,7 +20,7 @@ namespace e_commerce_server.Src.Core.Modules.Auth.Service
 
         public object Login(LoginDto model)
         {
-            var user = userRepository.FindByEmail(model.email);
+            var user = userRepository.GetUserByEmail(model.email);
 
             if (user == null || !bCryptService.Verify(model.password, user.password))
             {
@@ -45,7 +45,7 @@ namespace e_commerce_server.Src.Core.Modules.Auth.Service
 
         public object Register(RegisterDto model)
         {
-            var existingUser = userRepository.FindByEmail(model.email);
+            var existingUser = userRepository.GetUserByEmail(model.email);
 
             if (existingUser != null)
             {
@@ -62,7 +62,7 @@ namespace e_commerce_server.Src.Core.Modules.Auth.Service
                 role_id = 1,
             };
 
-            userRepository.Create(user);
+            userRepository.CreateUser(user);
 
             return new
             {
@@ -71,7 +71,7 @@ namespace e_commerce_server.Src.Core.Modules.Auth.Service
         }
 
         public object GenerateRefreshToken(RefreshTokenDto model) {
-            var user = userRepository.FindByRefreshToken(model.refresh_token);
+            var user = userRepository.GetUserByRefreshToken(model.refresh_token);
 
             if (user != null) {
                 var TokenPayload = jwtService.Verify(model.refresh_token);
@@ -97,7 +97,7 @@ namespace e_commerce_server.Src.Core.Modules.Auth.Service
                 }
             }
 
-            throw new UnAuthorizedException("Refresh token is invalid");
+            throw new UnAuthorizedException(AuthEnum.INVALID_REFRESH_TOKEN);
         }
     }
 }

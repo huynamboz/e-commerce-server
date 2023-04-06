@@ -11,7 +11,7 @@ namespace e_commerce_server.Src.Core.Modules.User
         {
             _context = context;
         }
-        public UserData? FindByEmail(string email)
+        public UserData? GetUserByEmail(string email)
         {
             try
             {
@@ -21,7 +21,7 @@ namespace e_commerce_server.Src.Core.Modules.User
                 throw new InternalException(ex.Message);
             }
         }
-        public UserData GetById(int id)
+        public UserData GetUserById(int id)
         {
             try
             {
@@ -32,10 +32,12 @@ namespace e_commerce_server.Src.Core.Modules.User
                 throw new InternalException(ex.Message);
             }
         }
-        public void Create(UserData user)
+        public void CreateUser(UserData user)
         {
             try
             {
+                user.created_at = DateTime.Now;
+
                 _context.Users.Add(user);
                 _context.SaveChanges();
             }
@@ -45,7 +47,7 @@ namespace e_commerce_server.Src.Core.Modules.User
             }
         }
 
-        public UserData? FindByRefreshToken(string refreshToken)
+        public UserData? GetUserByRefreshToken(string refreshToken)
         {
             try
             {

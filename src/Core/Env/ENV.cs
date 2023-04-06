@@ -11,7 +11,7 @@
         static ENV()
         {
             DotNetEnv.Env.Load();
-            WORK_FACTOR = Environment.GetEnvironmentVariable("WORK_FACTOR") ?? "19";
+            WORK_FACTOR = Environment.GetEnvironmentVariable("WORK_FACTOR") ?? "4";
             JWT_SECRET = Environment.GetEnvironmentVariable("JWT_SECRET") ?? "Ew8A?gWZj9!A5vnz!H?w5eBe=AG??{{";
             EXPIRE_MINUTE = Environment.GetEnvironmentVariable("EXPIRE_MINUTE") ?? "10";
             EXPIRE_DAY = Environment.GetEnvironmentVariable("EXPIRE_DAY") ?? "30";

@@ -22,7 +22,7 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
         {
             var products = productRepository.GetProductsByUserId(userId);
             
-            var paginatedProducts = productRepository.GetProductsByPage(products, page);
+            var paginatedProducts = productRepository.GetProductsByUserIdByPage(page, userId);
             
             int total = (int)Math.Ceiling((double)products.Count() / PageSizeEnum.PAGE_SIZE); //calculate total pages
 
@@ -51,12 +51,13 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                 throw new BadRequestException(ProductEnum.NOT_HAVE_PERMISSION);
             }
 
-            var user = userRepository.GetById(userId);
+            var user = userRepository.GetUserById(userId);
 
             if (userService.CheckUserStatus(user))
             {
                 return new
                 {
+                    message = ProductEnum.UPDATE_PRODUCT_SUCCESS,
                     data = productRepository.GetProductById(productRepository.UpdateProduct(productId, productDto).id)
                 };
             }
@@ -65,12 +66,13 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
         }
         public object AddProduct(AddProductDto productDto, int userId)
         {
-            var user = userRepository.GetById(userId);
+            var user = userRepository.GetUserById(userId);
             
             if (userService.CheckUserStatus(user))
             {
                 return  new
                 {
+                    message = ProductEnum.ADD_PRODUCT_SUCCESS,
                     data = productRepository.GetProductById(productRepository.AddProduct(productDto, userId).id)
                 };
             } 

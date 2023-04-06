@@ -13,8 +13,9 @@ namespace e_commerce_server.Src.Core.Database.Data
         public DbSet<DistrictData> Districts { get; set; }
         public DbSet<ProductData> Products { get; set; }
         public DbSet<CategoryData> Categories { get; set; }
-        #endregion
+        public DbSet<ProductStatusData> ProductStatuses { get; set; }
         public DbSet<ThumbnailData> Thumbnails { get; set; }
+        #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
