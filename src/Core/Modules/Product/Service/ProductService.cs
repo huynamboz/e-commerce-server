@@ -2,19 +2,20 @@
 using e_commerce_server.Src.Core.Common.Enum;
 using e_commerce_server.Src.Core.Database.Data;
 using e_commerce_server.Src.Core.Modules.User;
+using e_commerce_server.Src.Core.Modules.User.Service;
 using e_commerce_server.Src.Packages.HttpException;
 
 namespace e_commerce_server.src.Core.Modules.Product.Service
 {
     public class ProductService
     {
-        readonly MyDbContext _dbContext;
         private UserRepository userRepository;
-        ProductRepository productRepository;
+        private ProductRepository productRepository;
+        private UserService userService;
         public ProductService(MyDbContext context) {
-            _dbContext= context;
-            productRepository = new ProductRepository(_dbContext);
-            userRepository = new UserRepository(_dbContext);
+            productRepository = new ProductRepository(context);
+            userRepository = new UserRepository(context);
+            userService = new UserService();
         }
         public object editProductById(ProductDto productDto, int productId, int userId)
         {
@@ -28,30 +29,38 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
             if (product.user_id != userId)
             {
                 throw new BadRequestException(ProductEnum.NOT_HAVE_PERMISSION);
-            }  else
-            {
-                return new
-                {
-                    data = productRepository.GetProductById(productRepository.UpdateProduct(productId, productDto).id)
-                };
             }
+
+            var user = userRepository.GetById(userId);
+
+            if (userService.CheckUserStatus(user))
+            {
+                throw new BadRequestException(ProductEnum.INSUFFICIENT_CONDITION);
+            }
+
+            return new
+            {
+                data = productRepository.GetProductById(productRepository.UpdateProduct(productId, productDto).id)
+            };
         }
         public object addProduct(ProductDto productDto, int userId)
         {
-                //if (userRepository.FindById(userId).active_status)
+            var user = userRepository.GetById(userId);
+            
+            if (userService.CheckUserStatus(user))
+            {
+                return  new
                 {
-                    return  new
-                    {
-                        data = productRepository.GetProductById(productRepository.AddProduct(productDto, userId).id)
-                    };
-                } 
-                    throw new BadRequestException(ProductEnum.INSUFFICIENT_CONDITION);
+                    data = productRepository.GetProductById(productRepository.AddProduct(productDto, userId).id)
+                };
+            } 
+                throw new BadRequestException(ProductEnum.INSUFFICIENT_CONDITION);
         }
         public object GetAllProducts(int page)
         {
             var listProductDbSet = productRepository.GetProducts();
 
-            var listProducts = productRepository.GetProductByPage(listProductDbSet, page, PageSizeEnum.PAGE_SIZE);
+            var listProducts = productRepository.GetProductsByPage(listProductDbSet, page);
 
             int total = (int)Math.Ceiling((double)listProductDbSet.Count() / PageSizeEnum.PAGE_SIZE); //calculate total pages
 
@@ -69,10 +78,12 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
         public object GetProductById(int id)
         {
             var product = productRepository.GetProductById(id);
+
             if(product == null)
             {
                 throw new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND);
             }
+
             return new
             {
                 data = product

@@ -79,6 +79,7 @@ namespace e_commerce_server.Src.Core.Modules.Auth.Service
             try {
                 return tokenHandler.ValidateToken(token, validationParameters, out var validatedToken);
             } catch (Exception ex) {
+                Console.WriteLine(ex.Message);
                 return null;
             }
         }

@@ -21,7 +21,7 @@ namespace e_commerce_server.Src.Core.Modules.User
                 throw new InternalException(ex.Message);
             }
         }
-        public UserData FindById(int id)
+        public UserData GetById(int id)
         {
             try
             {

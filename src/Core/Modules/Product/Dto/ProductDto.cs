@@ -1,5 +1,4 @@
-﻿using e_commerce_server.src.Core.Database.Data;
-using e_commerce_server.Src.Core.Database.Data;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace e_commerce_server.src.Core.Modules.Product.Dto
@@ -15,11 +14,11 @@ namespace e_commerce_server.src.Core.Modules.Product.Dto
         public string description { get; set; }
         [Required]
         public int price { get; set; }
-
         [Required]
         public int discount { get; set; }
         [Required]
-        public string product_status { get; set; }
+        [DefaultValue(1)]
+        public int status_id { get; set; }
         public DateTime? created_at { get; set; }
         public DateTime? updated_at { get; set; }
         [Required]
@@ -29,6 +28,7 @@ namespace e_commerce_server.src.Core.Modules.Product.Dto
         public List<string> thumbnails { get; set; }
         public string? category_name { get; set; }
         [Required]
+        [DefaultValue(1)]
         public int category_id { get; set; }
     }
 }

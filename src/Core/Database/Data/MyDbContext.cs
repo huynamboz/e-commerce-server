@@ -1,5 +1,4 @@
 ﻿using e_commerce_server.src.Core.Database.Data;
-using e_commerce_server.Src.Core.Common.Enum;
 using e_commerce_server.Src.Core.Database.Model;
 using Microsoft.EntityFrameworkCore;
 
@@ -62,6 +61,27 @@ namespace e_commerce_server.Src.Core.Database.Data
                    }
                 );
 
+                modelBuilder.Entity<ProductStatusData>().HasData(
+                    new ProductStatusData[] {
+                        new ProductStatusData
+                        {
+                            id = 1,
+                            status = "Mới",
+                        },
+                        new ProductStatusData
+                        {
+                            id = 2,
+                            status = "Như mới",
+                        },
+                        new ProductStatusData
+                        {
+                            id = 3,
+                            status = "Đã qua sử dụng"
+                        },
+                        
+                    }
+                );
+
                 modelBuilder.Entity<ProductData>().HasData(
                     new ProductData
                     {
@@ -72,27 +92,26 @@ namespace e_commerce_server.Src.Core.Database.Data
                         discount = 10,
                         created_at = DateTime.Now,
                         updated_at = DateTime.Now,
-                        product_status = ProductStatusEnum.USED,
+                        status_id = 1,
                         user_id = 1,
                         category_id = 1
                     }
                 );
 
                 modelBuilder.Entity<ThumbnailData>().HasData(
-                    new ThumbnailData
-                    {
-                        id = 1 ,
-                        product_id = 1,
-                        thumbnail_url = "https://cdn.chotot.com/9Z0aQLnCvRxd1GweQgBNy_cmjRMix_mM54sVi9Aazzs/preset:view/plain/ccd2bbdb8b1a2ec046d397c7202c7052-2819561496186255487.jpg"
-                    }
-                );
-
-                modelBuilder.Entity<ThumbnailData>().HasData(
-                    new ThumbnailData
-                    {
-                        id = 2,
-                        product_id = 1,
-                        thumbnail_url = "https://cdn.chotot.com/9Z0aQLnCvRxd1GweQgBNy_cmjRMix_mM54sVi9Aazzs/preset:view/plain/ccd2bbdb8b1a2ec046d397c7202c7052-2819561496186255487.jpg"
+                    new ThumbnailData[] {
+                        new ThumbnailData
+                        {
+                            id = 1 ,
+                            product_id = 1,
+                            thumbnail_url = "https://cdn.chotot.com/9Z0aQLnCvRxd1GweQgBNy_cmjRMix_mM54sVi9Aazzs/preset:view/plain/ccd2bbdb8b1a2ec046d397c7202c7052-2819561496186255487.jpg"
+                        },
+                        new ThumbnailData
+                        {
+                            id = 2,
+                            product_id = 1,
+                            thumbnail_url = "https://cdn.chotot.com/9Z0aQLnCvRxd1GweQgBNy_cmjRMix_mM54sVi9Aazzs/preset:view/plain/ccd2bbdb8b1a2ec046d397c7202c7052-2819561496186255487.jpg"
+                        }
                     }
                 );
 
@@ -111,6 +130,11 @@ namespace e_commerce_server.Src.Core.Database.Data
                     .HasOne(p => p.category)
                     .WithMany(c => c.products)
                     .HasForeignKey(p => p.category_id);
+
+                modelBuilder.Entity<ProductData>()
+                    .HasOne(p => p.product_status)
+                    .WithMany(s => s.products)
+                    .HasForeignKey(p => p.status_id);
 
                 modelBuilder.Entity<ProductData>()
                     .HasOne(p => p.user)
@@ -133,7 +157,6 @@ namespace e_commerce_server.Src.Core.Database.Data
                         role_id = 1,
                     }
                 );
-              
             }).GetAwaiter().GetResult();
         }
     }

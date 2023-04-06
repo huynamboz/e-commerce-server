@@ -25,7 +25,8 @@ namespace e_commerce_server.src.Core.Database.Data
         [Required]
         public DateTime updated_at { get; set;}
         [Required]
-        public string product_status { get; set; }
+        public int status_id { get; set; }
+        public virtual ProductStatusData product_status { get; set; }
         [Required]
         public virtual ICollection<ThumbnailData> thumbnails { get; set; }
         public int user_id { get; set; }
