@@ -71,6 +71,17 @@ namespace e_commerce_server.src.Core.Modules.Product
                 throw new InternalException(ex.Message);
             }
         }
+        public ProductData? GetProductByIdAndUserId(int userId, int productId)
+        {
+            try
+            {
+                return _context.Products.SingleOrDefault(p => p.user_id == userId && p.id == productId);
+            }
+            catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            }
+        }
         public List<object> GetProductsByUserIdByPage(int page, int userId)
         {
             try
@@ -187,6 +198,25 @@ namespace e_commerce_server.src.Core.Modules.Product
             catch (Exception e)
             {
                 throw new InternalException(e.Message);
+            }
+        }
+        public void DeleteProductById(int productId)
+        {
+            try
+            {
+                var product = _context.Products.SingleOrDefault(p => p.id == productId);
+
+                if (product == null)
+                {
+                    throw new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND);
+                }
+
+                _context.Products.Remove(product);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
             }
         }
         public ProductDto? GetProductById(int id)

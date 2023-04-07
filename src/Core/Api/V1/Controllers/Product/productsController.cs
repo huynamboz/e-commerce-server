@@ -79,6 +79,20 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers.Product
             }
         }
 
+        [HttpGet("my-products/{id}")]
+        [Authorize]
+        public IActionResult getProductByUserId(int id) {
+            try
+            {
+                var idClaim = HttpContext.User.FindFirst("id");
+                return Ok(productService.GetProductByUserId(Convert.ToInt32(idClaim.Value), id));
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Response);
+            }
+        }
+
         //edit product by id
         [HttpPut("my-products/{id}")]
         [Authorize]
@@ -88,6 +102,22 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers.Product
             {
                 var idClaim = HttpContext.User.FindFirst("id");
                 return Ok(productService.EditProductById(productDto, id,Convert.ToInt32(idClaim.Value)));
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Response);
+            }
+        }
+
+        //delete product by id
+        [HttpDelete("my-products/{id}")]
+        [Authorize]
+        public IActionResult deleteProduct(int id)
+        {
+            try
+            {
+                var idClaim = HttpContext.User.FindFirst("id");
+                return Ok(productService.DeleteProductById(Convert.ToInt32(idClaim.Value), id));
             }
             catch (HttpException ex)
             {
