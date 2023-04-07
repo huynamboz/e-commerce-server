@@ -37,6 +37,19 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                 }
             };
         }
+        public object GetProductByUserId(int userId, int productId) {
+            var product = productRepository.GetProductByIdAndUserId(userId, productId);
+
+            if (product == null)
+            {
+                throw new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND);
+            }
+
+            return new
+            {
+                data = product
+            };
+        }
         public object EditProductById(AddProductDto productDto, int productId, int userId)
         {
             var product = productRepository.GetProductById(productId);
@@ -59,6 +72,34 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                 {
                     message = ProductEnum.UPDATE_PRODUCT_SUCCESS,
                     data = productRepository.GetProductById(productRepository.UpdateProduct(productId, productDto).id)
+                };
+            }
+
+            throw new BadRequestException(ProductEnum.INSUFFICIENT_CONDITION);
+        }
+        public object DeleteProductById(int userId, int productId)
+        {
+            var product = productRepository.GetProductById(productId);
+
+            if (product == null)
+            {
+                throw new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND);
+            }
+
+            if (product.user_id != userId)
+            {
+                throw new BadRequestException(ProductEnum.NOT_HAVE_PERMISSION);
+            }
+
+            var user = userRepository.GetUserById(userId);
+
+            if (userService.CheckUserStatus(user))
+            {
+                productRepository.DeleteProductById(productId);
+
+                return new
+                {
+                    message = ProductEnum.DELETE_PRODUCT_SUCCESS
                 };
             }
 
