@@ -17,13 +17,6 @@ namespace e_commerce_server.Src.Core.Database.Migrations
                 name: "product_status",
                 table: "products");
 
-            migrationBuilder.AddColumn<int>(
-                name: "status_id",
-                table: "products",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
-
             migrationBuilder.CreateTable(
                 name: "product_statuses",
                 columns: table => new
@@ -36,6 +29,13 @@ namespace e_commerce_server.Src.Core.Database.Migrations
                 {
                     table.PrimaryKey("PK_product_statuses", x => x.id);
                 });
+
+            migrationBuilder.AddColumn<int>(
+               name: "status_id",
+               table: "products",
+               type: "int",
+               nullable: false,
+               defaultValue: 1);
 
             migrationBuilder.InsertData(
                 table: "product_statuses",
