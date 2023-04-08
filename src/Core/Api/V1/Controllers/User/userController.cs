@@ -12,26 +12,27 @@ namespace e_commerce_server.Src.Core.Api.V1.Controllers.User
     [ApiController]
     public class usersController : ControllerBase
     {
-        private readonly MyDbContext _dbContext;
         private UserService userService;
-        private UserData userData;
         public usersController(MyDbContext dbContext)
         {
-            userData = new UserData();
-            _dbContext = dbContext;
             userService = new UserService(dbContext);
         }
 
         [HttpGet("me")]
         [Authorize]
-        public IActionResult Users()
+        public IActionResult GetUser()
         {
-            var idClaim = HttpContext.User.FindFirst("id");
-            if (idClaim != null)
+            try
             {
-                return Ok(idClaim.Value);
+                var idClaim = HttpContext.User.FindFirst("id");
+
+                return Ok(userService.GetUserById(Convert.ToInt32(idClaim.Value)));
+
             }
-            return Ok();
+            catch (HttpException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Response);
+            }
         }
 
         [HttpPut("me")]
@@ -41,6 +42,7 @@ namespace e_commerce_server.Src.Core.Api.V1.Controllers.User
             try
             {
                 var idClaim = HttpContext.User.FindFirst("id");
+
                 return Ok(userService.UpdateUserById(updateDto, Convert.ToInt32(idClaim.Value)));
             } 
             catch (HttpException ex) 

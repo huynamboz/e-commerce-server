@@ -13,8 +13,8 @@ namespace e_commerce_server.Src.Core.Modules.User.Service
         {
             userRepository = new UserRepository(context);
             bCryptService = new BCryptService();
-        } 
-    
+        }
+
         public bool CheckUserStatus(UserData user)
         {
             return !String.IsNullOrEmpty(user.email) &&
@@ -31,7 +31,7 @@ namespace e_commerce_server.Src.Core.Modules.User.Service
         public object UpdateUserById(UpdateUserDto updateUserDto, int userId)
         {
             var userByEmail = userRepository.GetUserByEmail(updateUserDto.email);
-            
+
             if (userByEmail != null && userByEmail.id != userId)
             {
                 throw new BadRequestException(AuthEnum.DUPLICATE_EMAIL);
@@ -63,6 +63,11 @@ namespace e_commerce_server.Src.Core.Modules.User.Service
                 message = UserEnum.UPDATE_USER_SUCCESS,
                 data = userRepository.UpdateUser(userById)
             };
+        }
+
+        public object GetUserById(int userId)
+        {
+            return userRepository.GetUserById(userId) ?? throw new BadRequestException(UserEnum.USER_NOT_FOUND);
         }
     }
 }
