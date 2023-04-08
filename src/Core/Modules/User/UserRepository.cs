@@ -7,7 +7,7 @@ namespace e_commerce_server.Src.Core.Modules.User
     public class UserRepository
     {
         private readonly MyDbContext _context;
-        public UserRepository(MyDbContext context) 
+        public UserRepository(MyDbContext context)
         {
             _context = context;
         }
@@ -21,7 +21,18 @@ namespace e_commerce_server.Src.Core.Modules.User
                 throw new InternalException(ex.Message);
             }
         }
-        public UserData GetUserById(int id)
+        public UserData? GetUserByPhoneNumber(string phoneNumber)
+        {
+            try
+            {
+                return _context.Users.SingleOrDefault(p => p.phone_number == phoneNumber);
+            }
+            catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            }
+        }
+        public UserData? GetUserById(int id)
         {
             try
             {
@@ -74,8 +85,7 @@ namespace e_commerce_server.Src.Core.Modules.User
                     existingUser.address = user.address;
                     existingUser.gender = user.gender;
                     existingUser.birthday = user.birthday;
-                    existingUser.avatar = user.avatar;
-                    existingUser.refresh_token = user.refresh_token;
+                    existingUser.avatar = user.avatar; 
                     existingUser.district_id = user.district_id;
 
                     _context.SaveChanges();

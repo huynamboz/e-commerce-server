@@ -15,7 +15,7 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
         public ProductService(MyDbContext context) {
             productRepository = new ProductRepository(context);
             userRepository = new UserRepository(context);
-            userService = new UserService();
+            userService = new UserService(context);
         }
 
         public object GetProductsByUserId(int page, int userId)
