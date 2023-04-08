@@ -1,4 +1,5 @@
-﻿using e_commerce_server.src.Core.Modules.Product.Dto;
+﻿using e_commerce_server.src.Core.Modules.Media.Service;
+using e_commerce_server.src.Core.Modules.Product.Dto;
 using e_commerce_server.Src.Core.Common.Enum;
 using e_commerce_server.Src.Core.Database.Data;
 using e_commerce_server.Src.Core.Modules.User;
@@ -12,10 +13,12 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
         private UserRepository userRepository;
         private ProductRepository productRepository;
         private UserService userService;
+        private FileSystemService fileSystemService;
         public ProductService(MyDbContext context) {
             productRepository = new ProductRepository(context);
             userRepository = new UserRepository(context);
             userService = new UserService(context);
+            fileSystemService = new FileSystemService();
         }
 
         public object GetProductsByUserId(int page, int userId)
@@ -50,32 +53,39 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                 data = product
             };
         }
-        public object EditProductById(AddProductDto productDto, int productId, int userId)
+        public object EditProductById(List<string> filePaths, AddProductDto productDto, int productId, int userId)
         {
-            var product = productRepository.GetProductById(productId);
-
-            if (product == null)
+            try
             {
-                throw new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND);
-            }
+                var product = productRepository.GetProductById(productId);
 
-            if (product.user_id != userId)
-            {
-                throw new BadRequestException(ProductEnum.NOT_HAVE_PERMISSION);
-            }
-
-            var user = userRepository.GetUserById(userId);
-
-            if (userService.CheckUserStatus(user))
-            {
-                return new
+                if (product == null)
                 {
-                    message = ProductEnum.UPDATE_PRODUCT_SUCCESS,
-                    data = productRepository.GetProductById(productRepository.UpdateProduct(productId, productDto).id)
-                };
-            }
+                    throw new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND);
+                }
 
-            throw new BadRequestException(ProductEnum.INSUFFICIENT_CONDITION);
+                if (product.user_id != userId)
+                {
+                    throw new BadRequestException(ProductEnum.NOT_HAVE_PERMISSION);
+                }
+
+                var user = userRepository.GetUserById(userId);
+
+                if (userService.CheckUserStatus(user))
+                {
+                    return new
+                    {
+                        message = ProductEnum.UPDATE_PRODUCT_SUCCESS,
+                        data = productRepository.GetProductById(productRepository.UpdateProduct(filePaths, productId, productDto).id)
+                    };
+                }
+
+                throw new BadRequestException(ProductEnum.INSUFFICIENT_CONDITION);
+            } catch (Exception ex)
+            {
+                fileSystemService.DeleteFiles(filePaths);
+                throw;
+            }
         }
         public object DeleteProductById(int userId, int productId)
         {
@@ -105,19 +115,27 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
 
             throw new BadRequestException(ProductEnum.INSUFFICIENT_CONDITION);
         }
-        public object AddProduct(AddProductDto productDto, int userId)
+        public object AddProduct(List<string> filePaths, AddProductDto productDto, int userId)
         {
-            var user = userRepository.GetUserById(userId);
-            
-            if (userService.CheckUserStatus(user))
+            try
             {
-                return  new
+                var user = userRepository.GetUserById(userId);
+            
+                if (userService.CheckUserStatus(user))
                 {
-                    message = ProductEnum.ADD_PRODUCT_SUCCESS,
-                    data = productRepository.GetProductById(productRepository.AddProduct(productDto, userId).id)
-                };
-            } 
-            throw new BadRequestException(ProductEnum.INSUFFICIENT_CONDITION);
+                    return  new
+                    {
+                        message = ProductEnum.ADD_PRODUCT_SUCCESS,
+                        data = productRepository.GetProductById(productRepository.AddProduct(filePaths, productDto, userId).id)
+                    };
+                }
+
+                throw new BadRequestException(ProductEnum.INSUFFICIENT_CONDITION);
+            } catch (Exception ex)
+            {
+                fileSystemService.DeleteFiles(filePaths);
+                throw;
+            }
         }
         public object GetAllProducts(int page)
         {

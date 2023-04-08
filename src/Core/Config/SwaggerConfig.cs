@@ -13,12 +13,11 @@ namespace e_commerce_server.Src.Core.Config
                 Description = "API for an e-commerce server",
                 Contact = new OpenApiContact
                 {
-                    Name = "John Smith",
-                    Email = "john.smith@example.com"
+                    Name = "Admin",
+                    Email = "user@example.com"
                 }
             };
         }
-
         public static OpenApiSecurityScheme ApiSecurityScheme()
         {
             return new OpenApiSecurityScheme

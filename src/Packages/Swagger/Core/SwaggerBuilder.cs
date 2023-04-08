@@ -1,5 +1,6 @@
 ﻿using e_commerce_server.Src.Core.Config;
 using e_commerce_server.Src.Packages.Swagger.Filter;
+using Microsoft.OpenApi.Models;
 
 namespace e_commerce_server.Src.Packages.Swagger.Core
 {
@@ -11,7 +12,6 @@ namespace e_commerce_server.Src.Packages.Swagger.Core
             Console.WriteLine("SwaggerBuilder is bundling");
             return new SwaggerBuilder();
         }
-
         public SwaggerBuilder ApplyBuilderContext(WebApplicationBuilder builder)
         {
             this._builder = builder;

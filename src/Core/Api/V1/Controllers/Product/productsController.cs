@@ -1,4 +1,6 @@
-﻿using e_commerce_server.src.Core.Modules.Product.Dto;
+﻿using e_commerce_server.src.Core.Modules.Media;
+using e_commerce_server.src.Core.Modules.Media.Service;
+using e_commerce_server.src.Core.Modules.Product.Dto;
 using e_commerce_server.src.Core.Modules.Product.Service;
 using e_commerce_server.Src.Core.Database.Data;
 using e_commerce_server.Src.Packages.HttpException;
@@ -11,12 +13,12 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers.Product
     [ApiController]
     public class productsController : ControllerBase
     {
-        private readonly MyDbContext _dbContext;
         private ProductService productService;
+        private MediaHandler mediaHandler;
         public productsController(MyDbContext dbContext)
         {
-            _dbContext = dbContext;
             productService = new ProductService(dbContext);
+            mediaHandler = new MediaHandler();
         }
 
         //get all product
@@ -65,13 +67,15 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers.Product
         //add new product
         [HttpPost("my-products")]
         [Authorize]
-        public IActionResult AddProduct(AddProductDto product)
+        public async Task<IActionResult> AddProduct([FromForm] AddProductDto productDto, List<IFormFile> files)
         {
             try
             {
+                List<string> filePaths = await mediaHandler.Validate(files).Save();
+
                 var idClaim = HttpContext.User.FindFirst("id");
 
-                return Ok(productService.AddProduct(product, Convert.ToInt32(idClaim.Value)));
+                return Ok(productService.AddProduct(filePaths, productDto, Convert.ToInt32(idClaim.Value)));
             }
             catch (HttpException ex)
             {
@@ -81,7 +85,8 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers.Product
 
         [HttpGet("my-products/{id}")]
         [Authorize]
-        public IActionResult getProductByUserId(int id) {
+        public IActionResult getProductByUserId(int id)
+        {
             try
             {
                 var idClaim = HttpContext.User.FindFirst("id");
@@ -96,12 +101,15 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers.Product
         //edit product by id
         [HttpPut("my-products/{id}")]
         [Authorize]
-        public IActionResult editProduct(AddProductDto productDto, int id)
+        public async Task<IActionResult> editProduct([FromForm] AddProductDto productDto, List<IFormFile> files, int id)
         {
             try
             {
+                List<string> filePaths = await mediaHandler.Validate(files).Save();
+
                 var idClaim = HttpContext.User.FindFirst("id");
-                return Ok(productService.EditProductById(productDto, id,Convert.ToInt32(idClaim.Value)));
+
+                return Ok(productService.EditProductById(filePaths, productDto, id,Convert.ToInt32(idClaim.Value)));
             }
             catch (HttpException ex)
             {

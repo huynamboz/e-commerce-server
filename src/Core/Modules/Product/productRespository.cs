@@ -1,4 +1,5 @@
 ﻿using e_commerce_server.src.Core.Database.Data;
+using e_commerce_server.src.Core.Modules.Media.Service;
 using e_commerce_server.src.Core.Modules.Product.Dto;
 using e_commerce_server.src.Core.Modules.Product.Service;
 using e_commerce_server.Src.Core.Common.Enum;
@@ -13,10 +14,12 @@ namespace e_commerce_server.src.Core.Modules.Product
     {
         private readonly MyDbContext _context;
         private UserRepository userRepository;
+        private MediaService mediaService;
         public ProductRepository(MyDbContext context)
         {
             _context = context;
             userRepository = new UserRepository(context);
+            mediaService = new MediaService();
         }
         public DbSet<ProductData> GetProducts()
         {
@@ -114,8 +117,10 @@ namespace e_commerce_server.src.Core.Modules.Product
                 throw new InternalException(ex.Message);
             }
         }
-        public ProductData UpdateProduct(int productId, AddProductDto productDto)
+        public ProductData UpdateProduct(List<string> filePaths, int productId, AddProductDto productDto)
         {
+            using var transaction = _context.Database.BeginTransaction();
+
             try
             {
                 var product = _context.Products.SingleOrDefault(p => p.id == productId);
@@ -133,10 +138,13 @@ namespace e_commerce_server.src.Core.Modules.Product
                 //add new list thumbnail for product
                 List<ThumbnailData> thumbnails = new List<ThumbnailData>();
 
-                foreach (var thumbnail in productDto.thumbnails) {
+                for(int i = 0; i < filePaths.Count; i++)
+                {
+                    string thumbnailUrl = mediaService.UploadOne(filePaths[i], $"BadSupermarket/users/{product.user_id}/products/{productId}", Convert.ToString(i + 1));
+
                     ThumbnailData item = new ThumbnailData
                     {
-                        thumbnail_url = thumbnail,
+                        thumbnail_url = thumbnailUrl,
                         product_id = productId,
                     };
 
@@ -154,14 +162,19 @@ namespace e_commerce_server.src.Core.Modules.Product
 
                 _context.SaveChanges();
 
+                transaction.Commit();
+
                 return product;
             } catch (Exception ex)
             {
+                transaction.Rollback();
                 throw new InternalException(ex.Message);
             }
         }
-        public ProductData AddProduct(AddProductDto productDto,int userId)
+        public ProductData AddProduct(List<string> filePaths, AddProductDto productDto,int userId)
         {
+            using var transaction = _context.Database.BeginTransaction();
+
             try
             {
                 var newProduct = new ProductData
@@ -180,23 +193,27 @@ namespace e_commerce_server.src.Core.Modules.Product
                 _context.Add(newProduct);
                 _context.SaveChanges();
 
-                foreach (var thumbnail in productDto.thumbnails)
+                for(int i = 0; i < filePaths.Count; i++)
                 {
+                    string thumbnailUrl = mediaService.UploadOne(filePaths[i], $"BadSupermarket/users/{userId}/products/{newProduct.id}", Convert.ToString(i + 1));
                     ThumbnailData item = new ThumbnailData
                     {
-                        thumbnail_url = thumbnail,
+                        thumbnail_url = thumbnailUrl,
                         product_id = newProduct.id,
                     };
 
                     _context.Add(item);
                 }
-                
+
                 _context.SaveChanges();
+
+                transaction.Commit();
 
                 return newProduct;
             }
             catch (Exception e)
             {
+                transaction.Rollback();
                 throw new InternalException(e.Message);
             }
         }

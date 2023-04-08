@@ -16,7 +16,6 @@ namespace e_commerce_server.Src.Core.Database.Data
         public DbSet<ProductStatusData> ProductStatuses { get; set; }
         public DbSet<ThumbnailData> Thumbnails { get; set; }
         #endregion
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

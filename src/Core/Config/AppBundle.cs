@@ -1,6 +1,7 @@
 ﻿using e_commerce_server.Src.Core.Database;
 using e_commerce_server.Src.Packages.Auth.Core;
 using e_commerce_server.Src.Packages.Extensions.Cors;
+using e_commerce_server.Src.Packages.Files.Core;
 using e_commerce_server.Src.Packages.Swagger.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
@@ -48,17 +49,17 @@ namespace e_commerce_server.Src.Core.Config
             _builder = DatabaseConnect
                 .Builder()
                 .ApplyBuilderContext(_builder)
-                .ApplyDbContext()
-                .ReturnBuilder();
+                .ApplyDbContext();
             return this;
         }
 
         public AppBundle AddCors()
         {
             _builder.Services
-                .AddCors(CorsOption
-                    .Builder()
-                    .ConfigureSetupAction()
+                .AddCors(
+                    CorsOption
+                        .Builder()
+                        .ConfigureSetupAction()
                 );
             return this;
         }
@@ -84,6 +85,12 @@ namespace e_commerce_server.Src.Core.Config
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseStaticFiles(
+                FilesOption
+                    .Builder()
+                    .ConfigureStaticFilesOptions()
+            );
 
             app.UseAuthentication();
 
