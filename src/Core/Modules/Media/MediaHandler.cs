@@ -10,6 +10,7 @@ namespace e_commerce_server.src.Core.Modules.Media
         public MediaHandler()
         {
             mediaInterceptor = new MediaInterceptor();
+            files = new List<IFormFile>();
         }
         public MediaHandler Validate(List<IFormFile> files, int quantity = 10)
         {

@@ -11,6 +11,7 @@ namespace e_commerce_server.Src.Core.Modules.Auth.Dto
         public string email { get; set; }
         [Required]
         [MaxLength(250)]
+        [PasswordPropertyText]
         public string password { get; set; }
     }
 }
