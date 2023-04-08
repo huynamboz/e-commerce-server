@@ -19,7 +19,6 @@ namespace e_commerce_server.src.Core.Modules.User.Dto
         public string? address { get; set; }
         public bool? gender { get; set; }
         public DateTime? birthday { get; set; }
-        public string? avatar { get; set; }
         public int? district_id { get; set; }
     }
 }
