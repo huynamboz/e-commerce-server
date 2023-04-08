@@ -2,12 +2,15 @@
 {
     public class ENV
     {
-        public static readonly string JWT_SECRET;
-        public static readonly string EXPIRE_MINUTE;
-        public static readonly string EXPIRE_DAY;
-        public static readonly string CLIENT;
-        public static readonly string CONNECTION_STRING;
-        public static readonly string WORK_FACTOR;
+        public static readonly string? JWT_SECRET;
+        public static readonly string? EXPIRE_MINUTE;
+        public static readonly string? EXPIRE_DAY;
+        public static readonly string? CLIENT;
+        public static readonly string? CONNECTION_STRING;
+        public static readonly string? WORK_FACTOR;
+        public static readonly string? CLOUDINARY_NAME;
+        public static readonly string? CLOUDINARY_API_KEY;
+        public static readonly string? CLOUDINARY_API_SECRET;
         static ENV()
         {
             DotNetEnv.Env.Load();
@@ -16,7 +19,10 @@
             EXPIRE_MINUTE = Environment.GetEnvironmentVariable("EXPIRE_MINUTE") ?? "10";
             EXPIRE_DAY = Environment.GetEnvironmentVariable("EXPIRE_DAY") ?? "30";
             CLIENT = Environment.GetEnvironmentVariable("CLIENT") ?? "http://localhost:3000";
-            CONNECTION_STRING = Environment.GetEnvironmentVariable("CONNECTION_STRING") ?? "";
+            CONNECTION_STRING = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+            CLOUDINARY_NAME = Environment.GetEnvironmentVariable("CLOUDINARY_NAME");
+            CLOUDINARY_API_KEY = Environment.GetEnvironmentVariable("CLOUDINARY_API_KEY");
+            CLOUDINARY_API_SECRET = Environment.GetEnvironmentVariable("CLOUDINARY_API_SECRET");
         }
     }
 }
