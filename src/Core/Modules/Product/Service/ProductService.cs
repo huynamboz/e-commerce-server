@@ -71,6 +71,10 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
 
                 var user = userRepository.GetUserById(userId);
 
+                if (user == null) {
+                    throw new BadRequestException(UserEnum.USER_NOT_FOUND);
+                }
+
                 if (userService.CheckUserStatus(user))
                 {
                     return new
@@ -103,6 +107,10 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
 
             var user = userRepository.GetUserById(userId);
 
+            if (user == null) {
+                throw new BadRequestException(UserEnum.USER_NOT_FOUND);
+            }
+
             if (userService.CheckUserStatus(user))
             {
                 productRepository.DeleteProductById(productId);
@@ -120,7 +128,11 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
             try
             {
                 var user = userRepository.GetUserById(userId);
-            
+
+                if (user == null) {
+                    throw new BadRequestException(UserEnum.USER_NOT_FOUND);
+                }
+
                 if (userService.CheckUserStatus(user))
                 {
                     return  new
