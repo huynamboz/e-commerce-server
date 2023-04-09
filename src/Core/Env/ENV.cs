@@ -11,6 +11,8 @@
         public static readonly string? CLOUDINARY_NAME;
         public static readonly string? CLOUDINARY_API_KEY;
         public static readonly string? CLOUDINARY_API_SECRET;
+        public static readonly string? SENDGRID_API_KEY;
+        public static readonly string? SENDGRID_EMAIL_ADDRESS;
         static ENV()
         {
             DotNetEnv.Env.Load();
@@ -23,6 +25,8 @@
             CLOUDINARY_NAME = Environment.GetEnvironmentVariable("CLOUDINARY_NAME");
             CLOUDINARY_API_KEY = Environment.GetEnvironmentVariable("CLOUDINARY_API_KEY");
             CLOUDINARY_API_SECRET = Environment.GetEnvironmentVariable("CLOUDINARY_API_SECRET");
+            SENDGRID_API_KEY = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
+            SENDGRID_EMAIL_ADDRESS = Environment.GetEnvironmentVariable("SENDGRID_EMAIL_ADDRESS");
         }
     }
 }

@@ -1,15 +1,11 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
 
-namespace e_commerce_server.Src.Core.Modules.Auth.Dto
+namespace e_commerce_server.src.Core.Modules.Auth.Dto
 {
-    public class RegisterDto
+    public class UpdatePasswordDto
     {
-        [Required]
-        [EmailAddress]
-        [RegularExpression(@"^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$",
-        ErrorMessage = "Định dạng email không hợp lệ")]
-        public string email { get; set; }
+
         [Required]
         [MaxLength(1000)]
         [PasswordPropertyText]
@@ -21,7 +17,6 @@ namespace e_commerce_server.Src.Core.Modules.Auth.Dto
         [PasswordPropertyText]
         public string confirm_password { get; set; }
         [Required]
-        [MaxLength(250)]
-        public string name { get; set; }
+        public string reset_token { get; set; }
     }
 }
