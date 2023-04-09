@@ -3,6 +3,8 @@ using e_commerce_server.Src.Packages.HttpException;
 using e_commerce_server.Src.Core.Modules.Auth.Dto;
 using e_commerce_server.Src.Core.Modules.Auth.Service;
 using e_commerce_server.Src.Core.Database.Data;
+using System.Web;
+using e_commerce_server.src.Core.Modules.Auth.Dto;
 
 namespace e_commerce_server.Src.Core.Api.V1.Controllers.Auth
 {
@@ -11,14 +13,13 @@ namespace e_commerce_server.Src.Core.Api.V1.Controllers.Auth
     public class authController : ControllerBase
     {
 
-        private MyDbContext _context;
         private AuthService authService;
 
         public authController(MyDbContext context)
         {
             authService = new AuthService(context);
-            _context = context;
         }
+
         [HttpPost("login")]
         public IActionResult Login(LoginDto model)
         {
@@ -51,6 +52,45 @@ namespace e_commerce_server.Src.Core.Api.V1.Controllers.Auth
             try
             {
                 return Ok(authService.GenerateRefreshToken(model));
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Response);
+            }
+        }
+
+        [HttpPost("forgot-password")]
+        public IActionResult ForgotPassword(ForgotPasswordDto model)
+        {
+            try
+            {
+                return Ok(authService.RequestResetPassword(model));
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Response);
+            }
+        }
+
+        [HttpGet("reset-password/{token}")]
+        public IActionResult GetResetToken(string token)
+        {
+            try
+            {
+                return Ok(authService.GetResetToken(HttpUtility.UrlDecode(token)));
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Response);
+            }
+        }
+        
+        [HttpPost("update-password")]
+        public IActionResult UpdatePassword(UpdatePasswordDto model)
+        {
+            try
+            {
+                return Ok(authService.UpdatePassword(model));
             }
             catch (HttpException ex)
             {

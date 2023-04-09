@@ -26,8 +26,7 @@ namespace e_commerce_server.Src.Core.Modules.User
             try
             {
                 return _context.Users.SingleOrDefault(p => p.phone_number == phoneNumber);
-            }
-            catch (Exception ex)
+            } catch (Exception ex)
             {
                 throw new InternalException(ex.Message);
             }
@@ -37,8 +36,7 @@ namespace e_commerce_server.Src.Core.Modules.User
             try
             {
                 return _context.Users.SingleOrDefault(p => p.id == id);
-            }
-            catch (Exception ex)
+            } catch (Exception ex)
             {
                 throw new InternalException(ex.Message);
             }
@@ -51,25 +49,32 @@ namespace e_commerce_server.Src.Core.Modules.User
 
                 _context.Users.Add(user);
                 _context.SaveChanges();
-            }
-            catch (Exception ex)
+            } catch (Exception ex)
             {
                 throw new InternalException(ex.Message);
             }
         }
-
         public UserData? GetUserByRefreshToken(string refreshToken)
         {
             try
             {
                 return _context.Users.SingleOrDefault(p => p.refresh_token == refreshToken);
-            }
-            catch (Exception ex)
+            } catch (Exception ex)
             {
                 throw new InternalException(ex.Message);
             }
         }
+        public UserData? GetUserByResetToken(string resetToken)
+        {
+            try
+            {
+                return _context.Users.SingleOrDefault(p => p.reset_token == resetToken);
 
+            } catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            }
+        }
         public UserData? UpdateUser(UserData user)
         {
             try
@@ -87,6 +92,9 @@ namespace e_commerce_server.Src.Core.Modules.User
                     existingUser.birthday = user.birthday;
                     existingUser.avatar = user.avatar; 
                     existingUser.district_id = user.district_id;
+                    existingUser.refresh_token = user.refresh_token;
+                    existingUser.reset_token = user.reset_token;
+                    existingUser.reset_token_expiration_date = user.reset_token_expiration_date;
 
                     _context.SaveChanges();
 
