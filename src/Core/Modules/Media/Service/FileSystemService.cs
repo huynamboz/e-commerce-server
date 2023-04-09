@@ -8,7 +8,10 @@ namespace e_commerce_server.src.Core.Modules.Media.Service
         {
             try
             {
-               File.Delete(file);
+                if (File.Exists(file))
+                {
+                    File.Delete(file);
+                }
             } catch (Exception ex)
             {
                 throw new InternalException(ex.Message);
