@@ -14,6 +14,7 @@
         public static readonly string? SENDGRID_API_KEY;
         public static readonly string? SENDGRID_EMAIL_ADDRESS;
         public static readonly string? ENVIRONMENT;
+        public static readonly string? HOST;
         static ENV()
         {
             DotNetEnv.Env.Load();
@@ -29,6 +30,7 @@
             SENDGRID_API_KEY = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
             SENDGRID_EMAIL_ADDRESS = Environment.GetEnvironmentVariable("SENDGRID_EMAIL_ADDRESS");
             ENVIRONMENT = Environment.GetEnvironmentVariable("ENVIRONMENT") ?? "development";
+            HOST = Environment.GetEnvironmentVariable("HOST") ?? "http://localhost:5000";
         }
     }
 }

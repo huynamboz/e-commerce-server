@@ -28,10 +28,10 @@ namespace e_commerce_server.src.Core.Database
                 option.UseSqlServer(this._connectionString);
             });
 
-            // if (this._environment == "production")
-            // {
+            if (this._environment == "production")
+            {
                 ApplyMigration();
-            // }
+            }
 
             return this._builder;
         }
