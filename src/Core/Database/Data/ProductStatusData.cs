@@ -13,6 +13,9 @@ namespace e_commerce_server.src.Core.Database.Data
         [Required]
         [StringLength(50)]
         public string status { get; set; }
-
+        public ProductStatusData()
+        {
+            this.products = new HashSet<ProductData>();
+        }
     }
 }

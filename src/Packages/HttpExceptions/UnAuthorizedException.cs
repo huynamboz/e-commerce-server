@@ -1,7 +1,6 @@
-﻿using e_commerce_server.Src.Packages.HttpException;
-using System.Net;
+﻿using System.Net;
 
-namespace e_commerce_server.Src.Packages.HttpException
+namespace e_commerce_server.src.Packages.HttpExceptions
 {
     public class UnAuthorizedException : HttpException
     {

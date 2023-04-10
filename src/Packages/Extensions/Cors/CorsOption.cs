@@ -1,6 +1,6 @@
-﻿using e_commerce_server.Src.Core.Env;
+﻿using e_commerce_server.src.Core.Env;
 
-namespace e_commerce_server.Src.Packages.Extensions.Cors
+namespace e_commerce_server.src.Packages.Extensions.Cors
 {
     public class CorsOption
     {

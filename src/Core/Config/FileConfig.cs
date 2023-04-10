@@ -1,6 +1,4 @@
-using Microsoft.OpenApi.Models;
-
-namespace e_commerce_server.Src.Core.Config
+namespace e_commerce_server.src.Core.Config
 {
     public class FileConfig
     {

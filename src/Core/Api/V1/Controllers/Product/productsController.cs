@@ -1,8 +1,8 @@
-﻿using e_commerce_server.src.Core.Modules.Media;
+﻿using e_commerce_server.src.Core.Database;
+using e_commerce_server.src.Core.Modules.Media;
 using e_commerce_server.src.Core.Modules.Product.Dto;
 using e_commerce_server.src.Core.Modules.Product.Service;
-using e_commerce_server.Src.Core.Database.Data;
-using e_commerce_server.Src.Packages.HttpException;
+using e_commerce_server.src.Packages.HttpExceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

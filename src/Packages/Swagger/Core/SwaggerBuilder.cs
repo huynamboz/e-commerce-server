@@ -1,8 +1,7 @@
-﻿using e_commerce_server.Src.Core.Config;
-using e_commerce_server.Src.Packages.Swagger.Filter;
-using Microsoft.OpenApi.Models;
+﻿using e_commerce_server.src.Core.Config;
+using e_commerce_server.src.Packages.Swagger.Filter;
 
-namespace e_commerce_server.Src.Packages.Swagger.Core
+namespace e_commerce_server.src.Packages.Swagger.Core
 {
     public class SwaggerBuilder
     {

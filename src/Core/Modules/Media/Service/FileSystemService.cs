@@ -1,4 +1,4 @@
-﻿using e_commerce_server.Src.Packages.HttpException;
+﻿using e_commerce_server.src.Packages.HttpExceptions;
 
 namespace e_commerce_server.src.Core.Modules.Media.Service
 {

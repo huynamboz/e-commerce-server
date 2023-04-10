@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace e_commerce_server.Src.Core.Modules.Auth.Dto
+namespace e_commerce_server.src.Core.Modules.Auth.Dto
 {
     public class ForgotPasswordDto
     {

@@ -1,7 +1,7 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
-using e_commerce_server.Src.Core.Env;
-using e_commerce_server.Src.Packages.HttpException;
+using e_commerce_server.src.Core.Env;
+using e_commerce_server.src.Packages.HttpExceptions;
 
 namespace e_commerce_server.src.Core.Modules.Media.Service
 {

@@ -12,5 +12,9 @@ namespace e_commerce_server.src.Core.Database.Data
         [StringLength(50)]
         public string name { get; set; }
         public virtual ICollection<ProductData> products { get; set; }
+        public CategoryData()
+        {
+            this.products = new List<ProductData>();
+        }
     }
 }

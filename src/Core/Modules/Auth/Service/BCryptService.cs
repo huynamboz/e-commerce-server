@@ -1,6 +1,6 @@
-﻿using e_commerce_server.Src.Core.Env;
+﻿using e_commerce_server.src.Core.Env;
 
-namespace e_commerce_server.Src.Core.Modules.Auth.Service
+namespace e_commerce_server.src.Core.Modules.Auth.Service
 {
     public class BCryptService
     {

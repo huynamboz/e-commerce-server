@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace e_commerce_server.Src.Core.Database.Migrations
+namespace e_commerce_server.src.Core.Database.Migrations
 {
     /// <inheritdoc />
     public partial class remove_active_status_column_from_users_table : Migration

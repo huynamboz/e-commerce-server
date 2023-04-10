@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace e_commerce_server.Src.Core.Database.Migrations
+namespace e_commerce_server.src.Core.Database.Migrations
 {
     /// <inheritdoc />
     public partial class init_tb_product_thumb_cate : Migration

@@ -1,9 +1,9 @@
-﻿using e_commerce_server.Src.Core.Env;
+﻿using e_commerce_server.src.Core.Env;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace e_commerce_server.Src.Packages.Auth.Core
+namespace e_commerce_server.src.Packages.Auth.Core
 {
     public class JwtBearerOption
     {

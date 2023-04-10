@@ -1,12 +1,10 @@
-﻿using e_commerce_server.Src.Core.Database.Data;
-using e_commerce_server.Src.Core.Modules.Auth.Dto;
-using e_commerce_server.Src.Core.Modules.User;
-using e_commerce_server.src.Packages.HttpExceptions;
-using e_commerce_server.Src.Packages.HttpException;
-using e_commerce_server.src.Core.Modules.Auth.Service;
+﻿using e_commerce_server.src.Core.Database.Data;
 using e_commerce_server.src.Core.Modules.Auth.Dto;
+using e_commerce_server.src.Core.Modules.User;
+using e_commerce_server.src.Packages.HttpExceptions;
+using e_commerce_server.src.Core.Database;
 
-namespace e_commerce_server.Src.Core.Modules.Auth.Service
+namespace e_commerce_server.src.Core.Modules.Auth.Service
 {
     public class AuthService
     {

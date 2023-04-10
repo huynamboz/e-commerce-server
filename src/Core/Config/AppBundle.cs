@@ -1,16 +1,21 @@
-﻿using e_commerce_server.Src.Core.Database;
-using e_commerce_server.Src.Packages.Auth.Core;
-using e_commerce_server.Src.Packages.Extensions.Cors;
-using e_commerce_server.Src.Packages.Files.Core;
-using e_commerce_server.Src.Packages.Swagger.Core;
+﻿using e_commerce_server.src.Core.Database;
+using e_commerce_server.src.Core.Env;
+using e_commerce_server.src.Packages.Auth.Core;
+using e_commerce_server.src.Packages.Extensions.Cors;
+using e_commerce_server.src.Packages.Files.Core;
+using e_commerce_server.src.Packages.Swagger.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
-namespace e_commerce_server.Src.Core.Config
+namespace e_commerce_server.src.Core.Config
 {
     public class AppBundle
     {
         private WebApplicationBuilder _builder;
-
+        private readonly string _environment;
+        private AppBundle()
+        {
+            _environment = ENV.ENVIRONMENT;
+        }
         public static AppBundle Builder()
         {
             Console.WriteLine("AppBundle is bundling");
@@ -80,7 +85,7 @@ namespace e_commerce_server.Src.Core.Config
             app.UseHttpsRedirection();
             app.UseCors("ApiCorsPolicy");
 
-            if (app.Environment.IsDevelopment())
+            if (_environment == "development")
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();

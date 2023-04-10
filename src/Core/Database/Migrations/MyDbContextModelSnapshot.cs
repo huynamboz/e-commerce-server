@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using e_commerce_server.Src.Core.Database.Data;
+using e_commerce_server.src.Core.Database;
 
 #nullable disable
 
-namespace e_commerce_server.Src.Core.Database.Migrations
+namespace e_commerce_server.src.Core.Database.Migrations
 {
     [DbContext(typeof(MyDbContext))]
     partial class MyDbContextModelSnapshot : ModelSnapshot
@@ -22,7 +22,32 @@ namespace e_commerce_server.Src.Core.Database.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("e_commerce_server.Src.Core.Database.Data.CityData", b =>
+            modelBuilder.Entity("e_commerce_server.src.Core.Database.Data.CategoryData", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("categories");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            name = "Đồ điện tử"
+                        });
+                });
+
+            modelBuilder.Entity("e_commerce_server.src.Core.Database.Data.CityData", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -357,7 +382,7 @@ namespace e_commerce_server.Src.Core.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("e_commerce_server.Src.Core.Database.Data.DistrictData", b =>
+            modelBuilder.Entity("e_commerce_server.src.Core.Database.Data.DistrictData", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -4636,107 +4661,6 @@ namespace e_commerce_server.Src.Core.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("e_commerce_server.Src.Core.Database.Data.UserData", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<string>("address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("avatar")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("birthday")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("created_at")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("district_id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("email")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<bool?>("gender")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("name")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<string>("password")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<string>("phone_number")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("refresh_token")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("reset_token")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("reset_token_expiration_date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("role_id")
-                        .HasColumnType("int");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("email")
-                        .IsUnique();
-
-                    b.ToTable("users");
-
-                    b.HasData(
-                        new
-                        {
-                            id = 1,
-                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            email = "string@gmail.com",
-                            name = "John Doe",
-                            password = "string",
-                            role_id = 1
-                        });
-                });
-
-            modelBuilder.Entity("e_commerce_server.src.Core.Database.Data.CategoryData", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<string>("name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("categories");
-
-                    b.HasData(
-                        new
-                        {
-                            id = 1,
-                            name = "Đồ điện tử"
-                        });
-                });
-
             modelBuilder.Entity("e_commerce_server.src.Core.Database.Data.ProductData", b =>
                 {
                     b.Property<int>("id")
@@ -4791,13 +4715,13 @@ namespace e_commerce_server.Src.Core.Database.Migrations
                         {
                             id = 1,
                             category_id = 1,
-                            created_at = new DateTime(2023, 4, 4, 13, 44, 51, 908, DateTimeKind.Local).AddTicks(4085),
+                            created_at = new DateTime(2023, 4, 10, 11, 38, 44, 28, DateTimeKind.Local).AddTicks(6271),
                             description = "Chuột Gaming Không Dây LOGITECH G304 Lightspeed Chuột Chơi Game\r\n❌❌  Lưu ý: Sản phẩm là OEM, không phải hàng chính hãng! Do đó không thể kết nối với APP Logitech (OEM, viết tắt của Original Equipment Manufacturer, được hiểu là Nhà sản xuất thiết bị gốc, dùng để chỉ công ty, đối tác gia công, lắp ráp sản phẩm cho một công ty sở hữu thương hiệu và công nghệ khác). Ngoài ra đèn led của chuột cũng không mượt như đèn led chính hàng, còn lại cảm giác khi chơi game, độ bền, thông số kỹ thuật và mọi thứ khác đều rất tốt, phù hợp cho các bạn không muốn bỏ ra một khoản tiền lớn mà vẫn được trải nghiệm cảm giác chơi game tuyệt vời của chuột G304.\r\n- Bảo Hành 12 tháng cho sản Phẩm nhằm tạo uy tín và chất lượng của shop\r\n- 1 ĐỔI 1 trong vòng 07 ngày nếu có lỗi từ NSX\r\n- G304 là chuột chơi game không dây LIGHTSPEED được thiết kế cho hiệu suất thực sự với các đột phá công nghệ mới nhất ở mức giá thành phù hợp. Đó là chơi game không dây thế hệ mới, hiện đã sẵn sàng cho mọi game thủ.\r\n-Các phím chính của G304, cả ở bên trái và phải, được đánh giá 10 triệu lần nhấp. G304 cũng có nút giữa,\r\n- Nó đem lại tới 250 giờ hoạt động chỉ trên một quả pin AA\r\n\r\nThông số kĩ thuật\r\n- Độ phân giải: 200 - 12.000 DPI\r\n- Làm mịn/tăng tốc/lọc\r\n- Tăng tốc tối đa: > 40 G5\r\n- Tốc độ tối đa: > 400 IPS6\r\n- Kết nối: USB\r\n- Tốc độ báo cáo không dây: 1000 Hz (1ms)\r\n- Công nghệ không dây: LIGHTSPEED không dây\r\n- Chiều cao: 116,6 mm\r\n- Chiều rộng: 62,15 mm\r\n- Chiều dày: 38,2 mm\r\n- Trọng lượng: 99 g\r\n- Tuổi thọ PIN: 250 giờ\r\n- Sản phẩm là Hàng Công ty loại 1 cần hỗ trợ liên hệ shop nhé !!\r\n-CAM KẾT--------> BẢO HÀNH 6 THÁNG - 1 ĐỔI 1 TRONG VÒNG 3 NGÀY NẾU DO LỖI CỦA NHÀ SẢN XUẤT\r\n-Chuột Gaming Không Dây LOGITECH G304 Lightspeed Chuột Chơi Game kiểm tra kỹ lưỡng trước khi gửi đi nhằm tránh sản phẩm lỗi đến tay khách hàng\r\n- Quy trình đóng gói cẩn thận bằng túi bóng khí chống sốc nhằm hạn chế tối đa trường hợp lỗi do quá trình vận chuyển.\r\nBộ phận Kĩ Thuật sẽ kiểm tra trước khi gửi đi cho quý khách \r\n\r\n#chuotgaming #chuotgame #gaming #game #chuotchoigame #chuotkhongday #chuotUSB #chuotchuyengame #chuotlogitech #chuotsieure #G304 #chuotlogitech304 #chuotkhongday #chuotUSB #chuotchuyengame #chuotlogitech #chuotsieure #chuotG304",
                             discount = 10,
                             name = "Điện thoại iphone 5",
                             price = 120000,
                             status_id = 1,
-                            updated_at = new DateTime(2023, 4, 7, 1, 57, 38, 629, DateTimeKind.Local).AddTicks(9853),
+                            updated_at = new DateTime(2023, 4, 10, 11, 38, 44, 28, DateTimeKind.Local).AddTicks(6279),
                             user_id = 1
                         });
                 });
@@ -4873,9 +4797,91 @@ namespace e_commerce_server.Src.Core.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("e_commerce_server.Src.Core.Database.Data.DistrictData", b =>
+            modelBuilder.Entity("e_commerce_server.src.Core.Database.Data.UserData", b =>
                 {
-                    b.HasOne("e_commerce_server.Src.Core.Database.Data.CityData", "city")
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<string>("address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("avatar")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("birthday")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("created_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("district_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("email")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<bool?>("gender")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("password")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("phone_number")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("refresh_token")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("reset_token")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("reset_token_expiration_date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("role_id")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("district_id");
+
+                    b.HasIndex("email")
+                        .IsUnique();
+
+                    b.HasIndex("phone_number")
+                        .IsUnique()
+                        .HasFilter("[phone_number] IS NOT NULL");
+
+                    b.ToTable("users");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            email = "user@example.com",
+                            name = "John Doe",
+                            password = "$2a$04$GmL6XUWBFM9nSUzBynCNa.nvLo7pfiPK9sg1tdNiF3tKmhoMP1MIi",
+                            role_id = 1
+                        });
+                });
+
+            modelBuilder.Entity("e_commerce_server.src.Core.Database.Data.DistrictData", b =>
+                {
+                    b.HasOne("e_commerce_server.src.Core.Database.Data.CityData", "city")
                         .WithMany("districts")
                         .HasForeignKey("city_id")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -4898,7 +4904,7 @@ namespace e_commerce_server.Src.Core.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("e_commerce_server.Src.Core.Database.Data.UserData", "user")
+                    b.HasOne("e_commerce_server.src.Core.Database.Data.UserData", "user")
                         .WithMany("products")
                         .HasForeignKey("user_id")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -4922,19 +4928,28 @@ namespace e_commerce_server.Src.Core.Database.Migrations
                     b.Navigation("product");
                 });
 
-            modelBuilder.Entity("e_commerce_server.Src.Core.Database.Data.CityData", b =>
+            modelBuilder.Entity("e_commerce_server.src.Core.Database.Data.UserData", b =>
                 {
-                    b.Navigation("districts");
-                });
+                    b.HasOne("e_commerce_server.src.Core.Database.Data.DistrictData", "district")
+                        .WithMany("users")
+                        .HasForeignKey("district_id");
 
-            modelBuilder.Entity("e_commerce_server.Src.Core.Database.Data.UserData", b =>
-                {
-                    b.Navigation("products");
+                    b.Navigation("district");
                 });
 
             modelBuilder.Entity("e_commerce_server.src.Core.Database.Data.CategoryData", b =>
                 {
                     b.Navigation("products");
+                });
+
+            modelBuilder.Entity("e_commerce_server.src.Core.Database.Data.CityData", b =>
+                {
+                    b.Navigation("districts");
+                });
+
+            modelBuilder.Entity("e_commerce_server.src.Core.Database.Data.DistrictData", b =>
+                {
+                    b.Navigation("users");
                 });
 
             modelBuilder.Entity("e_commerce_server.src.Core.Database.Data.ProductData", b =>
@@ -4943,6 +4958,11 @@ namespace e_commerce_server.Src.Core.Database.Migrations
                 });
 
             modelBuilder.Entity("e_commerce_server.src.Core.Database.Data.ProductStatusData", b =>
+                {
+                    b.Navigation("products");
+                });
+
+            modelBuilder.Entity("e_commerce_server.src.Core.Database.Data.UserData", b =>
                 {
                     b.Navigation("products");
                 });

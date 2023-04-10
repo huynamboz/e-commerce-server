@@ -1,4 +1,4 @@
-﻿namespace e_commerce_server.Src.Core.Utils
+﻿namespace e_commerce_server.src.Core.Utils
 {
     public class Optional
     {
