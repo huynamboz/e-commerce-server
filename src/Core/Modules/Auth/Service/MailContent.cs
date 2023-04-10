@@ -1,10 +1,13 @@
-﻿namespace e_commerce_server.src.Core.Modules.Auth.Service
+﻿using e_commerce_server.src.Core.Env;
+
+namespace e_commerce_server.src.Core.Modules.Auth.Service
 {
     public class MailContent
     {
         public readonly string subject;
         public readonly string plainTextContent;
         public readonly string htmlContent;
+        private static readonly string _host = ENV.HOST;
         private MailContent(string subject, string plainTextContent, string htmlContent)
         {
             this.subject = subject;
@@ -15,8 +18,8 @@
         {
             return new MailContent(
                 "Password recovery",
-                $"Click this link to reset your password: http://localhost:5000/api/v1/auth/reset-password/{token}",
-                $"Click this <a href=\"http://localhost:5000/api/v1/auth/reset-password/{token}\">link</a> to reset your password."
+                $"Click this link to reset your password: {_host}/api/v1/auth/reset-password/{token}",
+                $"Click this <a href=\"{_host}/api/v1/auth/reset-password/{token}\">link</a> to reset your password."
             );
         }
     }

@@ -41,18 +41,7 @@ Start the server
 
 ## Environment Variables
 
-To run this project, you will need to add the following environment variables to your .env file
-
-`CONNECTION_STRING`: database connection string
-
-`JWT_SECRET`
-`EXPIRE_MINUTE`
-`EXPIRE_DAY`: JWT related
-
-`WORK_FACTOR`: password hashing
-
-`CLIENT`: CORS allowance
-
+To run this project, you will need to add the following environment variables to your .env file. Read .env.example for more information.
 
 ## Authors
 
