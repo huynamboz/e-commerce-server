@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using e_commerce_server.Src.Core.Database.Data;
+using e_commerce_server.src.Core.Database;
 
 #nullable disable
 
-namespace e_commerce_server.Src.Core.Database.Migrations
+namespace e_commerce_server.src.Core.Database.Migrations
 {
     [DbContext(typeof(MyDbContext))]
     [Migration("20230331023941_create_users_table")]

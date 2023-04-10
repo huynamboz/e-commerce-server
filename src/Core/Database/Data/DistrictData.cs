@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace e_commerce_server.Src.Core.Database.Data
+namespace e_commerce_server.src.Core.Database.Data
 {
     [Table("districts")]
     public class DistrictData
@@ -11,6 +11,11 @@ namespace e_commerce_server.Src.Core.Database.Data
         [StringLength(250)]
         public string name { get; set; }
         public int city_id { get; set; }
-        public CityData city { get; set; }
+        public virtual CityData city { get; set; }
+        public virtual ICollection<UserData> users { get; set; }
+        public DistrictData()
+        {
+            users = new List<UserData>();
+        }
     }
 }

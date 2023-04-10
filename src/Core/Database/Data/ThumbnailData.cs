@@ -10,8 +10,9 @@ namespace e_commerce_server.src.Core.Database.Data
         public int id { get; set; }
         [Required]
         public string thumbnail_url { get; set; }
-        public virtual ProductData product { get; set; }
         [Required]
         public int product_id { get; set; }
+        [ForeignKey("product_id")]
+        public virtual ProductData product { get; set; }
     }
 }

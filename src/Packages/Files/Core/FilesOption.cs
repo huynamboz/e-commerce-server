@@ -1,7 +1,7 @@
-using e_commerce_server.Src.Core.Config;
+using e_commerce_server.src.Core.Config;
 using Microsoft.Extensions.FileProviders;
 
-namespace e_commerce_server.Src.Packages.Files.Core
+namespace e_commerce_server.src.Packages.Files.Core
 {
     public class FilesOption
     {

@@ -1,7 +1,6 @@
 ﻿using System.Net;
-using System.Runtime.Serialization;
 
-namespace e_commerce_server.Src.Packages.HttpException
+namespace e_commerce_server.src.Packages.HttpExceptions
 {
     public class HttpException : Exception
     {

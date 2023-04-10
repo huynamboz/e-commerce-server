@@ -1,6 +1,6 @@
 ﻿using SendGrid.Helpers.Mail;
 using SendGrid;
-using e_commerce_server.Src.Core.Env;
+using e_commerce_server.src.Core.Env;
 
 namespace e_commerce_server.src.Core.Modules.Auth.Service
 {

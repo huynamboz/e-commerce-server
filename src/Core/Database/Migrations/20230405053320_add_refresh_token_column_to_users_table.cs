@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace e_commerce_server.Src.Core.Database.Migrations
+namespace e_commerce_server.src.Core.Database.Migrations
 {
     /// <inheritdoc />
     public partial class add_refresh_token_column_to_users_table : Migration

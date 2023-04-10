@@ -1,4 +1,4 @@
-namespace e_commerce_server.Src.Core.Modules.User.Service
+namespace e_commerce_server.src.Core.Modules.User.Service
 {
     public static class UserEnum
     {

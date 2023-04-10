@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using e_commerce_server.Src.Packages.HttpException;
-using e_commerce_server.Src.Core.Modules.Auth.Dto;
-using e_commerce_server.Src.Core.Modules.Auth.Service;
-using e_commerce_server.Src.Core.Database.Data;
-using System.Web;
+using e_commerce_server.src.Packages.HttpExceptions;
 using e_commerce_server.src.Core.Modules.Auth.Dto;
+using e_commerce_server.src.Core.Modules.Auth.Service;
+using System.Web;
+using e_commerce_server.src.Core.Database;
 
-namespace e_commerce_server.Src.Core.Api.V1.Controllers.Auth
+namespace e_commerce_server.src.Core.Api.V1.Controllers.Auth
 {
     [Route("api/v1/[controller]")]
     [ApiController]

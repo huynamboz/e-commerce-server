@@ -1,4 +1,4 @@
-using e_commerce_server.Src.Core.Config;
+using e_commerce_server.src.Core.Config;
 
 var builder = WebApplication.CreateBuilder(args);
 

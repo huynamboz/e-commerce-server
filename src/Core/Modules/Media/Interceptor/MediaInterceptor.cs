@@ -1,8 +1,8 @@
 using e_commerce_server.src.Core.Modules.Media.Service;
-using e_commerce_server.Src.Core.Config;
-using e_commerce_server.Src.Packages.HttpException;
+using e_commerce_server.src.Core.Config;
+using e_commerce_server.src.Packages.HttpExceptions;
 
-namespace e_commerce_server.Src.Core.Modules.Media.Interceptor
+namespace e_commerce_server.src.Core.Modules.Media.Interceptor
 {
     public class MediaInterceptor
     {

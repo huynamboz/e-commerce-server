@@ -1,11 +1,11 @@
-﻿using e_commerce_server.Src.Core.Database.Data;
-using e_commerce_server.Src.Core.Env;
+﻿using e_commerce_server.src.Core.Database.Data;
+using e_commerce_server.src.Core.Env;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace e_commerce_server.Src.Core.Modules.Auth.Service
+namespace e_commerce_server.src.Core.Modules.Auth.Service
 {
     public class JwtService
     {

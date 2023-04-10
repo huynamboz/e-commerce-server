@@ -1,5 +1,5 @@
-using e_commerce_server.Src.Core.Config;
-using e_commerce_server.Src.Core.Modules.Media.Interceptor;
+using e_commerce_server.src.Core.Config;
+using e_commerce_server.src.Core.Modules.Media.Interceptor;
 
 namespace e_commerce_server.src.Core.Modules.Media
 {

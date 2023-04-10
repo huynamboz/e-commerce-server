@@ -1,57 +1,57 @@
 ﻿using e_commerce_server.src.Core.Database.Data;
-using e_commerce_server.Src.Core.Database.Model;
+using e_commerce_server.src.Core.Database.Model;
 using Microsoft.EntityFrameworkCore;
 
-namespace e_commerce_server.Src.Core.Database.Data
+namespace e_commerce_server.src.Core.Database
 {
     public class MyDbContext : DbContext
     {
         public MyDbContext(DbContextOptions options) : base(options) { }
         #region
-        public DbSet<UserData> Users { get; set; }
-        public DbSet<CityData> Cities { get; set; }
-        public DbSet<DistrictData> Districts { get; set; }
-        public DbSet<ProductData> Products { get; set; }
-        public DbSet<CategoryData> Categories { get; set; }
-        public DbSet<ProductStatusData> ProductStatuses { get; set; }
-        public DbSet<ThumbnailData> Thumbnails { get; set; }
+        public virtual DbSet<UserData> Users { get; set; }
+        public virtual DbSet<CityData> Cities { get; set; }
+        public virtual DbSet<DistrictData> Districts { get; set; }
+        public virtual DbSet<ProductData> Products { get; set; }
+        public virtual DbSet<CategoryData> Categories { get; set; }
+        public virtual DbSet<ProductStatusData> ProductStatuses { get; set; }
+        public virtual DbSet<ThumbnailData> Thumbnails { get; set; }
         #endregion
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            LocationModel locationModel = new LocationModel();
-
             //Write Fluent API configurations here
 
             Task.Run(async () =>
             {
-                // var cities = await locationModel.GetApi("https://api.goship.io/api/ext_v1/cities");
+                LocationModel locationModel = new();
 
-                // foreach (var city in cities)
-                // {
-                //    modelBuilder.Entity<CityData>().HasData(
-                //        new CityData
-                //        {
-                //            id = city.id,
-                //            name = city.name,
-                //        }
-                //    );
+                var cities = await locationModel.GetApi("https://api.goship.io/api/ext_v1/cities");
 
-                //    var districts = await locationModel.GetApi($"https://api.goship.io/api/ext_v1/cities/{city.id}/districts");
+                foreach (var city in cities)
+                {
+                    modelBuilder.Entity<CityData>().HasData(
+                        new CityData
+                        {
+                            id = city.id,
+                            name = city.name,
+                        }
+                    );
 
-                //    foreach (var district in districts)
-                //    {
-                //        modelBuilder.Entity<DistrictData>().HasData(
-                //            new DistrictData
-                //            {
-                //                id = district.id,
-                //                name = district.name,
-                //                city_id = city.id,
-                //            }
-                //        );
-                //    }
-                // }
+                    var districts = await locationModel.GetApi($"https://api.goship.io/api/ext_v1/cities/{city.id}/districts");
+
+                    foreach (var district in districts)
+                    {
+                        modelBuilder.Entity<DistrictData>().HasData(
+                            new DistrictData
+                            {
+                                id = district.id,
+                                name = district.name,
+                                city_id = city.id,
+                            }
+                        );
+                    }
+                }
 
                 modelBuilder.Entity<CategoryData>().HasData(
                    new CategoryData
@@ -78,7 +78,7 @@ namespace e_commerce_server.Src.Core.Database.Data
                             id = 3,
                             status = "Đã qua sử dụng"
                         },
-                        
+
                     }
                 );
 
@@ -120,10 +120,15 @@ namespace e_commerce_server.Src.Core.Database.Data
                     .WithMany(r => r.districts)
                     .HasForeignKey(u => u.city_id);
 
+                modelBuilder.Entity<UserData>()
+                    .HasOne(u => u.district)
+                    .WithMany(r => r.users)
+                    .HasForeignKey(u => u.district_id);
+
                 modelBuilder.Entity<UserData>(entity =>
                 {
-                    entity.HasMany(u => u.products);
                     entity.HasIndex(e => e.email).IsUnique();
+                    entity.HasIndex(e => e.phone_number).IsUnique();
                 });
 
                 modelBuilder.Entity<ProductData>()
@@ -152,8 +157,8 @@ namespace e_commerce_server.Src.Core.Database.Data
                     {
                         id = 1,
                         name = "John Doe",
-                        email = "string@gmail.com",
-                        password = "string",
+                        email = "user@example.com",
+                        password = "$2a$04$GmL6XUWBFM9nSUzBynCNa.nvLo7pfiPK9sg1tdNiF3tKmhoMP1MIi", //Password123!
                         role_id = 1,
                     }
                 );

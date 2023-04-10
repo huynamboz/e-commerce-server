@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using e_commerce_server.Src.Core.Database.Data;
+using e_commerce_server.src.Core.Database;
 
 #nullable disable
 
-namespace e_commerce_server.Src.Core.Database.Migrations
+namespace e_commerce_server.src.Core.Database.Migrations
 {
     [DbContext(typeof(MyDbContext))]
     [Migration("20230401100757_make_email_column_unique_in_users_table")]
@@ -25,7 +25,7 @@ namespace e_commerce_server.Src.Core.Database.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("e_commerce_server.Src.Core.Database.Data.CityData", b =>
+            modelBuilder.Entity("e_commerce_server.src.Core.Database.Data.CityData", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -360,7 +360,7 @@ namespace e_commerce_server.Src.Core.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("e_commerce_server.Src.Core.Database.Data.DistrictData", b =>
+            modelBuilder.Entity("e_commerce_server.src.Core.Database.Data.DistrictData", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -4639,7 +4639,7 @@ namespace e_commerce_server.Src.Core.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("e_commerce_server.Src.Core.Database.Data.UserData", b =>
+            modelBuilder.Entity("e_commerce_server.src.Core.Database.Data.UserData", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -4716,9 +4716,9 @@ namespace e_commerce_server.Src.Core.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("e_commerce_server.Src.Core.Database.Data.DistrictData", b =>
+            modelBuilder.Entity("e_commerce_server.src.Core.Database.Data.DistrictData", b =>
                 {
-                    b.HasOne("e_commerce_server.Src.Core.Database.Data.CityData", "city")
+                    b.HasOne("e_commerce_server.src.Core.Database.Data.CityData", "city")
                         .WithMany("districts")
                         .HasForeignKey("city_id")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -4727,7 +4727,7 @@ namespace e_commerce_server.Src.Core.Database.Migrations
                     b.Navigation("city");
                 });
 
-            modelBuilder.Entity("e_commerce_server.Src.Core.Database.Data.CityData", b =>
+            modelBuilder.Entity("e_commerce_server.src.Core.Database.Data.CityData", b =>
                 {
                     b.Navigation("districts");
                 });

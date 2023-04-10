@@ -1,4 +1,4 @@
-﻿namespace e_commerce_server.Src.Core.Env
+﻿namespace e_commerce_server.src.Core.Env
 {
     public class ENV
     {
@@ -13,6 +13,7 @@
         public static readonly string? CLOUDINARY_API_SECRET;
         public static readonly string? SENDGRID_API_KEY;
         public static readonly string? SENDGRID_EMAIL_ADDRESS;
+        public static readonly string? ENVIRONMENT;
         static ENV()
         {
             DotNetEnv.Env.Load();
@@ -27,6 +28,7 @@
             CLOUDINARY_API_SECRET = Environment.GetEnvironmentVariable("CLOUDINARY_API_SECRET");
             SENDGRID_API_KEY = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
             SENDGRID_EMAIL_ADDRESS = Environment.GetEnvironmentVariable("SENDGRID_EMAIL_ADDRESS");
+            ENVIRONMENT = Environment.GetEnvironmentVariable("ENVIRONMENT") ?? "development";
         }
     }
 }

@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using e_commerce_server.Src.Core.Database.Data;
+using e_commerce_server.src.Core.Database;
 
 #nullable disable
 
-namespace e_commerce_server.Src.Core.Database.Migrations
+namespace e_commerce_server.src.Core.Database.Migrations
 {
     [DbContext(typeof(MyDbContext))]
     [Migration("20230401075455_add_district_id_column_to_users_table")]
@@ -25,7 +25,7 @@ namespace e_commerce_server.Src.Core.Database.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("e_commerce_server.Src.Core.Database.Data.CityData", b =>
+            modelBuilder.Entity("e_commerce_server.src.Core.Database.Data.CityData", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -360,7 +360,7 @@ namespace e_commerce_server.Src.Core.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("e_commerce_server.Src.Core.Database.Data.UserData", b =>
+            modelBuilder.Entity("e_commerce_server.src.Core.Database.Data.UserData", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()

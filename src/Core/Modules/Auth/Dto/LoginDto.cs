@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace e_commerce_server.Src.Core.Modules.Auth.Dto
+namespace e_commerce_server.src.Core.Modules.Auth.Dto
 {
     public class LoginDto
     {
@@ -12,6 +12,7 @@ namespace e_commerce_server.Src.Core.Modules.Auth.Dto
         [Required]
         [MaxLength(250)]
         [PasswordPropertyText]
+        [DefaultValue("Password123!")]
         public string password { get; set; }
     }
 }

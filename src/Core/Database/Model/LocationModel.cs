@@ -1,7 +1,7 @@
-﻿using e_commerce_server.Src.Core.Database.Data;
+﻿using e_commerce_server.src.Core.Database.Data;
 using Newtonsoft.Json;
 
-namespace e_commerce_server.Src.Core.Database.Model
+namespace e_commerce_server.src.Core.Database.Model
 {
     public class LocationModel
     {
