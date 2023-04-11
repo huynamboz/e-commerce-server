@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace e_commerce_server.src.Core.Database.Data
 {
@@ -25,13 +26,18 @@ namespace e_commerce_server.src.Core.Database.Data
         public string? reset_token { get; set; }
         public DateTime? reset_token_expiration_date { get; set; }
         public DateTime created_at { get; set; }
+        public DateTime update_at { get; set; }
+        public DateTime delete_at { get; set; }
         public int? district_id { get; set; }
         public virtual DistrictData district { get; set; }
         public string? refresh_token { get; set; }
         public virtual ICollection<ProductData> products { get; set; }
+        public virtual ICollection<FavoriteData> favorites { get; set; }
+
         public UserData()
         {
-            this.products = new HashSet<ProductData>();
+            this.products = new List<ProductData>();
+            this.favorites = new List<FavoriteData>();
         }
     }
 }

@@ -88,7 +88,11 @@ namespace e_commerce_server.src.Core.Config
             if (_environment == "development")
             {
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(options =>
+                {
+                    options.HeadContent = "<link rel='stylesheet' type='text/css' href='/files/swagger-ui.css'>";
+                });
+
             }
 
             app.UseStaticFiles(

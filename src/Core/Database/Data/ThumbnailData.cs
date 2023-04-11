@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace e_commerce_server.src.Core.Database.Data
 {
@@ -12,7 +13,7 @@ namespace e_commerce_server.src.Core.Database.Data
         public string thumbnail_url { get; set; }
         [Required]
         public int product_id { get; set; }
-        [ForeignKey("product_id")]
+        [JsonIgnore]
         public virtual ProductData product { get; set; }
     }
 }

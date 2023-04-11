@@ -26,7 +26,7 @@ namespace e_commerce_server.src.Core.Modules.Media
             {
                 var fileName = $"{Path.GetFileNameWithoutExtension(file.FileName)}-{DateTime.Now.ToString("yyyyMMddHHmmssfff")}{Path.GetExtension(file.FileName)}";
 
-                var filePath = FileConfig.ApplyFileProviderPath(fileName);
+                var filePath = FileConfig.ApplyUploadFilesPath(fileName);
 
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {

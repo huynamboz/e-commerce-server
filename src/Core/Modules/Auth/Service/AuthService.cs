@@ -67,7 +67,8 @@ namespace e_commerce_server.src.Core.Modules.Auth.Service
                 password = hashedPassword,
                 name = model.name,
                 role_id = 1,
-            };
+                created_at = DateTime.Now
+        };
 
             userRepository.CreateUser(user);
 

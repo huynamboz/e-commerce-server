@@ -5,7 +5,7 @@ using e_commerce_server.src.Core.Modules.Auth.Service;
 using System.Web;
 using e_commerce_server.src.Core.Database;
 
-namespace e_commerce_server.src.Core.Api.V1.Controllers.Auth
+namespace e_commerce_server.src.Core.Api.V1.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
@@ -36,7 +36,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers.Auth
         public IActionResult Register(RegisterDto model)
         {
             try
-            { 
+            {
                 return Ok(authService.Register(model));
             }
             catch (HttpException ex)
@@ -83,7 +83,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers.Auth
                 return StatusCode((int)ex.StatusCode, ex.Response);
             }
         }
-        
+
         [HttpPost("update-password")]
         public IActionResult UpdatePassword(UpdatePasswordDto model)
         {
