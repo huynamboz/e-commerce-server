@@ -6,7 +6,7 @@ using e_commerce_server.src.Packages.HttpExceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace e_commerce_server.src.Core.Api.V1.Controllers.Product
+namespace e_commerce_server.src.Core.Api.V1.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
@@ -22,7 +22,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers.Product
 
         //get all product
         [HttpGet]
-        public IActionResult getAllProduct(int page = 1)
+        public IActionResult GetAllProducts(int page = 1)
         {
             try
             {
@@ -36,7 +36,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers.Product
 
         //get product by id
         [HttpGet("{id}")]
-        public IActionResult getProductById(int id)
+        public IActionResult GetProductById(int id)
         {
             try
             {
@@ -50,11 +50,12 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers.Product
 
         [HttpGet("my-products")]
         [Authorize]
-        public IActionResult getMyProducts(int page = 1)
+        public IActionResult GetMyProducts(int page = 1)
         {
             try
             {
                 var idClaim = HttpContext.User.FindFirst("id");
+ 
                 return Ok(productService.GetProductsByUserId(page, Convert.ToInt32(idClaim.Value)));
             }
             catch (HttpException ex)
@@ -84,11 +85,12 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers.Product
 
         [HttpGet("my-products/{id}")]
         [Authorize]
-        public IActionResult getProductByUserId(int id)
+        public IActionResult GetProductByUserId(int id)
         {
             try
             {
                 var idClaim = HttpContext.User.FindFirst("id");
+
                 return Ok(productService.GetProductByUserId(Convert.ToInt32(idClaim.Value), id));
             }
             catch (HttpException ex)
@@ -100,7 +102,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers.Product
         //edit product by id
         [HttpPut("my-products/{id}")]
         [Authorize]
-        public async Task<IActionResult> editProduct([FromForm] AddProductDto productDto, List<IFormFile> files, int id)
+        public async Task<IActionResult> EditProduct([FromForm] AddProductDto productDto, List<IFormFile> files, int id)
         {
             try
             {
@@ -108,7 +110,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers.Product
 
                 var idClaim = HttpContext.User.FindFirst("id");
 
-                return Ok(productService.EditProductById(filePaths, productDto, id,Convert.ToInt32(idClaim.Value)));
+                return Ok(productService.EditProductById(filePaths, productDto, id, Convert.ToInt32(idClaim.Value)));
             }
             catch (HttpException ex)
             {
@@ -119,11 +121,12 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers.Product
         //delete product by id
         [HttpDelete("my-products/{id}")]
         [Authorize]
-        public IActionResult deleteProduct(int id)
+        public IActionResult DeleteProduct(int id)
         {
             try
             {
                 var idClaim = HttpContext.User.FindFirst("id");
+
                 return Ok(productService.DeleteProductById(Convert.ToInt32(idClaim.Value), id));
             }
             catch (HttpException ex)

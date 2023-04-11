@@ -28,7 +28,7 @@ namespace e_commerce_server.src.Packages.Swagger.Core
                 options.SwaggerDoc("v1", SwaggerConfig.ApplyInfo());
 
                 // Configure Swagger to use the Authorization header
-                options.AddSecurityDefinition("Bearer", SwaggerConfig.ApiSecurityScheme());
+                options.AddSecurityDefinition(SwaggerConfig.ApiSecurityScheme().Reference.Id, SwaggerConfig.ApiSecurityScheme());
 
                 //Make sure Swagger UI requires the Authorization header to be set
                 options.OperationFilter<AuthorizeCheckOperationFilter>();

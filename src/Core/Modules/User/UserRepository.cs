@@ -2,6 +2,7 @@
 using e_commerce_server.src.Core.Database.Data;
 using e_commerce_server.src.Core.Modules.User.Service;
 using e_commerce_server.src.Core.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace e_commerce_server.src.Core.Modules.User
 {
@@ -36,7 +37,12 @@ namespace e_commerce_server.src.Core.Modules.User
         {
             try
             {
-                return _context.Users.SingleOrDefault(p => p.id == id);
+                return _context.Users
+                    .Include(u => u.products).ThenInclude(p => p.thumbnails)
+                    .Include(p => p.products).ThenInclude(p => p.product_status)
+                    .Include(p => p.products).ThenInclude(p => p.category)
+                    .Include(u => u.favorites)
+                    .SingleOrDefault(p => p.id == id);
             } catch (Exception ex)
             {
                 throw new InternalException(ex.Message);
@@ -46,8 +52,6 @@ namespace e_commerce_server.src.Core.Modules.User
         {
             try
             {
-                user.created_at = DateTime.Now;
-
                 _context.Users.Add(user);
                 _context.SaveChanges();
             } catch (Exception ex)
@@ -102,6 +106,39 @@ namespace e_commerce_server.src.Core.Modules.User
                     return existingUser;
                 }
                 throw new BadRequestException(UserEnum.USER_NOT_FOUND);
+            } catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            }
+        }
+        public void AddProductToFavorite(FavoriteData favorite)
+        {
+            try
+            {
+                _context.Favorites.Add(favorite);
+                _context.SaveChanges();
+            } catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            }
+        }
+        public FavoriteData GetFavoriteByUserIdAndProductId(int userId, int productId)
+        {
+            try
+            {
+                return _context.Favorites.SingleOrDefault(p => p.user_id == userId && p.product_id == productId);
+            } catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            }
+        }
+
+        public void RemoveProductFromFavorite(FavoriteData favorite)
+        {
+            try
+            {
+                _context.Favorites.Remove(favorite);
+                _context.SaveChanges();
             } catch (Exception ex)
             {
                 throw new InternalException(ex.Message);

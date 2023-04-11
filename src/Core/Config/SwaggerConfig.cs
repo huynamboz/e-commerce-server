@@ -1,4 +1,5 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi.Models;
 
 namespace e_commerce_server.src.Core.Config
 {
@@ -22,10 +23,18 @@ namespace e_commerce_server.src.Core.Config
         {
             return new OpenApiSecurityScheme
             {
+               BearerFormat = "JWT",
+                Name = "JWT Authentication",
                 In = ParameterLocation.Header,
+                Type = SecuritySchemeType.Http,
+                Scheme = JwtBearerDefaults.AuthenticationScheme,
                 Description = "Enter your token",
-                Name = "Authorization",
-                Type = SecuritySchemeType.ApiKey
+
+                Reference = new OpenApiReference
+                {
+                    Id = JwtBearerDefaults.AuthenticationScheme,
+                    Type = ReferenceType.SecurityScheme
+                }
             };
         }
     }
