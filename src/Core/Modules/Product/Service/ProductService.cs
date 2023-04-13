@@ -14,7 +14,8 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
         private ProductRepository productRepository;
         private UserService userService;
         private FileSystemService fileSystemService;
-        public ProductService(MyDbContext context) {
+        public ProductService(MyDbContext context)
+        {
             productRepository = new ProductRepository(context);
             userRepository = new UserRepository(context);
             userService = new UserService(context);
@@ -23,6 +24,13 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
 
         public object GetProductsByUserId(int page, int userId)
         {
+            var user = userRepository.GetUserById(userId);
+
+            if (user == null)
+            {
+                throw new BadRequestException(UserEnum.USER_NOT_FOUND);
+            }
+
             var products = productRepository.GetProductsByUserId(userId);
             
             var paginatedProducts = productRepository.GetProductsByUserIdByPage(page, userId);
@@ -40,7 +48,15 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                 }
             };
         }
-        public object GetProductByUserId(int userId, int productId) {
+        public object GetProductByUserId(int userId, int productId)
+        {
+            var user = userRepository.GetUserById(userId);
+
+            if (user == null)
+            {
+                throw new BadRequestException(UserEnum.USER_NOT_FOUND);
+            }
+
             var product = productRepository.GetProductByIdAndUserId(userId, productId);
 
             if (product == null)
@@ -57,21 +73,22 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
         {
             try
             {
-                var product = productRepository.GetProductById(productId);
+                dynamic product = productRepository.GetProductById(productId);
 
                 if (product == null)
                 {
                     throw new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND);
                 }
 
-                if (product.user_id != userId)
+                if (product.user.id != userId)
                 {
-                    throw new BadRequestException(ProductEnum.NOT_HAVE_PERMISSION);
+                   throw new BadRequestException(ProductEnum.NOT_HAVE_PERMISSION);
                 }
 
                 var user = userRepository.GetUserById(userId);
 
-                if (user == null) {
+                if (user == null)
+                {
                     throw new BadRequestException(UserEnum.USER_NOT_FOUND);
                 }
 
@@ -93,21 +110,22 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
         }
         public object DeleteProductById(int userId, int productId)
         {
-            var product = productRepository.GetProductById(productId);
+            dynamic product = productRepository.GetProductById(productId);
 
             if (product == null)
             {
                 throw new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND);
             }
 
-            if (product.user_id != userId)
+            if (product.user.id != userId)
             {
-                throw new BadRequestException(ProductEnum.NOT_HAVE_PERMISSION);
+               throw new BadRequestException(ProductEnum.NOT_HAVE_PERMISSION);
             }
 
             var user = userRepository.GetUserById(userId);
 
-            if (user == null) {
+            if (user == null)
+            {
                 throw new BadRequestException(UserEnum.USER_NOT_FOUND);
             }
 
@@ -129,7 +147,8 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
             {
                 var user = userRepository.GetUserById(userId);
 
-                if (user == null) {
+                if (user == null)
+                {
                     throw new BadRequestException(UserEnum.USER_NOT_FOUND);
                 }
 

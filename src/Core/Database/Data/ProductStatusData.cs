@@ -10,7 +10,6 @@ namespace e_commerce_server.src.Core.Database.Data
         [Key]
         [Required]
         public int id { get; set; }
-        [JsonIgnore]
         public virtual ICollection<ProductData> products { get; set; }
         [Required]
         [StringLength(50)]

@@ -10,7 +10,6 @@ namespace e_commerce_server.src.Core.Database.Data
         public int user_id { get; set; }
         public DateTime create_at {  get; set; }
         public virtual ProductData product { get; set; }
-        [JsonIgnore]
         public virtual UserData user { get; set; }
 
     }

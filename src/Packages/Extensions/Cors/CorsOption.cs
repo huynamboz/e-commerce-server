@@ -19,7 +19,8 @@ namespace e_commerce_server.src.Packages.Extensions.Cors
             return options =>
                 options.AddPolicy("ApiCorsPolicy", this.ConfigurePolicy());
         }
-        public Action<Microsoft.AspNetCore.Cors.Infrastructure.CorsPolicyBuilder> ConfigurePolicy() {
+        public Action<Microsoft.AspNetCore.Cors.Infrastructure.CorsPolicyBuilder> ConfigurePolicy()
+        {
             return builder =>
                 builder
                     .WithOrigins(this._client)

@@ -1,5 +1,4 @@
 ﻿using e_commerce_server.src.Core.Database.Data;
-using e_commerce_server.src.Core.Database.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace e_commerce_server.src.Core.Database

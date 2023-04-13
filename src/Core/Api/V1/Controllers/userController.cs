@@ -29,7 +29,6 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
                 var idClaim = HttpContext.User.FindFirst("id");
 
                 return Ok(userService.GetUserById(Convert.ToInt32(idClaim.Value)));
-
             }
             catch (HttpException ex)
             {
@@ -57,9 +56,25 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             }
         }
 
+        //get favorite products
+        [HttpGet("me/favorite-products")]
+        [Authorize]
+        public IActionResult GetFavoriteProducts(int page = 1)
+        {
+            try
+            {
+                var idClaim = HttpContext.User.FindFirst("id");
+
+                return Ok(userService.GetFavoriteProducts(page, Convert.ToInt32(idClaim.Value)));
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Response);
+            }
+        }
 
         //add product to favorite
-        [HttpPost("me/favorites")]
+        [HttpPost("me/favorite-products")]
         [Authorize]
         public IActionResult AddProductToFavorite(AddProductToFavoriteDto model)
         {
@@ -76,7 +91,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
         }
 
         //remove product from favorite
-        [HttpPost("me/favorites/{id}")]
+        [HttpDelete("me/favorite-products/{id}")]
         [Authorize]
         public IActionResult RemoveProductFromFavorite(int id)
         {

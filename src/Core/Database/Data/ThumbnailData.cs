@@ -13,7 +13,6 @@ namespace e_commerce_server.src.Core.Database.Data
         public string thumbnail_url { get; set; }
         [Required]
         public int product_id { get; set; }
-        [JsonIgnore]
         public virtual ProductData product { get; set; }
     }
 }
