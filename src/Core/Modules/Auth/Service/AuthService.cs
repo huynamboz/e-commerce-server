@@ -31,11 +31,11 @@ namespace e_commerce_server.src.Core.Modules.Auth.Service
 
             var accessToken = jwtService.GenerateAccessToken(user);
 
-            var refreshToken = jwtService.generateRefreshToken(user);
+            var refreshToken = jwtService.GenerateRefreshToken(user);
 
             user.refresh_token = refreshToken;
 
-            userRepository.UpdateUser(user);
+            userRepository.CreateOrUpdateUser(user);
 
             return new
             {
@@ -67,10 +67,11 @@ namespace e_commerce_server.src.Core.Modules.Auth.Service
                 password = hashedPassword,
                 name = model.name,
                 role_id = 1,
-                created_at = DateTime.Now
-        };
+                created_at = DateTime.Now,
+                update_at = DateTime.Now
+            };
 
-            userRepository.CreateUser(user);
+            userRepository.CreateOrUpdateUser(user);
 
             return new
             {
@@ -78,23 +79,27 @@ namespace e_commerce_server.src.Core.Modules.Auth.Service
             };
         }
 
-        public object GenerateRefreshToken(RefreshTokenDto model) {
+        public object GenerateRefreshToken(RefreshTokenDto model)
+        {
             var user = userRepository.GetUserByRefreshToken(model.refresh_token);
 
-            if (user != null) {
+            if (user != null)
+            {
                 var TokenPayload = jwtService.Verify(model.refresh_token);
 
-                if (TokenPayload != null) {
+                if (TokenPayload != null)
+                {
                     string? id = TokenPayload.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
 
-                    if (id == user.id.ToString()) {
+                    if (id == user.id.ToString())
+                    {
                         var accessToken = jwtService.GenerateAccessToken(user);
 
-                        var refreshToken = jwtService.generateRefreshToken(user);
+                        var refreshToken = jwtService.GenerateRefreshToken(user);
 
                         user.refresh_token = refreshToken;
 
-                        userRepository.UpdateUser(user);
+                        userRepository.CreateOrUpdateUser(user);
 
                         return new
                         {
@@ -118,7 +123,7 @@ namespace e_commerce_server.src.Core.Modules.Auth.Service
                 user.reset_token = token;
                 user.reset_token_expiration_date = DateTime.Now.AddHours(1);
 
-                userRepository.UpdateUser(user);
+                userRepository.CreateOrUpdateUser(user);
 
                 sendGridService.SendMail(model.email, MailContent.REQUEST_RESET_PASSWORD(token));
                 
@@ -164,8 +169,9 @@ namespace e_commerce_server.src.Core.Modules.Auth.Service
                     user.reset_token = null;
                     user.reset_token_expiration_date = null;
                     user.refresh_token = null;
+                    user.update_at = DateTime.Now;
 
-                    userRepository.UpdateUser(user);
+                    userRepository.CreateOrUpdateUser(user);
 
                     return new
                     {

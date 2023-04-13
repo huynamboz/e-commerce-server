@@ -1,8 +1,8 @@
 ﻿using e_commerce_server.src.Packages.HttpExceptions;
 using e_commerce_server.src.Core.Database.Data;
-using e_commerce_server.src.Core.Modules.User.Service;
 using e_commerce_server.src.Core.Database;
 using Microsoft.EntityFrameworkCore;
+using e_commerce_server.src.Core.Common.Enum;
 
 namespace e_commerce_server.src.Core.Modules.User
 {
@@ -33,27 +33,33 @@ namespace e_commerce_server.src.Core.Modules.User
                 throw new InternalException(ex.Message);
             }
         }
-        public UserData? GetUserById(int id)
+        public object? GetUserById(int id)
         {
             try
             {
-                return _context.Users
-                    .Include(u => u.products).ThenInclude(p => p.thumbnails)
-                    .Include(p => p.products).ThenInclude(p => p.product_status)
-                    .Include(p => p.products).ThenInclude(p => p.category)
-                    .Include(u => u.favorites)
+                var user =_context.Users
+                    .Include(u => u.district).ThenInclude(d => d.city)
                     .SingleOrDefault(p => p.id == id);
-            } catch (Exception ex)
-            {
-                throw new InternalException(ex.Message);
-            }
-        }
-        public void CreateUser(UserData user)
-        {
-            try
-            {
-                _context.Users.Add(user);
-                _context.SaveChanges();
+                
+                if (user == null)
+                {
+                    return null;
+                }
+
+                return new
+                {
+                    user.id,
+                    user.name,
+                    user.email,
+                    user.phone_number,
+                    user.address,
+                    user.avatar,
+                    user.birthday,
+                    user.created_at,
+                    user.update_at,
+                    user.gender,
+                    location = $"{user.district.name}, {user.district.city.name}"
+                };
             } catch (Exception ex)
             {
                 throw new InternalException(ex.Message);
@@ -80,32 +86,18 @@ namespace e_commerce_server.src.Core.Modules.User
                 throw new InternalException(ex.Message);
             }
         }
-        public UserData? UpdateUser(UserData user)
+        public UserData? CreateOrUpdateUser(UserData user)
         {
             try
             {
-                var existingUser = _context.Users.SingleOrDefault(p => p.id == user.id);
-        
-                if (existingUser != null)
+                if (user.id == 0)
                 {
-                    existingUser.name = user.name;
-                    existingUser.email = user.email;
-                    existingUser.password = user.password;
-                    existingUser.phone_number = user.phone_number;
-                    existingUser.address = user.address;
-                    existingUser.gender = user.gender;
-                    existingUser.birthday = user.birthday;
-                    existingUser.avatar = user.avatar; 
-                    existingUser.district_id = user.district_id;
-                    existingUser.refresh_token = user.refresh_token;
-                    existingUser.reset_token = user.reset_token;
-                    existingUser.reset_token_expiration_date = user.reset_token_expiration_date;
-
-                    _context.SaveChanges();
-
-                    return existingUser;
+                    _context.Users.Add(user);
                 }
-                throw new BadRequestException(UserEnum.USER_NOT_FOUND);
+
+                _context.SaveChanges();
+
+                return user;
             } catch (Exception ex)
             {
                 throw new InternalException(ex.Message);
@@ -122,7 +114,55 @@ namespace e_commerce_server.src.Core.Modules.User
                 throw new InternalException(ex.Message);
             }
         }
-        public FavoriteData GetFavoriteByUserIdAndProductId(int userId, int productId)
+        public List<FavoriteData> GetFavoriteProductsByUserId(int userId)
+        {
+            try
+            {
+                return _context.Favorites.Where(p => p.user_id == userId).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            }
+        }
+        public List<object> GetFavoriteProductsByUserIdByPage(int page, int userId)
+        {
+            try
+            {
+                return _context.Favorites
+                    .Where(p => p.user_id == userId)
+                    .Skip((page -1) * 10)
+                    .Take(PageSizeEnum.PAGE_SIZE)
+                    .Include(p => p.product).ThenInclude(p => p.category)
+                    .Include(p => p.product).ThenInclude(p => p.product_status)
+                    .Select(p => new
+                    {
+                        p.product.id,
+                        p.product.name,
+                        p.product.price,
+                        p.product.discount,
+                        p.product.description,
+                        p.product.created_at,
+                        p.product.updated_at,
+                        p.product.product_status.status,
+                        user = new
+                        {
+                            p.user.id,
+                            p.user.name,
+                            p.user.phone_number,
+                            p.user.avatar
+                        },
+                        thumbnails = p.product.thumbnails.Select(t => t.thumbnail_url),
+                        category = p.product.category.name,
+                        location = $"{p.user.district.name}, {p.user.district.city.name}"
+                    }
+                ).Cast<object>().ToList();
+            } catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            }
+        }
+        public FavoriteData? GetFavoriteProductByUserIdAndProductId(int userId, int productId)
         {
             try
             {

@@ -7,14 +7,17 @@ namespace e_commerce_server.src.Packages.Files.Core
     {
         private readonly string _fileProviderPath;
         private readonly string _requestPath;
-        private FilesOption() {
+        private FilesOption()
+        {
             this._fileProviderPath = FileConfig.ApplyFileProviderPath();
             this._requestPath = FileConfig.ApplyRequestPath();
         }
-        public static FilesOption Builder() {
+        public static FilesOption Builder()
+        {
             return new FilesOption();
         }
-        public StaticFileOptions ConfigureStaticFilesOptions() {
+        public StaticFileOptions ConfigureStaticFilesOptions()
+        {
             return new StaticFileOptions {
                 FileProvider = new PhysicalFileProvider(this._fileProviderPath),
                 RequestPath = new PathString(this._requestPath)

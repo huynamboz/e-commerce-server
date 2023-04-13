@@ -12,7 +12,8 @@ namespace e_commerce_server.src.Core.Modules.Auth.Service
         private readonly string _secret;
         private readonly double _expireDay;
         private readonly double _expireMinute;
-        public JwtService() {
+        public JwtService()
+        {
             _secret = ENV.JWT_SECRET;
             _expireMinute = Convert.ToDouble(ENV.EXPIRE_MINUTE);
             _expireDay = Convert.ToDouble(ENV.EXPIRE_DAY);
@@ -40,7 +41,7 @@ namespace e_commerce_server.src.Core.Modules.Auth.Service
             return jwtTokenHandler.WriteToken(token);
         }
 
-        public string generateRefreshToken(UserData user)
+        public string GenerateRefreshToken(UserData user)
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
 
@@ -78,7 +79,8 @@ namespace e_commerce_server.src.Core.Modules.Auth.Service
 
             try {
                 return tokenHandler.ValidateToken(token, validationParameters, out var validatedToken);
-            } catch (Exception ex) {
+            } catch (Exception ex)
+            {
                 Console.WriteLine(ex.Message);
                 return null;
             }

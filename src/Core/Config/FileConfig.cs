@@ -16,7 +16,8 @@ namespace e_commerce_server.src.Core.Config
         {
             return Path.Combine(Directory.GetCurrentDirectory(), "src", "Core", "Uploads", "Static");
         }
-        public static List<string> ApplyExtensions() {
+        public static List<string> ApplyExtensions()
+        {
             return new List<string> { ".jpg", ".png", ".jpeg" };
         }
     }

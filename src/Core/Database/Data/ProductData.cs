@@ -22,11 +22,9 @@ namespace e_commerce_server.src.Core.Database.Data
         public virtual ProductStatusData product_status { get; set; }
         public virtual ICollection<ThumbnailData> thumbnails { get; set; }
         public int user_id { get; set; }
-        [JsonIgnore]
         public virtual UserData user { get; set; }
         public int category_id { get; set; }
         public virtual CategoryData category { get; set; }
-        [JsonIgnore]
         public virtual ICollection<FavoriteData> favorites { get; set; }
 
         public ProductData()

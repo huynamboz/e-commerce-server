@@ -13,8 +13,8 @@ namespace e_commerce_server.src.Core.Modules.Product
     public class ProductRepository
     {
         private readonly MyDbContext _context;
-        private UserRepository userRepository;
-        private MediaService mediaService;
+        private readonly UserRepository userRepository;
+        private readonly MediaService mediaService;
         public ProductRepository(MyDbContext context)
         {
             _context = context;
@@ -47,28 +47,34 @@ namespace e_commerce_server.src.Core.Modules.Product
         {
             try
             {
-                return products
+                return _context.Products
                     .Skip((page -1) * 10)
                     .Take(PageSizeEnum.PAGE_SIZE)
-                    .Select(
-                    p => new
+                    .Include(p => p.thumbnails)
+                    .Include(p => p.user).ThenInclude(u => u.district).ThenInclude(d => d.city)
+                    .Include(p => p.category)
+                    .Include(p => p.product_status)
+                    .Select( product => new 
                     {
-                        p.id,
-                        p.name,
-                        p.price,
-                        p.discount,
-                        p.description,
-                        p.created_at,
-                        p.updated_at,
-                        product_status = p.product_status.status,
-                        thumbnails = _context.Thumbnails.Where(cond => cond.product_id == p.id).Select(data => data.thumbnail_url).ToList(),
-                        p.user_id,
-                        category = p.category.name,
-                        address = _context.Districts
-                            .Where(a => a.id == p.user.district_id)
-                            .Select(ct => ct.city.name).SingleOrDefault()
-                    }
-                ).Cast<object>().ToList();
+                        product.id,
+                        product.name,
+                        product.price,
+                        product.discount,
+                        product.description,
+                        product.created_at,
+                        product.updated_at,
+                        product.product_status.status,
+                        user = new
+                        {
+                            product.user.id,
+                            product.user.name,
+                            product.user.phone_number,
+                            product.user.avatar
+                        },
+                        thumbnails = product.thumbnails.Select(t => t.thumbnail_url),
+                        category = product.category.name,
+                        location = $"{product.user.district.name}, {product.user.district.city.name}"
+                    }).Cast<object>().ToList();
             } catch (Exception ex)
             {
                 throw new InternalException(ex.Message);
@@ -93,23 +99,30 @@ namespace e_commerce_server.src.Core.Modules.Product
                     .Where(p => p.user_id == userId)
                     .Skip((page -1) * 10)
                     .Take(PageSizeEnum.PAGE_SIZE)
-                    .Select(
-                    p => new
+                    .Include(p => p.thumbnails)
+                    .Include(p => p.user).ThenInclude(u => u.district).ThenInclude(d => d.city)
+                    .Include(p => p.category)
+                    .Include(p => p.product_status)
+                    .Select(product => new
                     {
-                        p.id,
-                        p.name,
-                        p.price,
-                        p.discount,
-                        p.description,
-                        p.created_at,
-                        p.updated_at,
-                        product_status = p.product_status.status,
-                        thumbnails = _context.Thumbnails.Where(cond => cond.product_id == p.id).Select(data => data.thumbnail_url).ToList(),
-                        p.user_id,
-                        category = p.category.name,
-                        address = _context.Districts
-                            .Where(a => a.id == p.user.district_id)
-                            .Select(ct => ct.city.name).SingleOrDefault()
+                        product.id,
+                        product.name,
+                        product.price,
+                        product.discount,
+                        product.description,
+                        product.created_at,
+                        product.updated_at,
+                        product.product_status.status,
+                        user = new
+                        {
+                            product.user.id,
+                            product.user.name,
+                            product.user.phone_number,
+                            product.user.avatar
+                        },
+                        thumbnails = product.thumbnails.Select(t => t.thumbnail_url),
+                        category = product.category.name,
+                        location = $"{product.user.district.name}, {product.user.district.city.name}"
                     }
                 ).Cast<object>().ToList();
             } catch (Exception ex)
@@ -236,35 +249,42 @@ namespace e_commerce_server.src.Core.Modules.Product
                 throw new InternalException(ex.Message);
             }
         }
-        public ProductDto? GetProductById(int id)
+        public object? GetProductById(int id)
         {
             try
             {
-                var product = _context.Products.FirstOrDefault(p => p.id == id);
+                var product = _context.Products
+                    .Include(p => p.thumbnails)
+                    .Include(p => p.user).ThenInclude(u => u.district).ThenInclude(d => d.city)
+                    .Include(p => p.category)
+                    .Include(p => p.product_status)
+                    .FirstOrDefault(p => p.id == id);
 
-                if (product == null) 
+                if (product == null)
                 {
                     return null;
                 }
 
-                var user = userRepository.GetUserById(product.user_id);
-
-                return new ProductDto
+                return new
                 {
-                    id = product.id,
-                    name = product.name,
-                    price = product.price,
-                    discount = product.discount,
-                    description = product.description,
-                    created_at = product.created_at,
-                    updated_at = product.updated_at,
-                    status_id = product.status_id,
-                    thumbnails = _context.Thumbnails.Where(cond => cond.product_id == product.id).Select(data => data.thumbnail_url).ToList(),
-                    user_id = product.user_id,
-                    category_id = product.category_id,
-                    address = _context.Districts
-                        .Where(a => a.id == product.user.district_id)
-                        .Select(ct => ct.city.name).SingleOrDefault()
+                    product.id,
+                    product.name,
+                    product.price,
+                    product.discount,
+                    product.description,
+                    product.created_at,
+                    product.updated_at,
+                    product.product_status.status,
+                    user = new
+                    {
+                        product.user.id,
+                        product.user.name,
+                        product.user.phone_number,
+                        product.user.avatar
+                    },
+                    thumbnails = product.thumbnails.Select(t => t.thumbnail_url),
+                    category = product.category.name,
+                    location = $"{product.user.district.name}, {product.user.district.city.name}"
                 };
             }
             catch (Exception ex)
