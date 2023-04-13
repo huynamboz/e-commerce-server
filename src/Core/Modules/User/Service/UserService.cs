@@ -93,32 +93,32 @@ namespace e_commerce_server.src.Core.Modules.User.Service
         {
             return userRepository.GetUserById(userId) ?? throw new BadRequestException(UserEnum.USER_NOT_FOUND);
         }
-    public object GetFavoriteProducts(int page, int userId)
-    {
-        var user = userRepository.GetUserById(userId);
-
-        if (user == null)
+        public object GetFavoriteProducts(int page, int userId)
         {
-            throw new BadRequestException(UserEnum.USER_NOT_FOUND);
-        }
+            var user = userRepository.GetUserById(userId);
 
-        var products = userRepository.GetFavoriteProductsByUserId(userId);
-
-        var paginatedProducts = userRepository.GetFavoriteProductsByUserIdByPage(page, userId);
-
-        int total = (int)Math.Ceiling((double)products.Count() / PageSizeEnum.PAGE_SIZE); //calculate total pages
-
-        return new
-        {
-            data = paginatedProducts,
-            meta = new
+            if (user == null)
             {
-                totalPages = total,
-                totalCount = products.Count(),
-                currentPage = page
+                throw new BadRequestException(UserEnum.USER_NOT_FOUND);
             }
-        };
-    }
+
+            var products = userRepository.GetFavoriteProductsByUserId(userId);
+
+            var paginatedProducts = userRepository.GetFavoriteProductsByUserIdByPage(page, userId);
+
+            int total = (int)Math.Ceiling((double)products.Count() / PageSizeEnum.PAGE_SIZE); //calculate total pages
+
+            return new
+            {
+                data = paginatedProducts,
+                meta = new
+                {
+                    totalPages = total,
+                    totalCount = products.Count(),
+                    currentPage = page
+                }
+            };
+        }
         public object AddProductToFavorite(int userId, AddProductToFavoriteDto model)
         {
             var product = productRepository.GetProductById(model.product_id);
@@ -178,6 +178,14 @@ namespace e_commerce_server.src.Core.Modules.User.Service
             {
                 message = UserEnum.REMOVE_FROM_FAVORITE_SUCCESS
             };
+        }
+        public object GetAllUsers(int roleId) 
+        {
+            if(roleId == 2)
+            {
+                return userRepository.GetAllUsers();
+            }
+            throw new BadRequestException();
         }
     }
 }

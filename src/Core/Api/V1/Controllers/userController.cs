@@ -106,5 +106,19 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
                 return StatusCode((int)ex.StatusCode, ex.Response);
             }
         }
+
+        [HttpGet("{id}")]
+        [Authorize] 
+        public IActionResult GetUserById(int id) 
+        {
+            try
+            {
+                return Ok(userService.GetUserById(id));
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Response);
+            }
+        }
     }
 }

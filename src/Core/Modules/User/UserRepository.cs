@@ -58,7 +58,7 @@ namespace e_commerce_server.src.Core.Modules.User
                     user.created_at,
                     user.update_at,
                     user.gender,
-                    location = $"{user.district.name}, {user.district.city.name}"
+                    location = Convert.ToBoolean(user.district_id) ? $"{user.district.name}, {user.district.city.name}" : null
                 };
             } catch (Exception ex)
             {
@@ -98,6 +98,30 @@ namespace e_commerce_server.src.Core.Modules.User
                 _context.SaveChanges();
 
                 return user;
+            } catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            }
+        }
+        public List<object> GetAllUsers()
+        {
+            try
+            {
+                return _context.Users
+                    .Where(u => u.role_id == 1)
+                    .Include(u => u.district).ThenInclude(d => d.city)
+                    .Select(user => new
+                    {
+                        user.id,
+                        user.email,
+                        user.name,
+                        user.phone_number,
+                        user.address,
+                        user.gender,
+                        user.birthday,
+                        user.avatar,
+                        location  = Convert.ToBoolean(user.district_id) ? $"{user.district.name}, {user.district.city.name}" : null
+                    }).Cast<object>().ToList();
             } catch (Exception ex)
             {
                 throw new InternalException(ex.Message);
