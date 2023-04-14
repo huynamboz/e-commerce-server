@@ -12,8 +12,8 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
     [ApiController]
     public class usersController : ControllerBase
     {
-        private UserService userService;
-        private MediaHandler mediaHandler;
+        private readonly UserService userService;
+        private readonly MediaHandler mediaHandler;
         public usersController(MyDbContext dbContext)
         {
             userService = new UserService(dbContext);
@@ -38,17 +38,13 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
 
         [HttpPut("me")]
         [Authorize]
-        public async Task<IActionResult> UpdateUser([FromForm] UpdateUserDto updateDto, List<IFormFile> file)
+        public IActionResult UpdateUser(UpdateUserDto model)
         {
             try
             {
-                List<string> filePaths = await mediaHandler.Validate(file, 1).Save();
-
-                string? filePath = filePaths.Count > 0 ? filePaths[0] : null;
-
                 var idClaim = HttpContext.User.FindFirst("id");
 
-                return Ok(userService.UpdateUserById(filePath, updateDto, Convert.ToInt32(idClaim.Value)));
+                return Ok(userService.UpdateUserById(model, Convert.ToInt32(idClaim.Value)));
             }
             catch (HttpException ex)
             {

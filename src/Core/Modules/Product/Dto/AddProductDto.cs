@@ -19,9 +19,9 @@ namespace e_commerce_server.src.Core.Modules.Product.Dto
         [DefaultValue(1)]
         public int status_id { get; set; }
         [Required]
-        public string? keyword { get; set; }
-        [Required]
         [DefaultValue(1)]
         public int category_id { get; set; }
+        [Required]
+        public List<string> thumbnailUrls { get; set; }
     }
 }

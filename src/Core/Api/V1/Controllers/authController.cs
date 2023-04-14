@@ -12,7 +12,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
     public class authController : ControllerBase
     {
 
-        private AuthService authService;
+        private readonly AuthService authService;
 
         public authController(MyDbContext context)
         {

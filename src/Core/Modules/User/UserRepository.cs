@@ -33,33 +33,13 @@ namespace e_commerce_server.src.Core.Modules.User
                 throw new InternalException(ex.Message);
             }
         }
-        public object? GetUserById(int id)
+        public UserData? GetUserById(int id)
         {
             try
             {
-                var user =_context.Users
+                return _context.Users
                     .Include(u => u.district).ThenInclude(d => d.city)
                     .SingleOrDefault(p => p.id == id);
-                
-                if (user == null)
-                {
-                    return null;
-                }
-
-                return new
-                {
-                    user.id,
-                    user.name,
-                    user.email,
-                    user.phone_number,
-                    user.address,
-                    user.avatar,
-                    user.birthday,
-                    user.created_at,
-                    user.update_at,
-                    user.gender,
-                    location = Convert.ToBoolean(user.district_id) ? $"{user.district.name}, {user.district.city.name}" : null
-                };
             } catch (Exception ex)
             {
                 throw new InternalException(ex.Message);
@@ -93,9 +73,12 @@ namespace e_commerce_server.src.Core.Modules.User
                 if (user.id == 0)
                 {
                     _context.Users.Add(user);
+                    _context.SaveChanges();
+                } else {
+                    _context.SaveChanges();
+                    _context.Entry(user).Reference(u => u.district).Load();
+                    _context.Entry(user.district).Reference(d => d.city).Load();
                 }
-
-                _context.SaveChanges();
 
                 return user;
             } catch (Exception ex)
@@ -178,7 +161,7 @@ namespace e_commerce_server.src.Core.Modules.User
                         },
                         thumbnails = p.product.thumbnails.Select(t => t.thumbnail_url),
                         category = p.product.category.name,
-                        location = $"{p.user.district.name}, {p.user.district.city.name}"
+                        location = Convert.ToBoolean(p.user.district_id) ? $"{p.user.district.name}, {p.user.district.city.name}" : null
                     }
                 ).Cast<object>().ToList();
             } catch (Exception ex)

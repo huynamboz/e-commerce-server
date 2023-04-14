@@ -5,15 +5,16 @@ using e_commerce_server.src.Core.Common.Enum;
 using e_commerce_server.src.Core.Modules.User;
 using e_commerce_server.src.Core.Modules.User.Service;
 using e_commerce_server.src.Packages.HttpExceptions;
+using e_commerce_server.src.Core.Database.Data;
 
 namespace e_commerce_server.src.Core.Modules.Product.Service
 {
     public class ProductService
     {
-        private UserRepository userRepository;
-        private ProductRepository productRepository;
-        private UserService userService;
-        private FileSystemService fileSystemService;
+        private readonly UserRepository userRepository;
+        private readonly ProductRepository productRepository;
+        private readonly UserService userService;
+        private readonly FileSystemService fileSystemService;
         public ProductService(MyDbContext context)
         {
             productRepository = new ProductRepository(context);
@@ -69,48 +70,9 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                 data = product
             };
         }
-        public object EditProductById(List<string> filePaths, AddProductDto productDto, int productId, int userId)
+        public object EditProductById(AddProductDto productDto, int productId, int userId)
         {
-            try
-            {
-                dynamic product = productRepository.GetProductById(productId);
-
-                if (product == null)
-                {
-                    throw new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND);
-                }
-
-                if (product.user.id != userId)
-                {
-                   throw new BadRequestException(ProductEnum.NOT_HAVE_PERMISSION);
-                }
-
-                var user = userRepository.GetUserById(userId);
-
-                if (user == null)
-                {
-                    throw new BadRequestException(UserEnum.USER_NOT_FOUND);
-                }
-
-                if (userService.CheckUserStatus(user))
-                {
-                    return new
-                    {
-                        message = ProductEnum.UPDATE_PRODUCT_SUCCESS,
-                        data = productRepository.GetProductById(productRepository.UpdateProduct(filePaths, productId, productDto).id)
-                    };
-                }
-
-                throw new BadRequestException(ProductEnum.INSUFFICIENT_CONDITION);
-            } catch (Exception ex)
-            {
-                fileSystemService.DeleteFiles(filePaths);
-                throw;
-            }
-        }
-        public object DeleteProductById(int userId, int productId)
-        {
-            dynamic product = productRepository.GetProductById(productId);
+            var product = productRepository.GetProductById(productId);
 
             if (product == null)
             {
@@ -119,7 +81,67 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
 
             if (product.user.id != userId)
             {
-               throw new BadRequestException(ProductEnum.NOT_HAVE_PERMISSION);
+                throw new ForbiddenException(ProductEnum.NOT_HAVE_PERMISSION);
+            }
+
+            var user = userRepository.GetUserById(userId);
+
+            if (user == null)
+            {
+                throw new BadRequestException(UserEnum.USER_NOT_FOUND);
+            }
+
+            if (userService.CheckUserStatus(user))
+            {
+                product.name = productDto.name;
+                product.description = productDto.description;
+                product.price = productDto.price;
+                product.status_id = productDto.status_id;
+                product.category_id = productDto.category_id;
+                product.updated_at = DateTime.Now;
+
+                productRepository.AddOrUpdateProduct(product, productDto.thumbnailUrls);
+
+                return new
+                {
+                    message = ProductEnum.UPDATE_PRODUCT_SUCCESS,
+                    data = new
+                    {
+                        product.id,
+                        product.name,
+                        product.price,
+                        product.discount,
+                        product.description,
+                        product.created_at,
+                        product.updated_at,
+                        product.product_status.status,
+                        user = new
+                        {
+                            product.user.id,
+                            product.user.name,
+                            product.user.phone_number,
+                            product.user.avatar
+                        },
+                        thumbnails = product.thumbnails.Select(t => t.thumbnail_url),
+                        category = product.category.name,
+                        location = $"{product.user.district.name}, {product.user.district.city.name}"
+                    }
+                };
+            }
+            throw new BadRequestException(ProductEnum.INSUFFICIENT_CONDITION);
+        }
+        public object DeleteProductById(int userId, int productId)
+        {
+            var product = productRepository.GetProductById(productId);
+
+            if (product == null)
+            {
+                throw new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND);
+            }
+
+            if (product.user.id != userId)
+            {
+               throw new ForbiddenException(ProductEnum.NOT_HAVE_PERMISSION);
             }
 
             var user = userRepository.GetUserById(userId);
@@ -141,32 +163,58 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
 
             throw new BadRequestException(ProductEnum.INSUFFICIENT_CONDITION);
         }
-        public object AddProduct(List<string> filePaths, AddProductDto productDto, int userId)
+        public object AddProduct(AddProductDto productDto, int userId)
         {
-            try
+            var user = userRepository.GetUserById(userId);
+
+            if (user == null)
             {
-                var user = userRepository.GetUserById(userId);
-
-                if (user == null)
-                {
-                    throw new BadRequestException(UserEnum.USER_NOT_FOUND);
-                }
-
-                if (userService.CheckUserStatus(user))
-                {
-                    return  new
-                    {
-                        message = ProductEnum.ADD_PRODUCT_SUCCESS,
-                        data = productRepository.GetProductById(productRepository.AddProduct(filePaths, productDto, userId).id)
-                    };
-                }
-
-                throw new BadRequestException(ProductEnum.INSUFFICIENT_CONDITION);
-            } catch (Exception ex)
-            {
-                fileSystemService.DeleteFiles(filePaths);
-                throw;
+                throw new BadRequestException(UserEnum.USER_NOT_FOUND);
             }
+
+            if (userService.CheckUserStatus(user))
+            {
+                ProductData product = new ProductData 
+                {
+                    name = productDto.name,
+                    description = productDto.description,
+                    price = productDto.price,
+                    user_id = userId,
+                    status_id = productDto.status_id,
+                    category_id = productDto.category_id,
+                    created_at = DateTime.Now,
+                    updated_at = DateTime.Now
+                };
+
+                var newProduct = productRepository.GetProductById(productRepository.AddOrUpdateProduct(product, productDto.thumbnailUrls).id);
+
+                return new
+                {
+                    message = ProductEnum.ADD_PRODUCT_SUCCESS,
+                    data = new 
+                    {
+                        newProduct.id,
+                        newProduct.name,
+                        newProduct.price,
+                        newProduct.discount,
+                        newProduct.description,
+                        newProduct.created_at,
+                        newProduct.updated_at,
+                        newProduct.product_status.status,
+                        user = new
+                        {
+                            newProduct.user.id,
+                            newProduct.user.name,
+                            newProduct.user.phone_number,
+                            newProduct.user.avatar
+                        },
+                        thumbnails = newProduct.thumbnails.Select(t => t.thumbnail_url),
+                        category = newProduct.category.name,
+                        location = $"{newProduct.user.district.name}, {newProduct.user.district.city.name}"
+                    }
+                };
+            }
+            throw new BadRequestException(ProductEnum.INSUFFICIENT_CONDITION);
         }
         public object GetAllProducts(int page)
         {
@@ -198,7 +246,24 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
 
             return new
             {
-                data = product
+                product.id,
+                product.name,
+                product.price,
+                product.discount,
+                product.description,
+                product.created_at,
+                product.updated_at,
+                product.product_status.status,
+                user = new
+                {
+                    product.user.id,
+                    product.user.name,
+                    product.user.phone_number,
+                    product.user.avatar
+                },
+                thumbnails = product.thumbnails.Select(t => t.thumbnail_url),
+                category = product.category.name,
+                location = $"{product.user.district.name}, {product.user.district.city.name}"
             };
         }
     }

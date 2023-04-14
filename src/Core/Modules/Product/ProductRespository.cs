@@ -1,7 +1,6 @@
 ﻿using e_commerce_server.src.Core.Database;
 using e_commerce_server.src.Core.Database.Data;
 using e_commerce_server.src.Core.Modules.Media.Service;
-using e_commerce_server.src.Core.Modules.Product.Dto;
 using e_commerce_server.src.Core.Modules.Product.Service;
 using e_commerce_server.src.Core.Common.Enum;
 using e_commerce_server.src.Core.Modules.User;
@@ -13,13 +12,9 @@ namespace e_commerce_server.src.Core.Modules.Product
     public class ProductRepository
     {
         private readonly MyDbContext _context;
-        private readonly UserRepository userRepository;
-        private readonly MediaService mediaService;
         public ProductRepository(MyDbContext context)
         {
             _context = context;
-            userRepository = new UserRepository(context);
-            mediaService = new MediaService();
         }
         public DbSet<ProductData> GetProducts()
         {
@@ -54,7 +49,7 @@ namespace e_commerce_server.src.Core.Modules.Product
                     .Include(p => p.user).ThenInclude(u => u.district).ThenInclude(d => d.city)
                     .Include(p => p.category)
                     .Include(p => p.product_status)
-                    .Select( product => new 
+                    .Select(product => new 
                     {
                         product.id,
                         product.name,
@@ -130,103 +125,74 @@ namespace e_commerce_server.src.Core.Modules.Product
                 throw new InternalException(ex.Message);
             }
         }
-        public ProductData UpdateProduct(List<string> filePaths, int productId, AddProductDto productDto)
+        public ProductData AddOrUpdateProduct(ProductData product, List<string> thumbnailUrls)
         {
             using var transaction = _context.Database.BeginTransaction();
 
             try
             {
-                var product = _context.Products.SingleOrDefault(p => p.id == productId);
+                if (product.id == 0) {
+                    _context.Products.Add(product);
+                    _context.SaveChanges();
 
-                if (product == null)
-                {
-                    throw new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND);
+                    this.AddProductThumbnails(product.id, thumbnailUrls);
+                } else {
+                    _context.SaveChanges();
+
+                    this.DeleteProductThumbnails(product.id);
+                    this.AddProductThumbnails(product.id, thumbnailUrls);
+
+                    _context.Entry(product).Reference(p => p.product_status).Load();
+                    _context.Entry(product).Reference(p => p.category).Load();
                 }
 
-                //delete old product's thumbnails
-                var thumbnailsToDelete = _context.Thumbnails.Where(cond => cond.product_id == productId).ToList();
 
-                _context.Thumbnails.RemoveRange(thumbnailsToDelete);
+                transaction.Commit();
 
-                //add new list thumbnail for product
+                return product;
+            }
+            catch (Exception e)
+            {
+                transaction.Rollback();
+                throw new InternalException(e.Message);
+            }
+        }
+        public void AddProductThumbnails(int productId, List<string> thumbnailUrls) 
+        {
+            try
+            {
+                Console.WriteLine(productId);
                 List<ThumbnailData> thumbnails = new List<ThumbnailData>();
 
-                for(int i = 0; i < filePaths.Count; i++)
+                foreach(string thumbnailUrl in thumbnailUrls)
                 {
-                    string thumbnailUrl = mediaService.UploadOne(filePaths[i], $"BadSupermarket/users/{product.user_id}/products/{productId}", Convert.ToString(i + 1));
-
-                    ThumbnailData item = new ThumbnailData
+                    ThumbnailData thumbnail = new ThumbnailData
                     {
                         thumbnail_url = thumbnailUrl,
                         product_id = productId,
                     };
 
-                    thumbnails.Add(item);
-                }
-                _context.AddRange(thumbnails);
-
-                //update detail 
-                product.description = productDto.description;
-                product.price = productDto.price;
-                product.name = productDto.name;
-                product.updated_at = DateTime.Now;
-                product.category_id = productDto.category_id;
-                product.discount = productDto.discount;
-
-                _context.SaveChanges();
-
-                transaction.Commit();
-
-                return product;
-            } catch (Exception ex)
-            {
-                transaction.Rollback();
-                throw new InternalException(ex.Message);
-            }
-        }
-        public ProductData AddProduct(List<string> filePaths, AddProductDto productDto,int userId)
-        {
-            using var transaction = _context.Database.BeginTransaction();
-
-            try
-            {
-                var newProduct = new ProductData
-                {
-                    name = productDto.name,
-                    description = productDto.description,
-                    price = productDto.price,
-                    discount = productDto.discount,
-                    created_at = DateTime.Now,
-                    updated_at = DateTime.Now,
-                    status_id = productDto.status_id,
-                    user_id = userId,
-                    category_id = productDto.category_id,
-                };
-
-                _context.Add(newProduct);
-                _context.SaveChanges();
-
-                for(int i = 0; i < filePaths.Count; i++)
-                {
-                    string thumbnailUrl = mediaService.UploadOne(filePaths[i], $"BadSupermarket/users/{userId}/products/{newProduct.id}", Convert.ToString(i + 1));
-                    ThumbnailData item = new ThumbnailData
-                    {
-                        thumbnail_url = thumbnailUrl,
-                        product_id = newProduct.id,
-                    };
-
-                    _context.Add(item);
+                    thumbnails.Add(thumbnail);
                 }
 
+                _context.Thumbnails.AddRange(thumbnails);
                 _context.SaveChanges();
-
-                transaction.Commit();
-
-                return newProduct;
             }
             catch (Exception e)
             {
-                transaction.Rollback();
+                throw new InternalException(e.Message);
+            }
+        }
+        public void DeleteProductThumbnails(int productId) {
+            try
+            {
+                var thumbnails = _context.Thumbnails.Where(t => t.product_id == productId).ToList();
+
+                _context.Thumbnails.RemoveRange(thumbnails);
+                _context.SaveChanges();
+            }
+            catch (Exception e)
+            {
                 throw new InternalException(e.Message);
             }
         }
@@ -249,43 +215,16 @@ namespace e_commerce_server.src.Core.Modules.Product
                 throw new InternalException(ex.Message);
             }
         }
-        public object? GetProductById(int id)
+        public ProductData? GetProductById(int id)
         {
             try
             {
-                var product = _context.Products
+                return _context.Products
                     .Include(p => p.thumbnails)
                     .Include(p => p.user).ThenInclude(u => u.district).ThenInclude(d => d.city)
                     .Include(p => p.category)
                     .Include(p => p.product_status)
                     .FirstOrDefault(p => p.id == id);
-
-                if (product == null)
-                {
-                    return null;
-                }
-
-                return new
-                {
-                    product.id,
-                    product.name,
-                    product.price,
-                    product.discount,
-                    product.description,
-                    product.created_at,
-                    product.updated_at,
-                    product.product_status.status,
-                    user = new
-                    {
-                        product.user.id,
-                        product.user.name,
-                        product.user.phone_number,
-                        product.user.avatar
-                    },
-                    thumbnails = product.thumbnails.Select(t => t.thumbnail_url),
-                    category = product.category.name,
-                    location = $"{product.user.district.name}, {product.user.district.city.name}"
-                };
             }
             catch (Exception ex)
             {

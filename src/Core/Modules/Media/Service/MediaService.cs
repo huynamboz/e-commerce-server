@@ -7,13 +7,14 @@ namespace e_commerce_server.src.Core.Modules.Media.Service
 {
     public class MediaService
     {
-        private FileSystemService fileSystemService;
-        private Cloudinary cloudinary;
+        private readonly FileSystemService fileSystemService;
+        private readonly Cloudinary cloudinary;
 
         public MediaService()
         {
             fileSystemService = new FileSystemService();
-            cloudinary = new Cloudinary(new Account(
+            cloudinary = new Cloudinary(new Account
+            (
                ENV.CLOUDINARY_NAME,
                ENV.CLOUDINARY_API_KEY,
                ENV.CLOUDINARY_API_SECRET
@@ -38,6 +39,24 @@ namespace e_commerce_server.src.Core.Modules.Media.Service
             } finally
             {
                 fileSystemService.DeleteFile(filePath);
+            }
+        }
+        public List<string> UploadMany(List<string> filePaths, string? folderPath = null, string? publicId = null) 
+        {
+            List<string> urls = new List<string>();
+
+            try
+            {
+                foreach(string filePath in filePaths)
+                {
+                    urls.Add(this.UploadOne(filePath, folderPath, publicId));
+                }
+
+                return urls;
+            } catch (Exception ex)
+            {
+                fileSystemService.DeleteFiles(filePaths);
+                throw new InternalException(ex.Message);
             }
         }
     }
