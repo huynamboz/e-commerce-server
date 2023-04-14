@@ -4,6 +4,6 @@ namespace e_commerce_server.src.Packages.HttpExceptions
 {
     public class BadRequestException : HttpException
     {
-        public BadRequestException(string message = "You don't have permission to access this resource"):base(HttpStatusCode.BadRequest, ErrorEnum.BAD_REQUEST, message) { }
+        public BadRequestException(string message = "Bad request"):base(HttpStatusCode.BadRequest, ErrorEnum.BAD_REQUEST, message) { }
     }
 }

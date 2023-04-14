@@ -12,8 +12,8 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
     [ApiController]
     public class productsController : ControllerBase
     {
-        private ProductService productService;
-        private MediaHandler mediaHandler;
+        private readonly ProductService productService;
+        private readonly MediaHandler mediaHandler;
         public productsController(MyDbContext dbContext)
         {
             productService = new ProductService(dbContext);
@@ -67,17 +67,14 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
         //add new product
         [HttpPost("my-products")]
         [Authorize]
-        public async Task<IActionResult> AddProduct([FromForm] AddProductDto productDto, List<IFormFile> files)
+        public IActionResult AddProduct(AddProductDto productDto)
         {
             try
             {
-                List<string> filePaths = await mediaHandler.Validate(files).Save();
-
                 var idClaim = HttpContext.User.FindFirst("id");
 
-                return Ok(productService.AddProduct(filePaths, productDto, Convert.ToInt32(idClaim.Value)));
-            }
-            catch (HttpException ex)
+                return Ok(productService.AddProduct(productDto, Convert.ToInt32(idClaim.Value)));
+            } catch (HttpException ex)
             {
                 return StatusCode((int)ex.StatusCode, ex.Response);
             }
@@ -92,27 +89,23 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
                 var idClaim = HttpContext.User.FindFirst("id");
 
                 return Ok(productService.GetProductByUserId(Convert.ToInt32(idClaim.Value), id));
-            }
-            catch (HttpException ex)
+            } catch (HttpException ex)
             {
                 return StatusCode((int)ex.StatusCode, ex.Response);
             }
         }
 
-        //edit product by id
+        //update product by id
         [HttpPut("my-products/{id}")]
         [Authorize]
-        public async Task<IActionResult> EditProduct([FromForm] AddProductDto productDto, List<IFormFile> files, int id)
+        public IActionResult EditProduct(AddProductDto productDto, int id)
         {
             try
             {
-                List<string> filePaths = await mediaHandler.Validate(files).Save();
-
                 var idClaim = HttpContext.User.FindFirst("id");
 
-                return Ok(productService.EditProductById(filePaths, productDto, id, Convert.ToInt32(idClaim.Value)));
-            }
-            catch (HttpException ex)
+                return Ok(productService.EditProductById(productDto, id, Convert.ToInt32(idClaim.Value)));
+            } catch (HttpException ex)
             {
                 return StatusCode((int)ex.StatusCode, ex.Response);
             }
@@ -128,8 +121,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
                 var idClaim = HttpContext.User.FindFirst("id");
 
                 return Ok(productService.DeleteProductById(Convert.ToInt32(idClaim.Value), id));
-            }
-            catch (HttpException ex)
+            } catch (HttpException ex)
             {
                 return StatusCode((int)ex.StatusCode, ex.Response);
             }

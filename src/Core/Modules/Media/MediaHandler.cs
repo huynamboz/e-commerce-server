@@ -5,7 +5,7 @@ namespace e_commerce_server.src.Core.Modules.Media
 {
     public class MediaHandler
     {
-        private MediaInterceptor mediaInterceptor;
+        private readonly MediaInterceptor mediaInterceptor;
         private List<IFormFile> files;
         public MediaHandler()
         {

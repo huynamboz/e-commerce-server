@@ -12,11 +12,11 @@ namespace e_commerce_server.src.Core.Modules.User.Service
 {
     public class UserService
     {
-        private ProductRepository productRepository;
-        private FileSystemService fileSystemService;
-        private UserRepository userRepository;
-        private BCryptService bCryptService;
-        private MediaService mediaService;
+        private readonly ProductRepository productRepository;
+        private readonly FileSystemService fileSystemService;
+        private readonly UserRepository userRepository;
+        private readonly BCryptService bCryptService;
+        private readonly MediaService mediaService;
         public UserService(MyDbContext context)
         {
             productRepository = new ProductRepository(context);
@@ -26,7 +26,7 @@ namespace e_commerce_server.src.Core.Modules.User.Service
             mediaService = new MediaService();
         } 
     
-        public bool CheckUserStatus(dynamic user)
+        public bool CheckUserStatus(UserData user)
         {
             return !String.IsNullOrEmpty(user.email) &&
                 !String.IsNullOrEmpty(user.name) &&
@@ -35,63 +35,79 @@ namespace e_commerce_server.src.Core.Modules.User.Service
                 user.gender != null &&
                 user.birthday != null &&
                 !String.IsNullOrEmpty(user.avatar) &&
-                Convert.ToBoolean(user.district);
+                Convert.ToBoolean(user.district_id);
         }
 
-        public object UpdateUserById(string? filePath, UpdateUserDto updateUserDto, int userId)
+        public object UpdateUserById(UpdateUserDto updateUserDto, int userId)
         {
-            try
+            var userByEmail = userRepository.GetUserByEmail(updateUserDto.email);
+        
+            if (userByEmail != null && userByEmail.id != userId)
             {
-                var userByEmail = userRepository.GetUserByEmail(updateUserDto.email);
-            
-                if (userByEmail != null && userByEmail.id != userId)
-                {
-                    throw new BadRequestException(AuthEnum.DUPLICATE_EMAIL);
-                }
-
-                if (!String.IsNullOrEmpty(updateUserDto.phone_number))
-                {
-                    var userByPhone = userRepository.GetUserByPhoneNumber(updateUserDto.phone_number);
-
-                    if (userByPhone != null && userByPhone.id != userId)
-                    {
-                        throw new BadRequestException(AuthEnum.DUPLICATE_PHONE_NUMBER);
-                    }
-                }
-
-                var userById = userRepository.GetUserById(userId) ?? throw new BadRequestException(UserEnum.USER_NOT_FOUND);
-
-                UserData updatedUser = new UserData();
-
-                updatedUser.id = userId;
-                updatedUser.name = updateUserDto.name;
-                updatedUser.email = updateUserDto.email;
-                updatedUser.phone_number = updateUserDto.phone_number;
-                updatedUser.password = bCryptService.Hash(updateUserDto.password);
-                updatedUser.gender = updateUserDto.gender;
-                updatedUser.birthday = updateUserDto.birthday;
-                updatedUser.address = updateUserDto.address;
-                updatedUser.avatar = string.IsNullOrEmpty(filePath) ? null : mediaService.UploadOne(filePath, $"BadSupermarket/users/{userId}/avatar/");
-                updatedUser.district_id = updateUserDto.district_id;
-                updatedUser.update_at = DateTime.Now;
-
-                return new
-                {
-                    message = UserEnum.UPDATE_USER_SUCCESS,
-                    data = userRepository.CreateOrUpdateUser(updatedUser)
-                };
-            } catch(Exception ex)
-            {
-                if (!string.IsNullOrEmpty(filePath))
-                {
-                    fileSystemService.DeleteFile(filePath);
-                }
-                throw;
+                throw new BadRequestException(AuthEnum.DUPLICATE_EMAIL);
             }
+
+            if (!String.IsNullOrEmpty(updateUserDto.phone_number))
+            {
+                var userByPhone = userRepository.GetUserByPhoneNumber(updateUserDto.phone_number);
+
+                if (userByPhone != null && userByPhone.id != userId)
+                {
+                    throw new BadRequestException(AuthEnum.DUPLICATE_PHONE_NUMBER);
+                }
+            }
+
+            var userById = userRepository.GetUserById(userId) ?? throw new BadRequestException(UserEnum.USER_NOT_FOUND);
+
+            userById.name = updateUserDto.name;
+            userById.email = updateUserDto.email;
+            userById.phone_number = updateUserDto.phone_number;
+            userById.password = bCryptService.Hash(updateUserDto.password);
+            userById.gender = updateUserDto.gender;
+            userById.birthday = updateUserDto.birthday;
+            userById.address = updateUserDto.address;
+            userById.avatar = updateUserDto.avatar;
+            userById.district_id = updateUserDto.district_id;
+            userById.update_at = DateTime.Now;
+
+            userRepository.CreateOrUpdateUser(userById);
+
+            return new
+            {
+                message = UserEnum.UPDATE_USER_SUCCESS,
+                data = new
+                {
+                    userById.id,
+                    userById.name,
+                    userById.email,
+                    userById.phone_number,
+                    userById.address,
+                    userById.avatar,
+                    userById.birthday,
+                    userById.created_at,
+                    userById.update_at,
+                    userById.gender,
+                    location = Convert.ToBoolean(userById?.district_id) ? $"{userById.district?.name}, {userById.district?.city.name}" : null
+                }
+            };
         }
         public object GetUserById(int userId)
         {
-            return userRepository.GetUserById(userId) ?? throw new BadRequestException(UserEnum.USER_NOT_FOUND);
+            var user = userRepository.GetUserById(userId) ?? throw new BadRequestException(UserEnum.USER_NOT_FOUND);
+
+            return new {
+                user.id,
+                user.name,
+                user.email,
+                user.phone_number,
+                user.address,
+                user.avatar,
+                user.birthday,
+                user.created_at,
+                user.update_at,
+                user.gender,
+                location = Convert.ToBoolean(user.district_id) ? $"{user.district.name}, {user.district.city.name}" : null
+            };
         }
         public object GetFavoriteProducts(int page, int userId)
         {

@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
 
 namespace e_commerce_server.src.Core.Database.Data
 {
@@ -8,6 +7,7 @@ namespace e_commerce_server.src.Core.Database.Data
     public class ProductData
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int id { get; set; }
         [StringLength(50)]
         public string name { get; set; }
