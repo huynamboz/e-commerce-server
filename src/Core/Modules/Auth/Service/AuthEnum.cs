@@ -15,5 +15,6 @@
         public const string INVALID_TOKEN = "Invalid token";
         public const string EXPIRED_TOKEN = "Expired token";
         public const string UPDATE_PASSWORD_SUCCESS = "Updated password successfully";
+        public const string USER_BANNED = "This account has been banned";
     }
 }

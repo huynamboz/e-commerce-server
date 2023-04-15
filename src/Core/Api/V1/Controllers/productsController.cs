@@ -13,11 +13,9 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
     public class productsController : ControllerBase
     {
         private readonly ProductService productService;
-        private readonly MediaHandler mediaHandler;
         public productsController(MyDbContext dbContext)
         {
             productService = new ProductService(dbContext);
-            mediaHandler = new MediaHandler();
         }
 
         //get all product

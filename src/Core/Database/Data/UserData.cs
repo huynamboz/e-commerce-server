@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
 
 namespace e_commerce_server.src.Core.Database.Data
 {
@@ -27,7 +26,8 @@ namespace e_commerce_server.src.Core.Database.Data
         public DateTime? reset_token_expiration_date { get; set; }
         public DateTime created_at { get; set; }
         public DateTime update_at { get; set; }
-        public DateTime delete_at { get; set; }
+        public DateTime? delete_at { get; set; }
+        public bool active_status { get; set; }
         public int? district_id { get; set; }
         public virtual DistrictData district { get; set; }
         public string? refresh_token { get; set; }

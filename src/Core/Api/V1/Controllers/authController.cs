@@ -50,7 +50,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
         {
             try
             {
-                return Ok(authService.GenerateRefreshToken(model));
+                return Ok(authService.GenerateAccessToken(model));
             }
             catch (HttpException ex)
             {

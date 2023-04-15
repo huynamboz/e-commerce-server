@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
 
 namespace e_commerce_server.src.Core.Database.Data
 {
@@ -12,7 +11,6 @@ namespace e_commerce_server.src.Core.Database.Data
         [Required]
         [StringLength(50)]
         public string name { get; set; }
-        [JsonIgnore]
         public virtual ICollection<ProductData> products { get; set; }
         public CategoryData()
         {

@@ -29,6 +29,11 @@ namespace e_commerce_server.src.Core.Modules.Auth.Service
                 throw new BadRequestException(AuthEnum.LOGIN_INCORRECT);
             }
 
+            if (user.delete_at != null)
+            {
+                throw new ForbiddenException(AuthEnum.USER_BANNED);
+            }
+
             var accessToken = jwtService.GenerateAccessToken(user);
 
             var refreshToken = jwtService.GenerateRefreshToken(user);
@@ -66,7 +71,7 @@ namespace e_commerce_server.src.Core.Modules.Auth.Service
                 email = model.email,
                 password = hashedPassword,
                 name = model.name,
-                role_id = 1,
+                role_id = 2,
                 created_at = DateTime.Now,
                 update_at = DateTime.Now
             };
@@ -79,7 +84,7 @@ namespace e_commerce_server.src.Core.Modules.Auth.Service
             };
         }
 
-        public object GenerateRefreshToken(RefreshTokenDto model)
+        public object GenerateAccessToken(RefreshTokenDto model)
         {
             var user = userRepository.GetUserByRefreshToken(model.refresh_token);
 
@@ -115,24 +120,30 @@ namespace e_commerce_server.src.Core.Modules.Auth.Service
         {
             var user = userRepository.GetUserByEmail(model.email);
 
-            if (user != null)
+            if (user == null)
             {
-                string token = Convert.ToBase64String(CryptoService.GetRandomBytes());
-                Console.WriteLine(token);
-
-                user.reset_token = token;
-                user.reset_token_expiration_date = DateTime.Now.AddHours(1);
-
-                userRepository.CreateOrUpdateUser(user);
-
-                sendGridService.SendMail(model.email, MailContent.REQUEST_RESET_PASSWORD(token));
-                
-                return new
-                {
-                    message = AuthEnum.REQUEST_RESET_PASSWORD_SUCCESS
-                };
+                throw new BadRequestException(AuthEnum.NOT_FOUND_EMAIL);
             }
-            throw new BadRequestException(AuthEnum.NOT_FOUND_EMAIL);
+
+            if (user.delete_at != null)
+            {
+                throw new ForbiddenException(AuthEnum.USER_BANNED);
+            }
+
+            string token = Convert.ToBase64String(CryptoService.GetRandomBytes());
+            Console.WriteLine(token);
+
+            user.reset_token = token;
+            user.reset_token_expiration_date = DateTime.Now.AddHours(1);
+
+            userRepository.CreateOrUpdateUser(user);
+
+            sendGridService.SendMail(model.email, MailContent.REQUEST_RESET_PASSWORD(token));
+            
+            return new
+            {
+                message = AuthEnum.REQUEST_RESET_PASSWORD_SUCCESS
+            };
         }
         public object GetResetToken(string token)
         {

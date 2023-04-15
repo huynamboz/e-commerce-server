@@ -168,13 +168,31 @@ namespace e_commerce_server.src.Core.Database
                     .OnDelete(DeleteBehavior.NoAction);
 
                 modelBuilder.Entity<UserData>().HasData(
-                    new UserData
+                    new UserData[]
                     {
-                        id = 1,
-                        name = "John Doe",
-                        email = "user@example.com",
-                        password = "$2a$04$GmL6XUWBFM9nSUzBynCNa.nvLo7pfiPK9sg1tdNiF3tKmhoMP1MIi", //Password123!
-                        role_id = 1,
+                        new UserData
+                        {
+                            id = 1,
+                            name = "Admin",
+                            email = "user@example.com",
+                            password = "$2a$04$GmL6XUWBFM9nSUzBynCNa.nvLo7pfiPK9sg1tdNiF3tKmhoMP1MIi", //Password123!
+                            role_id = 1,
+                            phone_number = "0812345678",
+                            address = "54 Nguyễn Lương Bằng",
+                            gender = true,
+                            district_id = 550500,
+                            avatar = "https://res.cloudinary.com/dgtaa84en/image/upload/v1678819995/organizations/116/avatar/avatar.jpg",
+                            active_status = true,
+                        },
+                        new UserData
+                        {
+                            id = 2,
+                            name = "User",
+                            email = "user2@example.com",
+                            password = "$2a$04$GmL6XUWBFM9nSUzBynCNa.nvLo7pfiPK9sg1tdNiF3tKmhoMP1MIi", //Password123!
+                            role_id = 2,
+                            active_status = false
+                        },
                     }
                 );
             }).GetAwaiter().GetResult();
