@@ -28,14 +28,13 @@ namespace e_commerce_server.src.Core.Modules.User.Service
     
         public bool CheckUserStatus(UserData user)
         {
-            return !String.IsNullOrEmpty(user.email) &&
-                !String.IsNullOrEmpty(user.name) &&
-                !String.IsNullOrEmpty(user.phone_number) &&
+            return !String.IsNullOrEmpty(user.phone_number) &&
                 !String.IsNullOrEmpty(user.address) &&
                 user.gender != null &&
                 user.birthday != null &&
                 !String.IsNullOrEmpty(user.avatar) &&
-                Convert.ToBoolean(user.district_id);
+                Convert.ToBoolean(user.district_id) &&
+                user.delete_at == null;
         }
 
         public object UpdateUserById(UpdateUserDto updateUserDto, int userId)
@@ -59,6 +58,11 @@ namespace e_commerce_server.src.Core.Modules.User.Service
 
             var userById = userRepository.GetUserById(userId) ?? throw new BadRequestException(UserEnum.USER_NOT_FOUND);
 
+            if (userById.delete_at != null)
+            {
+                throw new ForbiddenException(AuthEnum.USER_BANNED);
+            }
+
             userById.name = updateUserDto.name;
             userById.email = updateUserDto.email;
             userById.phone_number = updateUserDto.phone_number;
@@ -69,6 +73,7 @@ namespace e_commerce_server.src.Core.Modules.User.Service
             userById.avatar = updateUserDto.avatar;
             userById.district_id = updateUserDto.district_id;
             userById.update_at = DateTime.Now;
+            userById.active_status = CheckUserStatus(userById);
 
             userRepository.CreateOrUpdateUser(userById);
 
@@ -87,6 +92,7 @@ namespace e_commerce_server.src.Core.Modules.User.Service
                     userById.created_at,
                     userById.update_at,
                     userById.gender,
+                    userById.active_status,
                     location = Convert.ToBoolean(userById?.district_id) ? $"{userById.district?.name}, {userById.district?.city.name}" : null
                 }
             };
@@ -105,7 +111,9 @@ namespace e_commerce_server.src.Core.Modules.User.Service
                 user.birthday,
                 user.created_at,
                 user.update_at,
+                user.delete_at,
                 user.gender,
+                user.active_status,
                 location = Convert.ToBoolean(user.district_id) ? $"{user.district.name}, {user.district.city.name}" : null
             };
         }
@@ -197,11 +205,40 @@ namespace e_commerce_server.src.Core.Modules.User.Service
         }
         public object GetAllUsers(int roleId) 
         {
-            if(roleId == 2)
+            if(roleId == RoleEnum.ADMIN)
             {
                 return userRepository.GetAllUsers();
             }
-            throw new BadRequestException();
+            throw new ForbiddenException(UserEnum.GET_ALL_USERS_DENIED);
+        }
+        public object DeleteUserById(int roleId, int userId)
+        {
+            var user = userRepository.GetUserById(userId);
+
+            if(user == null)
+            {
+                throw new BadRequestException(UserEnum.USER_NOT_FOUND);
+            }
+
+            if (roleId != RoleEnum.ADMIN || user.role_id == RoleEnum.ADMIN)
+            {
+                throw new BadRequestException(UserEnum.DELETE_USER_DENIED);
+            }
+
+            if (user.delete_at != null) {
+                throw new BadRequestException(UserEnum.USER_ALREADY_DELETED);
+            }
+
+            user.delete_at = DateTime.Now;
+            user.active_status = false;
+            user.refresh_token = null;
+
+            userRepository.CreateOrUpdateUser(user);
+
+            return new
+            {
+                message = UserEnum.DELETE_USER_SUCCESS
+            };
         }
     }
 }

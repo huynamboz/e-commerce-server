@@ -1,9 +1,7 @@
 ﻿using e_commerce_server.src.Core.Database;
 using e_commerce_server.src.Core.Database.Data;
-using e_commerce_server.src.Core.Modules.Media.Service;
 using e_commerce_server.src.Core.Modules.Product.Service;
 using e_commerce_server.src.Core.Common.Enum;
-using e_commerce_server.src.Core.Modules.User;
 using e_commerce_server.src.Packages.HttpExceptions;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,11 +14,11 @@ namespace e_commerce_server.src.Core.Modules.Product
         {
             _context = context;
         }
-        public DbSet<ProductData> GetProducts()
+        public List<ProductData> GetProducts()
         {
             try
             {
-                return _context.Products;
+                return _context.Products.Where(p => p.user.active_status == true).ToList();
             }
             catch (Exception ex)
             {
@@ -31,18 +29,19 @@ namespace e_commerce_server.src.Core.Modules.Product
         {
             try
             {
-                return _context.Products.Where(p => p.user_id == userId).ToList();
+                return _context.Products.Where(p => p.user_id == userId && p.user.active_status == true).ToList();
             }
             catch (Exception ex)
             {
                 throw new InternalException(ex.Message);
             }
         }
-        public List<object> GetProductsByPage(DbSet<ProductData> products, int page)
+        public List<object> GetProductsByPage(int page)
         {
             try
             {
                 return _context.Products
+                    .Where(p => p.user.active_status == true)
                     .Skip((page -1) * 10)
                     .Take(PageSizeEnum.PAGE_SIZE)
                     .Include(p => p.thumbnails)
@@ -64,11 +63,11 @@ namespace e_commerce_server.src.Core.Modules.Product
                             product.user.id,
                             product.user.name,
                             product.user.phone_number,
-                            product.user.avatar
+                            product.user.avatar,
+                            location = Convert.ToBoolean(product.user.district_id) ? $"{product.user.district.name}, {product.user.district.city.name}" : null
                         },
                         thumbnails = product.thumbnails.Select(t => t.thumbnail_url),
                         category = product.category.name,
-                        location = $"{product.user.district.name}, {product.user.district.city.name}"
                     }).Cast<object>().ToList();
             } catch (Exception ex)
             {
@@ -79,7 +78,12 @@ namespace e_commerce_server.src.Core.Modules.Product
         {
             try
             {
-                return _context.Products.SingleOrDefault(p => p.user_id == userId && p.id == productId);
+                return _context.Products
+                    .Include(p => p.thumbnails)
+                    .Include(p => p.user).ThenInclude(u => u.district).ThenInclude(d => d.city)
+                    .Include(p => p.category)
+                    .Include(p => p.product_status)
+                    .SingleOrDefault(p => p.user_id == userId && p.id == productId && p.user.active_status);
             }
             catch (Exception ex)
             {
@@ -91,7 +95,7 @@ namespace e_commerce_server.src.Core.Modules.Product
             try
             {
                 return _context.Products
-                    .Where(p => p.user_id == userId)
+                    .Where(p => p.user_id == userId && p.user.active_status == true)
                     .Skip((page -1) * 10)
                     .Take(PageSizeEnum.PAGE_SIZE)
                     .Include(p => p.thumbnails)
@@ -113,11 +117,11 @@ namespace e_commerce_server.src.Core.Modules.Product
                             product.user.id,
                             product.user.name,
                             product.user.phone_number,
-                            product.user.avatar
+                            product.user.avatar,
+                            location = Convert.ToBoolean(product.user.district_id) ? $"{product.user.district.name}, {product.user.district.city.name}" : null
                         },
                         thumbnails = product.thumbnails.Select(t => t.thumbnail_url),
                         category = product.category.name,
-                        location = $"{product.user.district.name}, {product.user.district.city.name}"
                     }
                 ).Cast<object>().ToList();
             } catch (Exception ex)
@@ -145,7 +149,6 @@ namespace e_commerce_server.src.Core.Modules.Product
                     _context.Entry(product).Reference(p => p.product_status).Load();
                     _context.Entry(product).Reference(p => p.category).Load();
                 }
-
 
                 transaction.Commit();
 
@@ -224,7 +227,7 @@ namespace e_commerce_server.src.Core.Modules.Product
                     .Include(p => p.user).ThenInclude(u => u.district).ThenInclude(d => d.city)
                     .Include(p => p.category)
                     .Include(p => p.product_status)
-                    .FirstOrDefault(p => p.id == id);
+                    .FirstOrDefault(p => p.id == id && p.user.active_status);
             }
             catch (Exception ex)
             {

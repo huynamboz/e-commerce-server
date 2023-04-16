@@ -49,7 +49,7 @@ namespace e_commerce_server.src.Core.Modules.User
         {
             try
             {
-                return _context.Users.SingleOrDefault(p => p.refresh_token == refreshToken);
+                return _context.Users.SingleOrDefault(u => u.refresh_token == refreshToken && u.delete_at != null);
             } catch (Exception ex)
             {
                 throw new InternalException(ex.Message);
@@ -76,8 +76,11 @@ namespace e_commerce_server.src.Core.Modules.User
                     _context.SaveChanges();
                 } else {
                     _context.SaveChanges();
-                    _context.Entry(user).Reference(u => u.district).Load();
-                    _context.Entry(user.district).Reference(d => d.city).Load();
+                    if (user.district_id != null) 
+                    {
+                        _context.Entry(user).Reference(u => u.district).Load();
+                        _context.Entry(user.district).Reference(d => d.city).Load();
+                    }
                 }
 
                 return user;
@@ -91,7 +94,7 @@ namespace e_commerce_server.src.Core.Modules.User
             try
             {
                 return _context.Users
-                    .Where(u => u.role_id == 1)
+                    .Where(u => u.role_id == RoleEnum.USER)
                     .Include(u => u.district).ThenInclude(d => d.city)
                     .Select(user => new
                     {
@@ -103,6 +106,10 @@ namespace e_commerce_server.src.Core.Modules.User
                         user.gender,
                         user.birthday,
                         user.avatar,
+                        user.role_id,
+                        user.created_at,
+                        user.delete_at,
+                        user.active_status,
                         location  = Convert.ToBoolean(user.district_id) ? $"{user.district.name}, {user.district.city.name}" : null
                     }).Cast<object>().ToList();
             } catch (Exception ex)
@@ -125,7 +132,7 @@ namespace e_commerce_server.src.Core.Modules.User
         {
             try
             {
-                return _context.Favorites.Where(p => p.user_id == userId).ToList();
+                return _context.Favorites.Where(p => p.user_id == userId && p.user.active_status).ToList();
             }
             catch (Exception ex)
             {
@@ -137,7 +144,7 @@ namespace e_commerce_server.src.Core.Modules.User
             try
             {
                 return _context.Favorites
-                    .Where(p => p.user_id == userId)
+                    .Where(p => p.user_id == userId && p.product.user.active_status)
                     .Skip((page -1) * 10)
                     .Take(PageSizeEnum.PAGE_SIZE)
                     .Include(p => p.product).ThenInclude(p => p.category)
@@ -154,14 +161,14 @@ namespace e_commerce_server.src.Core.Modules.User
                         p.product.product_status.status,
                         user = new
                         {
-                            p.user.id,
-                            p.user.name,
-                            p.user.phone_number,
-                            p.user.avatar
+                            p.product.user.id,
+                            p.product.user.name,
+                            p.product.user.phone_number,
+                            p.product.user.avatar,
+                            location = Convert.ToBoolean(p.user.district_id) ? $"{p.user.district.name}, {p.user.district.city.name}" : null
                         },
                         thumbnails = p.product.thumbnails.Select(t => t.thumbnail_url),
                         category = p.product.category.name,
-                        location = Convert.ToBoolean(p.user.district_id) ? $"{p.user.district.name}, {p.user.district.city.name}" : null
                     }
                 ).Cast<object>().ToList();
             } catch (Exception ex)

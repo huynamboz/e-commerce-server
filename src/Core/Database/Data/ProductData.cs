@@ -17,7 +17,7 @@ namespace e_commerce_server.src.Core.Database.Data
         public int discount { get; set; }
         public DateTime created_at { get; set; }
         public DateTime updated_at { get; set;}
-        public DateTime delete_at { get; set; }
+        public DateTime? delete_at { get; set; }
         public int status_id { get; set; }
         public virtual ProductStatusData product_status { get; set; }
         public virtual ICollection<ThumbnailData> thumbnails { get; set; }

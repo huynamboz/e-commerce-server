@@ -24,7 +24,22 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             {
                 var roleIdClaim = HttpContext.User.FindFirst("role_id");
 
-                return Ok(userService.GetAllUsers(Convert.ToInt32(roleIdClaim.Value))); 
+                return Ok(userService.GetAllUsers(Convert.ToInt32(roleIdClaim.Value)));
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Response);
+            }
+        }
+
+        [HttpPatch("/users/{id}")]
+        public IActionResult DeleteUser(int id)
+        {
+            try
+            {
+                var roleIdClaim = HttpContext.User.FindFirst("role_id"); 
+
+                return Ok(userService.DeleteUserById(Convert.ToInt32(roleIdClaim.Value), id));    
             }
             catch (HttpException ex)
             {

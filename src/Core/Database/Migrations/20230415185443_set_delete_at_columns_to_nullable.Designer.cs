@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using e_commerce_server.src.Core.Database;
 
@@ -11,9 +12,11 @@ using e_commerce_server.src.Core.Database;
 namespace e_commerce_server.src.Core.Database.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230415185443_set_delete_at_columns_to_nullable")]
+    partial class set_delete_at_columns_to_nullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4826,9 +4829,6 @@ namespace e_commerce_server.src.Core.Database.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<bool>("active_status")
-                        .HasColumnType("bit");
-
                     b.Property<string>("address")
                         .HasColumnType("nvarchar(max)");
 
@@ -4901,7 +4901,6 @@ namespace e_commerce_server.src.Core.Database.Migrations
                         new
                         {
                             id = 1,
-                            active_status = true,
                             address = "54 Nguyễn Lương Bằng",
                             avatar = "https://res.cloudinary.com/dgtaa84en/image/upload/v1678819995/organizations/116/avatar/avatar.jpg",
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -4917,7 +4916,6 @@ namespace e_commerce_server.src.Core.Database.Migrations
                         new
                         {
                             id = 2,
-                            active_status = false,
                             created_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             email = "user2@example.com",
                             name = "User",
