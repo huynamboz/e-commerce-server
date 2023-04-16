@@ -1,16 +1,16 @@
 ﻿using e_commerce_server.src.Core.Database;
 using e_commerce_server.src.Packages.HttpExceptions;
 
-namespace e_commerce_server.src.Core.Modules.City
+namespace e_commerce_server.src.Core.Modules.Location
 {
-    public class CityRepository 
+    public class LocationRepository 
     {
         private readonly MyDbContext _context;
-        public CityRepository(MyDbContext context)
+        public LocationRepository(MyDbContext context)
         {
             _context = context;
         }
-        public object? GetAllCities()
+        public List<object>? GetAllCities()
         {
             try
             {
@@ -27,7 +27,7 @@ namespace e_commerce_server.src.Core.Modules.City
             }
         }
 
-        public object GetDistrictsByCityId(int cityId)
+        public List<object>? GetDistrictsByCityId(int cityId)
         {
             try
             {

@@ -1,19 +1,18 @@
 ﻿using e_commerce_server.src.Core.Database;
-using e_commerce_server.src.Core.Modules.Media;
 using e_commerce_server.src.Packages.HttpExceptions;
 using Microsoft.AspNetCore.Mvc;
-using e_commerce_server.src.Core.Modules.City.Service;
+using e_commerce_server.src.Core.Modules.Location.Service;
 
 namespace e_commerce_server.src.Core.Api.V1.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class cityController : ControllerBase
+    public class locationController : ControllerBase
     {
-        private CityService cityService;
-        public cityController(MyDbContext dbContext)
+        private readonly LocationService locationService;
+        public locationController(MyDbContext dbContext)
         {
-            cityService = new CityService(dbContext);
+            locationService = new LocationService(dbContext);
         }
 
         [HttpGet("cities")]
@@ -21,7 +20,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
         {
             try
             {
-                return Ok(cityService.GetAllCities());
+                return Ok(locationService.GetAllCities());
             }
             catch (HttpException ex)
             {
@@ -34,7 +33,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
         {
             try
             {
-                return Ok(cityService.GetDistrictsByCityId(id));
+                return Ok(locationService.GetDistrictsByCityId(id));
             }
             catch (HttpException ex)
             {
