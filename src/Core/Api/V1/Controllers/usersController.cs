@@ -28,6 +28,11 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             {
                 var idClaim = HttpContext.User.FindFirst("id");
 
+                if (idClaim?.Value == null)
+                {
+                    throw new UnAuthorizedException();
+                }
+
                 return Ok(userService.GetUserById(Convert.ToInt32(idClaim.Value)));
             }
             catch (HttpException ex)
@@ -43,6 +48,11 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             try
             {
                 var idClaim = HttpContext.User.FindFirst("id");
+
+                if (idClaim?.Value == null)
+                {
+                    throw new UnAuthorizedException();
+                }
 
                 return Ok(userService.UpdateUserById(model, Convert.ToInt32(idClaim.Value)));
             }
@@ -61,6 +71,11 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             {
                 var idClaim = HttpContext.User.FindFirst("id");
 
+                if (idClaim?.Value == null)
+                {
+                    throw new UnAuthorizedException();
+                }
+
                 return Ok(userService.GetFavoriteProducts(page, Convert.ToInt32(idClaim.Value)));
             }
             catch (HttpException ex)
@@ -78,6 +93,11 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             {
                 var idClaim = HttpContext.User.FindFirst("id");
 
+                if (idClaim?.Value == null)
+                {
+                    throw new UnAuthorizedException();
+                }
+
                 return Ok(userService.AddProductToFavorite(Convert.ToInt32(idClaim.Value), model));
             }
             catch (HttpException ex)
@@ -94,6 +114,11 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             try
             {
                 var idClaim = HttpContext.User.FindFirst("id");
+
+                if (idClaim?.Value == null)
+                {
+                    throw new UnAuthorizedException();
+                }
 
                 return Ok(userService.RemoveProductFromFavorite(Convert.ToInt32(idClaim.Value), id));
             }
