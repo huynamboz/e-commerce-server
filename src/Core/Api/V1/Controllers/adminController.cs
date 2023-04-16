@@ -24,6 +24,11 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             {
                 var roleIdClaim = HttpContext.User.FindFirst("role_id");
 
+                if (roleIdClaim?.Value == null) 
+                {
+                    throw new UnAuthorizedException();
+                }
+
                 return Ok(userService.GetAllUsers(Convert.ToInt32(roleIdClaim.Value)));
             }
             catch (HttpException ex)
@@ -38,6 +43,11 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             try
             {
                 var roleIdClaim = HttpContext.User.FindFirst("role_id"); 
+
+                if (roleIdClaim?.Value == null) 
+                {
+                    throw new UnAuthorizedException();
+                }
 
                 return Ok(userService.DeleteUserById(Convert.ToInt32(roleIdClaim.Value), id));    
             }

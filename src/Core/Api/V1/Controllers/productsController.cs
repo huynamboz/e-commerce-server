@@ -1,5 +1,4 @@
 ﻿using e_commerce_server.src.Core.Database;
-using e_commerce_server.src.Core.Modules.Media;
 using e_commerce_server.src.Core.Modules.Product.Dto;
 using e_commerce_server.src.Core.Modules.Product.Service;
 using e_commerce_server.src.Packages.HttpExceptions;
@@ -54,6 +53,11 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             {
                 var idClaim = HttpContext.User.FindFirst("id");
  
+                if (idClaim?.Value == null)
+                {
+                    throw new UnAuthorizedException();
+                }
+
                 return Ok(productService.GetProductsByUserId(page, Convert.ToInt32(idClaim.Value)));
             }
             catch (HttpException ex)
@@ -71,6 +75,11 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             {
                 var idClaim = HttpContext.User.FindFirst("id");
 
+                if (idClaim?.Value == null)
+                {
+                    throw new UnAuthorizedException();
+                }
+
                 return Ok(productService.AddProduct(productDto, Convert.ToInt32(idClaim.Value)));
             } catch (HttpException ex)
             {
@@ -85,6 +94,11 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             try
             {
                 var idClaim = HttpContext.User.FindFirst("id");
+
+                if (idClaim?.Value == null)
+                {
+                    throw new UnAuthorizedException();
+                }
 
                 return Ok(productService.GetProductByUserId(Convert.ToInt32(idClaim.Value), id));
             } catch (HttpException ex)
@@ -102,6 +116,11 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             {
                 var idClaim = HttpContext.User.FindFirst("id");
 
+                if (idClaim?.Value == null)
+                {
+                    throw new UnAuthorizedException();
+                }
+
                 return Ok(productService.EditProductById(productDto, id, Convert.ToInt32(idClaim.Value)));
             } catch (HttpException ex)
             {
@@ -117,6 +136,11 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             try
             {
                 var idClaim = HttpContext.User.FindFirst("id");
+
+                if (idClaim?.Value == null)
+                {
+                    throw new UnAuthorizedException();
+                }
 
                 return Ok(productService.DeleteProductById(Convert.ToInt32(idClaim.Value), id));
             } catch (HttpException ex)
