@@ -154,6 +154,18 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
                 var idClaim = HttpContext.User.FindFirst("id")?.Value;
 
                 return Ok(reviewService.CreateOrUpdateReview(productId, Convert.ToInt32(idClaim), reviewDto));
+            } catch (HttpException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Response);
+            }
+        }
+
+        [HttpGet("{id}/comparisons")]
+        public IActionResult Get(int id)
+        {
+            try
+            {
+                return Ok(productService.GetCompareCost(id));
             }
             catch (HttpException ex)
             {

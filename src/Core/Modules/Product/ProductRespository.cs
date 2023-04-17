@@ -3,6 +3,9 @@ using e_commerce_server.src.Core.Database.Data;
 using e_commerce_server.src.Core.Common.Enum;
 using e_commerce_server.src.Packages.HttpExceptions;
 using Microsoft.EntityFrameworkCore;
+using OpenQA.Selenium.Edge;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 
 namespace e_commerce_server.src.Core.Modules.Product
 {
