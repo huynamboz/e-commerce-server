@@ -89,6 +89,23 @@ namespace e_commerce_server.src.Core.Modules.User
                 throw new InternalException(ex.Message);
             }
         }
+
+        public int GetUserIdByProductId(int productId)
+        {
+            try
+            {
+                var product = _context.Products
+                .Include(p => p.user)
+                .SingleOrDefault(p => p.id == productId);
+                return product.user.id;
+
+            } catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            }
+        }
+        
+
         public List<object> GetAllUsers()
         {
             try

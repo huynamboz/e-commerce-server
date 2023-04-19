@@ -240,5 +240,14 @@ namespace e_commerce_server.src.Core.Modules.User.Service
                 message = UserEnum.DELETE_USER_SUCCESS
             };
         }
+
+        public int GetUserByProductId(int productId)
+        {
+            int userId = userRepository.GetUserIdByProductId(productId);
+
+            var user = userRepository.GetUserById(userId) ?? throw new BadRequestException(UserEnum.USER_NOT_FOUND);
+
+            return user.role_id;
+        }
     }
 }

@@ -290,5 +290,34 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                 category = product.category.name,
             };
         }
+
+        public object DeleteProductByProductId(int roleId, int productId)
+        {
+            var product = productRepository.GetProductById(productId);
+
+            if (product == null)
+            {
+                throw new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND);
+            }
+
+            if (roleId != RoleEnum.ADMIN)
+            {
+                throw new BadRequestException(ProductEnum.DELETE_PRODUCT_DENY);
+            }
+
+            if(userService.GetUserByProductId(productId) == RoleEnum.USER)
+            {
+                throw new BadRequestException(ProductEnum.DELETE_PRODUCT_DENY);
+            }
+
+            product.delete_at = DateTime.Now;
+            
+            //... update lai database
+
+            return new
+            {
+                message = ProductEnum.DELETE_PRODUCT_SUCCESS
+            };
+        }
     }
 }
