@@ -13,11 +13,9 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
     public class usersController : ControllerBase
     {
         private readonly UserService userService;
-        private readonly MediaHandler mediaHandler;
         public usersController(MyDbContext dbContext)
         {
             userService = new UserService(dbContext);
-            mediaHandler = new MediaHandler();
         }
 
         [HttpGet("me")]
@@ -129,8 +127,8 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize] 
-        public IActionResult GetUserById(int id) 
+        [Authorize]
+        public IActionResult GetUserById(int id)
         {
             try
             {

@@ -1,9 +1,12 @@
 ﻿using e_commerce_server.src.Core.Database;
 using e_commerce_server.src.Core.Modules.Product.Dto;
 using e_commerce_server.src.Core.Modules.Product.Service;
+using e_commerce_server.src.Core.Modules.Review.Dto;
+using e_commerce_server.src.Core.Modules.Review.Service;
 using e_commerce_server.src.Packages.HttpExceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace e_commerce_server.src.Core.Api.V1.Controllers
 {
@@ -12,9 +15,11 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
     public class productsController : ControllerBase
     {
         private readonly ProductService productService;
+        private readonly ReviewService reviewService;
         public productsController(MyDbContext dbContext)
         {
             productService = new ProductService(dbContext);
+            reviewService = new ReviewService(dbContext);
         }
 
         //get all product
@@ -144,6 +149,22 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
 
                 return Ok(productService.DeleteProductById(Convert.ToInt32(idClaim.Value), id));
             } catch (HttpException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Response);
+            }
+        }
+
+        [HttpPost("{productId}/reviews")]
+        [Authorize]
+        public IActionResult ReviewProductById(int productId, ReviewProductDto reviewDto)
+        {
+            try
+            {
+                var userIdClaim = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                return Ok(reviewService.ReviewProduct(productId, Convert.ToInt32(userIdClaim) , reviewDto));
+            }
+            catch (HttpException ex)
             {
                 return StatusCode((int)ex.StatusCode, ex.Response);
             }
