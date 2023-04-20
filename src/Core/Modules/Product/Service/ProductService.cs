@@ -178,7 +178,7 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                throw new ForbiddenException(ProductEnum.NOT_HAVE_PERMISSION);
             }
 
-            productRepository.DeleteProductById(productId);
+            productRepository.DeleteProduct(product);
 
             return new
             {
@@ -302,17 +302,10 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
 
             if (roleId != RoleEnum.ADMIN)
             {
-                throw new BadRequestException(ProductEnum.DELETE_PRODUCT_DENY);
+                throw new BadRequestException(ProductEnum.DELETE_PRODUCT_DENIED);
             }
 
-            if(userService.GetUserByProductId(productId) == RoleEnum.USER)
-            {
-                throw new BadRequestException(ProductEnum.DELETE_PRODUCT_DENY);
-            }
-
-            product.delete_at = DateTime.Now;
-            
-            //... update lai database
+            productRepository.DeleteProduct(product);
 
             return new
             {

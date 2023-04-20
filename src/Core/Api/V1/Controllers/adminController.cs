@@ -60,8 +60,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             }
         }
 
-        [HttpDelete("/product/{id}")]
-
+        [HttpDelete("/products/{id}")]
         public IActionResult DeleteProduct(int id) 
         {
             try

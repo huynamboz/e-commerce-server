@@ -89,23 +89,6 @@ namespace e_commerce_server.src.Core.Modules.User
                 throw new InternalException(ex.Message);
             }
         }
-
-        public int GetUserIdByProductId(int productId)
-        {
-            try
-            {
-                var product = _context.Products
-                .Include(p => p.user)
-                .SingleOrDefault(p => p.id == productId);
-                return product.user.id;
-
-            } catch (Exception ex)
-            {
-                throw new InternalException(ex.Message);
-            }
-        }
-        
-
         public List<object> GetAllUsers()
         {
             try
@@ -129,87 +112,6 @@ namespace e_commerce_server.src.Core.Modules.User
                         user.active_status,
                         location  = Convert.ToBoolean(user.district_id) ? $"{user.district.name}, {user.district.city.name}" : null
                     }).Cast<object>().ToList();
-            } catch (Exception ex)
-            {
-                throw new InternalException(ex.Message);
-            }
-        }
-        public void AddProductToFavorite(FavoriteData favorite)
-        {
-            try
-            {
-                _context.Favorites.Add(favorite);
-                _context.SaveChanges();
-            } catch (Exception ex)
-            {
-                throw new InternalException(ex.Message);
-            }
-        }
-        public List<FavoriteData> GetFavoriteProductsByUserId(int userId)
-        {
-            try
-            {
-                return _context.Favorites.Where(p => p.user_id == userId && p.user.active_status).ToList();
-            }
-            catch (Exception ex)
-            {
-                throw new InternalException(ex.Message);
-            }
-        }
-        public List<object> GetFavoriteProductsByUserIdByPage(int page, int userId)
-        {
-            try
-            {
-                return _context.Favorites
-                    .Where(p => p.user_id == userId && p.product.user.active_status)
-                    .Skip((page -1) * 10)
-                    .Take(PageSizeEnum.PAGE_SIZE)
-                    .Include(p => p.product).ThenInclude(p => p.category)
-                    .Include(p => p.product).ThenInclude(p => p.product_status)
-                    .Select(p => new
-                    {
-                        p.product.id,
-                        p.product.name,
-                        p.product.price,
-                        p.product.discount,
-                        p.product.description,
-                        p.product.created_at,
-                        p.product.updated_at,
-                        p.product.product_status.status,
-                        user = new
-                        {
-                            p.product.user.id,
-                            p.product.user.name,
-                            p.product.user.phone_number,
-                            p.product.user.avatar,
-                            location = Convert.ToBoolean(p.user.district_id) ? $"{p.user.district.name}, {p.user.district.city.name}" : null
-                        },
-                        thumbnails = p.product.thumbnails.Select(t => t.thumbnail_url),
-                        category = p.product.category.name,
-                    }
-                ).Cast<object>().ToList();
-            } catch (Exception ex)
-            {
-                throw new InternalException(ex.Message);
-            }
-        }
-        public FavoriteData? GetFavoriteProductByUserIdAndProductId(int userId, int productId)
-        {
-            try
-            {
-                return _context.Favorites.SingleOrDefault(p => p.user_id == userId && p.product_id == productId);
-            } catch (Exception ex)
-            {
-                throw new InternalException(ex.Message);
-            }
-        }
-
-        public void RemoveProductFromFavorite(FavoriteData favorite)
-        {
-            try
-            {
-                _context.Favorites.Remove(favorite);
-                _context.SaveChanges();
             } catch (Exception ex)
             {
                 throw new InternalException(ex.Message);

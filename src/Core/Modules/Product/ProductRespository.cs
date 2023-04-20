@@ -1,6 +1,5 @@
 ﻿using e_commerce_server.src.Core.Database;
 using e_commerce_server.src.Core.Database.Data;
-using e_commerce_server.src.Core.Modules.Product.Service;
 using e_commerce_server.src.Core.Common.Enum;
 using e_commerce_server.src.Packages.HttpExceptions;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +17,7 @@ namespace e_commerce_server.src.Core.Modules.Product
         {
             try
             {
-                return _context.Products.Where(p => p.user.active_status == true).ToList();
+                return _context.Products.Where(p => p.user.active_status == true && p.delete_at == null).ToList();
             }
             catch (Exception ex)
             {
@@ -29,7 +28,7 @@ namespace e_commerce_server.src.Core.Modules.Product
         {
             try
             {
-                return _context.Products.Where(p => p.user_id == userId && p.user.active_status == true).ToList();
+                return _context.Products.Where(p => p.user_id == userId && p.user.active_status == true && p.delete_at == null).ToList();
             }
             catch (Exception ex)
             {
@@ -41,7 +40,7 @@ namespace e_commerce_server.src.Core.Modules.Product
             try
             {
                 return _context.Products
-                    .Where(p => p.user.active_status == true)
+                    .Where(p => p.user.active_status == true && p.delete_at == null)
                     .Skip((page -1) * 10)
                     .Take(PageSizeEnum.PAGE_SIZE)
                     .Include(p => p.thumbnails)
@@ -83,7 +82,7 @@ namespace e_commerce_server.src.Core.Modules.Product
                     .Include(p => p.user).ThenInclude(u => u.district).ThenInclude(d => d.city)
                     .Include(p => p.category)
                     .Include(p => p.product_status)
-                    .SingleOrDefault(p => p.user_id == userId && p.id == productId && p.user.active_status);
+                    .SingleOrDefault(p => p.user_id == userId && p.id == productId && p.user.active_status && p.delete_at == null);
             }
             catch (Exception ex)
             {
@@ -95,7 +94,7 @@ namespace e_commerce_server.src.Core.Modules.Product
             try
             {
                 return _context.Products
-                    .Where(p => p.user_id == userId && p.user.active_status == true)
+                    .Where(p => p.user_id == userId && p.user.active_status == true && p.delete_at == null)
                     .Skip((page -1) * 10)
                     .Take(PageSizeEnum.PAGE_SIZE)
                     .Include(p => p.thumbnails)
@@ -164,7 +163,6 @@ namespace e_commerce_server.src.Core.Modules.Product
         {
             try
             {
-                Console.WriteLine(productId);
                 List<ThumbnailData> thumbnails = new List<ThumbnailData>();
 
                 foreach(string thumbnailUrl in thumbnailUrls)
@@ -199,23 +197,17 @@ namespace e_commerce_server.src.Core.Modules.Product
                 throw new InternalException(e.Message);
             }
         }
-        public void DeleteProductById(int productId)
+        public void DeleteProduct(ProductData product)
         {
             try
             {
-                var product = _context.Products.SingleOrDefault(p => p.id == productId);
+                product.delete_at = DateTime.Now;
 
-                if (product == null)
-                {
-                    throw new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND);
-                }
-
-                _context.Products.Remove(product);
                 _context.SaveChanges();
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                throw new InternalException(ex.Message);
+                throw new InternalException(e.Message);
             }
         }
         public ProductData? GetProductById(int id)
@@ -227,9 +219,89 @@ namespace e_commerce_server.src.Core.Modules.Product
                     .Include(p => p.user).ThenInclude(u => u.district).ThenInclude(d => d.city)
                     .Include(p => p.category)
                     .Include(p => p.product_status)
-                    .FirstOrDefault(p => p.id == id && p.user.active_status);
+                    .FirstOrDefault(p => p.id == id && p.user.active_status && p.delete_at == null);
             }
             catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            }
+        }
+        public void AddProductToFavorite(FavoriteData favorite)
+        {
+            try
+            {
+                _context.Favorites.Add(favorite);
+                _context.SaveChanges();
+            } catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            }
+        }
+        public List<FavoriteData> GetFavoriteProductsByUserId(int userId)
+        {
+            try
+            {
+                return _context.Favorites.Where(p => p.user_id == userId && p.user.active_status).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            }
+        }
+        public List<object> GetFavoriteProductsByUserIdByPage(int page, int userId)
+        {
+            try
+            {
+                return _context.Favorites
+                    .Where(p => p.user_id == userId && p.product.user.active_status && p.product.delete_at == null)
+                    .Skip((page -1) * 10)
+                    .Take(PageSizeEnum.PAGE_SIZE)
+                    .Include(p => p.product).ThenInclude(p => p.category)
+                    .Include(p => p.product).ThenInclude(p => p.product_status)
+                    .Select(p => new
+                    {
+                        p.product.id,
+                        p.product.name,
+                        p.product.price,
+                        p.product.discount,
+                        p.product.description,
+                        p.product.created_at,
+                        p.product.updated_at,
+                        p.product.product_status.status,
+                        user = new
+                        {
+                            p.product.user.id,
+                            p.product.user.name,
+                            p.product.user.phone_number,
+                            p.product.user.avatar,
+                            location = Convert.ToBoolean(p.user.district_id) ? $"{p.user.district.name}, {p.user.district.city.name}" : null
+                        },
+                        thumbnails = p.product.thumbnails.Select(t => t.thumbnail_url),
+                        category = p.product.category.name,
+                    }
+                ).Cast<object>().ToList();
+            } catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            }
+        }
+        public FavoriteData? GetFavoriteProductByUserIdAndProductId(int userId, int productId)
+        {
+            try
+            {
+                return _context.Favorites.SingleOrDefault(p => p.user_id == userId && p.product_id == productId && p.product.delete_at == null);
+            } catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            }
+        }
+        public void RemoveProductFromFavorite(FavoriteData favorite)
+        {
+            try
+            {
+                _context.Favorites.Remove(favorite);
+                _context.SaveChanges();
+            } catch (Exception ex)
             {
                 throw new InternalException(ex.Message);
             }
