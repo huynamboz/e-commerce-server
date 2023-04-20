@@ -1,4 +1,5 @@
 ﻿using e_commerce_server.src.Core.Database;
+using e_commerce_server.src.Core.Modules.Product.Service;
 using e_commerce_server.src.Core.Modules.User.Service;
 using e_commerce_server.src.Packages.HttpExceptions;
 using Microsoft.AspNetCore.Authorization;
@@ -12,9 +13,11 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
     public class adminController : ControllerBase
     {
         private UserService userService;
+        private ProductService productService;
         public adminController(MyDbContext dbContext)
         {
             userService = new UserService(dbContext);
+            productService = new ProductService(dbContext);
         }
 
         [HttpGet("/users")]
@@ -56,5 +59,25 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
                 return StatusCode((int)ex.StatusCode, ex.Response);
             }
         }
+
+        [HttpDelete("/products/{id}")]
+        public IActionResult DeleteProduct(int id) 
+        {
+            try
+            {
+                var roleIdClaim = HttpContext.User.FindFirst("role_id");
+
+                if (roleIdClaim?.Value == null)
+                {
+                    throw new UnAuthorizedException();
+                }
+                return Ok(productService.DeleteProductByProductId(Convert.ToInt32(roleIdClaim.Value), id));
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Response);
+            }
+        }
+
     }
 }

@@ -178,7 +178,7 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                throw new ForbiddenException(ProductEnum.NOT_HAVE_PERMISSION);
             }
 
-            productRepository.DeleteProductById(productId);
+            productRepository.DeleteProduct(product);
 
             return new
             {
@@ -288,6 +288,28 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                 },
                 thumbnails = product.thumbnails.Select(t => t.thumbnail_url),
                 category = product.category.name,
+            };
+        }
+
+        public object DeleteProductByProductId(int roleId, int productId)
+        {
+            var product = productRepository.GetProductById(productId);
+
+            if (product == null)
+            {
+                throw new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND);
+            }
+
+            if (roleId != RoleEnum.ADMIN)
+            {
+                throw new BadRequestException(ProductEnum.DELETE_PRODUCT_DENIED);
+            }
+
+            productRepository.DeleteProduct(product);
+
+            return new
+            {
+                message = ProductEnum.DELETE_PRODUCT_SUCCESS
             };
         }
     }

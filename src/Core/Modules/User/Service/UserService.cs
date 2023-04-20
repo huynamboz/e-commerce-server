@@ -126,9 +126,9 @@ namespace e_commerce_server.src.Core.Modules.User.Service
                 throw new BadRequestException(UserEnum.USER_NOT_FOUND);
             }
 
-            var products = userRepository.GetFavoriteProductsByUserId(userId);
+            var products = productRepository.GetFavoriteProductsByUserId(userId);
 
-            var paginatedProducts = userRepository.GetFavoriteProductsByUserIdByPage(page, userId);
+            var paginatedProducts = productRepository.GetFavoriteProductsByUserIdByPage(page, userId);
 
             int total = (int)Math.Ceiling((double)products.Count() / PageSizeEnum.PAGE_SIZE); //calculate total pages
 
@@ -159,7 +159,7 @@ namespace e_commerce_server.src.Core.Modules.User.Service
                 throw new BadRequestException(UserEnum.USER_NOT_FOUND);
             }
 
-            var existingFavoriteProduct = userRepository.GetFavoriteProductByUserIdAndProductId(userId, model.product_id);
+            var existingFavoriteProduct = productRepository.GetFavoriteProductByUserIdAndProductId(userId, model.product_id);
 
             if (existingFavoriteProduct != null)
             {
@@ -173,7 +173,7 @@ namespace e_commerce_server.src.Core.Modules.User.Service
                 create_at = DateTime.Now
             };
 
-            userRepository.AddProductToFavorite(favorite);
+            productRepository.AddProductToFavorite(favorite);
 
             return new
             {
@@ -189,14 +189,14 @@ namespace e_commerce_server.src.Core.Modules.User.Service
                 throw new BadRequestException(UserEnum.USER_NOT_FOUND);
             }
 
-            var existingFavoriteProduct = userRepository.GetFavoriteProductByUserIdAndProductId(userId, productId);
+            var existingFavoriteProduct = productRepository.GetFavoriteProductByUserIdAndProductId(userId, productId);
 
             if (existingFavoriteProduct == null)
             {
                 throw new BadRequestException(UserEnum.FAVORITE_PRODUCT_NOT_FOUND);
             }
 
-            userRepository.RemoveProductFromFavorite(existingFavoriteProduct);
+            productRepository.RemoveProductFromFavorite(existingFavoriteProduct);
 
             return new
             {
