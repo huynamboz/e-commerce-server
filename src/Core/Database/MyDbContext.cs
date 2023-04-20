@@ -16,6 +16,8 @@ namespace e_commerce_server.src.Core.Database
         public virtual DbSet<ProductStatusData> ProductStatuses { get; set; }
         public virtual DbSet<ThumbnailData> Thumbnails { get; set; }
         public virtual DbSet<FavoriteData> Favorites { get; set; }
+        public virtual DbSet<ReviewData> Reviews { get; set; }
+        public virtual DbSet<ReportData> Reports { get; set; }
 
         #endregion
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -164,6 +166,36 @@ namespace e_commerce_server.src.Core.Database
                 modelBuilder.Entity<FavoriteData>()
                     .HasOne(p => p.user)
                     .WithMany(p => p.favorites)
+                    .HasForeignKey(p => p.user_id)
+                    .OnDelete(DeleteBehavior.NoAction);
+
+                modelBuilder.Entity<ReviewData>()
+                    .HasOne(p => p.product)
+                    .WithMany(p => p.reviews)
+                    .HasForeignKey(p => p.product_id)
+                    .OnDelete(DeleteBehavior.NoAction);
+
+                modelBuilder.Entity<ReviewData>()
+                    .HasKey(e => new { e.product_id, e.user_id });
+
+                modelBuilder.Entity<ReviewData>()
+                    .HasOne(p => p.user)
+                    .WithMany(p => p.reviews)
+                    .HasForeignKey(p => p.user_id)
+                    .OnDelete(DeleteBehavior.NoAction);
+
+                modelBuilder.Entity<ReportData>()
+                    .HasOne(p => p.product)
+                    .WithMany(p => p.reports)
+                    .HasForeignKey(p => p.product_id)
+                    .OnDelete(DeleteBehavior.NoAction);
+
+                modelBuilder.Entity<ReportData>()
+                    .HasKey(e => new { e.product_id, e.user_id });
+
+                modelBuilder.Entity<ReportData>()
+                    .HasOne(p => p.user)
+                    .WithMany(p => p.reports)
                     .HasForeignKey(p => p.user_id)
                     .OnDelete(DeleteBehavior.NoAction);
 

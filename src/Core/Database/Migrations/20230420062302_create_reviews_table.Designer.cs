@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using e_commerce_server.src.Core.Database;
 
@@ -11,9 +12,11 @@ using e_commerce_server.src.Core.Database;
 namespace e_commerce_server.src.Core.Database.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230420062302_create_reviews_table")]
+    partial class create_reviews_table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4782,31 +4785,6 @@ namespace e_commerce_server.src.Core.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("e_commerce_server.src.Core.Database.Data.ReportData", b =>
-                {
-                    b.Property<int>("product_id")
-                        .HasColumnType("int");
-
-                    b.Property<int>("user_id")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("create_at")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("update_at")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("product_id", "user_id");
-
-                    b.HasIndex("user_id");
-
-                    b.ToTable("reports");
-                });
-
             modelBuilder.Entity("e_commerce_server.src.Core.Database.Data.ReviewData", b =>
                 {
                     b.Property<int>("product_id")
@@ -4818,14 +4796,8 @@ namespace e_commerce_server.src.Core.Database.Migrations
                     b.Property<string>("comment")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("create_at")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("rating")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("update_at")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("product_id", "user_id");
 
@@ -4924,9 +4896,6 @@ namespace e_commerce_server.src.Core.Database.Migrations
                     b.Property<string>("refresh_token")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("report_count")
-                        .HasColumnType("int");
-
                     b.Property<string>("reset_token")
                         .HasColumnType("nvarchar(max)");
 
@@ -4966,7 +4935,6 @@ namespace e_commerce_server.src.Core.Database.Migrations
                             name = "Admin",
                             password = "$2a$04$GmL6XUWBFM9nSUzBynCNa.nvLo7pfiPK9sg1tdNiF3tKmhoMP1MIi",
                             phone_number = "0812345678",
-                            report_count = 0,
                             role_id = 1,
                             update_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -4978,7 +4946,6 @@ namespace e_commerce_server.src.Core.Database.Migrations
                             email = "user2@example.com",
                             name = "User",
                             password = "$2a$04$GmL6XUWBFM9nSUzBynCNa.nvLo7pfiPK9sg1tdNiF3tKmhoMP1MIi",
-                            report_count = 0,
                             role_id = 2,
                             update_at = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
@@ -5041,25 +5008,6 @@ namespace e_commerce_server.src.Core.Database.Migrations
                     b.Navigation("user");
                 });
 
-            modelBuilder.Entity("e_commerce_server.src.Core.Database.Data.ReportData", b =>
-                {
-                    b.HasOne("e_commerce_server.src.Core.Database.Data.ProductData", "product")
-                        .WithMany("reports")
-                        .HasForeignKey("product_id")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("e_commerce_server.src.Core.Database.Data.UserData", "user")
-                        .WithMany("reports")
-                        .HasForeignKey("user_id")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("product");
-
-                    b.Navigation("user");
-                });
-
             modelBuilder.Entity("e_commerce_server.src.Core.Database.Data.ReviewData", b =>
                 {
                     b.HasOne("e_commerce_server.src.Core.Database.Data.ProductData", "product")
@@ -5118,8 +5066,6 @@ namespace e_commerce_server.src.Core.Database.Migrations
                 {
                     b.Navigation("favorites");
 
-                    b.Navigation("reports");
-
                     b.Navigation("reviews");
 
                     b.Navigation("thumbnails");
@@ -5135,8 +5081,6 @@ namespace e_commerce_server.src.Core.Database.Migrations
                     b.Navigation("favorites");
 
                     b.Navigation("products");
-
-                    b.Navigation("reports");
 
                     b.Navigation("reviews");
                 });
