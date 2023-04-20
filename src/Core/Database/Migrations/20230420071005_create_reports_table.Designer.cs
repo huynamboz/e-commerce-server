@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using e_commerce_server.src.Core.Database;
 
@@ -11,9 +12,11 @@ using e_commerce_server.src.Core.Database;
 namespace e_commerce_server.src.Core.Database.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230420071005_create_reports_table")]
+    partial class create_reports_table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4790,15 +4793,9 @@ namespace e_commerce_server.src.Core.Database.Migrations
                     b.Property<int>("user_id")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("create_at")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("update_at")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("product_id", "user_id");
 
@@ -4818,14 +4815,8 @@ namespace e_commerce_server.src.Core.Database.Migrations
                     b.Property<string>("comment")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("create_at")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("rating")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("update_at")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("product_id", "user_id");
 

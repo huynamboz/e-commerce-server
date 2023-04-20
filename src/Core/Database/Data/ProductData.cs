@@ -26,11 +26,14 @@ namespace e_commerce_server.src.Core.Database.Data
         public int category_id { get; set; }
         public virtual CategoryData category { get; set; }
         public virtual ICollection<FavoriteData> favorites { get; set; }
-
+        public virtual ICollection<ReviewData> reviews { get; set ; }
+        public virtual ICollection<ReportData> reports { get; set ; }
         public ProductData()
         {
             this.thumbnails = new List<ThumbnailData>();
             this.favorites = new List<FavoriteData>();
+            this.reviews = new List<ReviewData>();
+            this.reports = new List<ReportData>();
         }
     }
 }

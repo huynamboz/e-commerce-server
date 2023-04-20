@@ -31,13 +31,17 @@ namespace e_commerce_server.src.Core.Database.Data
         public int? district_id { get; set; }
         public virtual DistrictData district { get; set; }
         public string? refresh_token { get; set; }
+        public int report_count { get; set; }
         public virtual ICollection<ProductData> products { get; set; }
         public virtual ICollection<FavoriteData> favorites { get; set; }
-
+        public virtual ICollection<ReviewData> reviews { get; set; }
+        public virtual ICollection<ReportData> reports { get; set; }
         public UserData()
         {
             this.products = new List<ProductData>();
             this.favorites = new List<FavoriteData>();
+            this.reviews = new List<ReviewData>();
+            this.reports = new List<ReportData>();
         }
     }
 }
