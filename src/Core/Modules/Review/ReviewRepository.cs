@@ -45,5 +45,22 @@ namespace e_commerce_server.src.Core.Modules.Review
                 throw new InternalException(ex.Message);
             }
         }
+
+        public object GetProductByProductId(int productId)
+        {
+            var userProductReviews = 
+                from r in _context.Reviews
+                join p in _context.Products on r.product_id equals p.id 
+                join u in _context.Users on p.user_id equals u.id
+                select new
+                {
+                       UserId = u.id,
+                       ProductId = p.id,
+                       ReviewComment = r.comment,
+                       ReviewRating = r.rating
+                };
+
+            return userProductReviews;
+        }
     }
 }

@@ -86,5 +86,22 @@ namespace e_commerce_server.src.Core.Modules.Review.Service
                 }
             };
         }
+
+        public object GetReviewProductById(int productId)
+        {
+            var product = productRepository.GetProductById(productId);
+
+            if (product == null) 
+            { 
+                throw new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND);
+            }
+
+            reviewRepository.GetProductByProductId(productId);
+
+            return new
+            {
+                message = ProductEnum.PRODUCT_NOT_FOUND
+            };
+        }
     }
 }
