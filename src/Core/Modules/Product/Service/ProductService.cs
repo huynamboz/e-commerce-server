@@ -325,7 +325,6 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
             var options = new ChromeOptions();// Chạy Chrome ở chế độ ẩn
             var driver = new ChromeDriver(options);
             driver.Navigate().GoToUrl("https://shopee.vn/search?keyword=" + product.name);
-            //driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             try
             {
                 driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
@@ -346,12 +345,10 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
 
                     ListProduct.Add(item);
                 }
-                driver.Quit();
                 return ListProduct;
             }
             catch (Exception ex)
             {
-                driver.Quit();
                 throw new InternalException(ex.Message);
             }
             finally
