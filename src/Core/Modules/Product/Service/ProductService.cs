@@ -5,9 +5,9 @@ using e_commerce_server.src.Core.Modules.User;
 using e_commerce_server.src.Core.Modules.User.Service;
 using e_commerce_server.src.Packages.HttpExceptions;
 using e_commerce_server.src.Core.Database.Data;
-using System.Runtime.Remoting;
-using OpenQA.Selenium.Edge;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+
 
 namespace e_commerce_server.src.Core.Modules.Product.Service
 {
