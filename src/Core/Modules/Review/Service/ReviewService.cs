@@ -86,5 +86,18 @@ namespace e_commerce_server.src.Core.Modules.Review.Service
                 }
             };
         }
+
+        public object GetReviewsByUserId(int userId)
+        {
+            var user = userRepository.GetUserById(userId);
+
+            if (user == null)
+            {
+                throw new BadRequestException(UserEnum.USER_NOT_FOUND);
+            }
+
+            return reviewRepository.GetReviewsByUserId(userId);
+        }
+
     }
 }
