@@ -13,11 +13,9 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
     public class usersController : ControllerBase
     {
         private readonly UserService userService;
-        private readonly MediaHandler mediaHandler;
         public usersController(MyDbContext dbContext)
         {
             userService = new UserService(dbContext);
-            mediaHandler = new MediaHandler();
         }
 
         [HttpGet("me")]
@@ -26,14 +24,9 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
         {
             try
             {
-                var idClaim = HttpContext.User.FindFirst("id");
+                var idClaim = HttpContext.User.FindFirst("id")?.Value;
 
-                if (idClaim?.Value == null)
-                {
-                    throw new UnAuthorizedException();
-                }
-
-                return Ok(userService.GetUserById(Convert.ToInt32(idClaim.Value)));
+                return Ok(userService.GetUserById(Convert.ToInt32(idClaim)));
             }
             catch (HttpException ex)
             {
@@ -47,14 +40,9 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
         {
             try
             {
-                var idClaim = HttpContext.User.FindFirst("id");
+                var idClaim = HttpContext.User.FindFirst("id")?.Value;
 
-                if (idClaim?.Value == null)
-                {
-                    throw new UnAuthorizedException();
-                }
-
-                return Ok(userService.UpdateUserById(model, Convert.ToInt32(idClaim.Value)));
+                return Ok(userService.UpdateUserById(model, Convert.ToInt32(idClaim)));
             }
             catch (HttpException ex)
             {
@@ -69,14 +57,9 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
         {
             try
             {
-                var idClaim = HttpContext.User.FindFirst("id");
+                var idClaim = HttpContext.User.FindFirst("id")?.Value;
 
-                if (idClaim?.Value == null)
-                {
-                    throw new UnAuthorizedException();
-                }
-
-                return Ok(userService.GetFavoriteProducts(page, Convert.ToInt32(idClaim.Value)));
+                return Ok(userService.GetFavoriteProducts(page, Convert.ToInt32(idClaim)));
             }
             catch (HttpException ex)
             {
@@ -91,14 +74,9 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
         {
             try
             {
-                var idClaim = HttpContext.User.FindFirst("id");
+                var idClaim = HttpContext.User.FindFirst("id")?.Value;
 
-                if (idClaim?.Value == null)
-                {
-                    throw new UnAuthorizedException();
-                }
-
-                return Ok(userService.AddProductToFavorite(Convert.ToInt32(idClaim.Value), model));
+                return Ok(userService.AddProductToFavorite(Convert.ToInt32(idClaim), model));
             }
             catch (HttpException ex)
             {
@@ -113,14 +91,9 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
         {
             try
             {
-                var idClaim = HttpContext.User.FindFirst("id");
+                var idClaim = HttpContext.User.FindFirst("id")?.Value;
 
-                if (idClaim?.Value == null)
-                {
-                    throw new UnAuthorizedException();
-                }
-
-                return Ok(userService.RemoveProductFromFavorite(Convert.ToInt32(idClaim.Value), id));
+                return Ok(userService.RemoveProductFromFavorite(Convert.ToInt32(idClaim), id));
             }
             catch (HttpException ex)
             {
@@ -129,8 +102,8 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize] 
-        public IActionResult GetUserById(int id) 
+        [Authorize]
+        public IActionResult GetUserById(int id)
         {
             try
             {
