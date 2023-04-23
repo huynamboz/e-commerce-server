@@ -118,12 +118,12 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             }
         }
 
-        [HttpGet("{productid}/reviews")]
-        public IActionResult GetReviewProduct(int productId)
+        [HttpGet("{id}/reviews")]
+        public IActionResult GetReviewsByUserId(int id)
         {
             try
             {
-                return Ok(reviewService.GetReviewProductById(productId));   
+                return Ok(reviewService.GetReviewsByUserId(id));   
             }
             catch (HttpException ex)
             {

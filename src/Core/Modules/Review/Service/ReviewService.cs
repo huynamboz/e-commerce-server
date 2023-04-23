@@ -87,21 +87,17 @@ namespace e_commerce_server.src.Core.Modules.Review.Service
             };
         }
 
-        public object GetReviewProductById(int productId)
+        public object GetReviewsByUserId(int userId)
         {
-            var product = productRepository.GetProductById(productId);
+            var user = userRepository.GetUserById(userId);
 
-            if (product == null) 
-            { 
-                throw new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND);
+            if (user == null)
+            {
+                throw new BadRequestException(UserEnum.USER_NOT_FOUND);
             }
 
-            reviewRepository.GetProductByProductId(productId);
-
-            return new
-            {
-                message = ProductEnum.PRODUCT_NOT_FOUND
-            };
+            return reviewRepository.GetReviewsByUserId(userId);
         }
+
     }
 }

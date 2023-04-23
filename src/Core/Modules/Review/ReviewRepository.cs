@@ -1,6 +1,7 @@
 ﻿using e_commerce_server.src.Core.Database;
 using e_commerce_server.src.Core.Database.Data;
 using e_commerce_server.src.Packages.HttpExceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace e_commerce_server.src.Core.Modules.Review
 {
@@ -45,22 +46,39 @@ namespace e_commerce_server.src.Core.Modules.Review
                 throw new InternalException(ex.Message);
             }
         }
-
-        public object GetProductByProductId(int productId)
+        
+        public List<object> GetReviewsByUserId (int userId)
         {
-            var userProductReviews = 
-                from r in _context.Reviews
-                join p in _context.Products on r.product_id equals p.id 
-                join u in _context.Users on p.user_id equals u.id
-                select new
-                {
-                       UserId = u.id,
-                       ProductId = p.id,
-                       ReviewComment = r.comment,
-                       ReviewRating = r.rating
-                };
-
-            return userProductReviews;
+            try
+            {
+                var reviews = _context.Reviews
+                    .Where(r => r.product.user_id == userId)
+                    .Include(r => r.product).ThenInclude(p => p.thumbnails)
+                    .Include(r => r.user)
+                    .Select(r => new
+                    {
+                        product = new
+                        {
+                            r.product.id,
+                            r.product.name,
+                            thumbnails = r.product.thumbnails.Select(t => t.thumbnail_url)
+                        },
+                        user = new
+                        {
+                            r.user.id,
+                            r.user.name,
+                            r.user.avatar
+                        },
+                        r.rating,
+                        r.comment,
+                        r.create_at,
+                        r.update_at
+                    }).Cast<object>().ToList(); 
+                return reviews;
+            } catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            }
         }
     }
 }
