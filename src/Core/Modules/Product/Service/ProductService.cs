@@ -5,6 +5,9 @@ using e_commerce_server.src.Core.Modules.User;
 using e_commerce_server.src.Core.Modules.User.Service;
 using e_commerce_server.src.Packages.HttpExceptions;
 using e_commerce_server.src.Core.Database.Data;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+
 
 namespace e_commerce_server.src.Core.Modules.Product.Service
 {
@@ -311,6 +314,57 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
             {
                 message = ProductEnum.DELETE_PRODUCT_SUCCESS
             };
+		}
+        public List<object> GetPricesComparison(int productId)
+        {
+            var product = productRepository.GetProductById(productId);
+
+			if(product == null)
+            {
+                throw new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND);
+            }
+
+            var options = new ChromeOptions();// Chạy Chrome ở chế độ ẩn
+
+            var driver = new ChromeDriver(options);
+
+            driver.Navigate().GoToUrl("https://shopee.vn/search?keyword=" + product.name);
+    
+            try
+            {
+                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+
+                var productElements = driver.FindElements(By.CssSelector(".shopee-search-item-result__item"));
+
+                List<object> ListProduct = new List<object>();
+
+                for (int i = 0; i < 4; i++)
+                {
+                    var nameElement = productElements[i].FindElement(By.CssSelector(".Cve6sh"));
+
+                    var cost = productElements[i].FindElement(By.CssSelector(".ZEgDH9"));
+
+                    var imgElement = productElements[i].FindElement(By.CssSelector("img"));
+
+                    string img = imgElement.GetAttribute("src");
+
+                    var item = new
+                    {
+                        name = nameElement.Text,
+                        cost = cost.Text,
+                        img_url = img
+                    };
+
+                    ListProduct.Add(item);
+                }
+                return ListProduct;
+            } catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            } finally
+            {
+                driver.Quit();
+			}
         }
     }
 }
