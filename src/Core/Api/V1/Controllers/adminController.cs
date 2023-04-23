@@ -25,14 +25,9 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
         {
             try
             {
-                var roleIdClaim = HttpContext.User.FindFirst("role_id");
+                var roleIdClaim = HttpContext.User.FindFirst("role_id")?.Value;
 
-                if (roleIdClaim?.Value == null) 
-                {
-                    throw new UnAuthorizedException();
-                }
-
-                return Ok(userService.GetAllUsers(Convert.ToInt32(roleIdClaim.Value)));
+                return Ok(userService.GetAllUsers(Convert.ToInt32(roleIdClaim)));
             }
             catch (HttpException ex)
             {
@@ -45,14 +40,9 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
         {
             try
             {
-                var roleIdClaim = HttpContext.User.FindFirst("role_id"); 
+                var roleIdClaim = HttpContext.User.FindFirst("role_id")?.Value; 
 
-                if (roleIdClaim?.Value == null) 
-                {
-                    throw new UnAuthorizedException();
-                }
-
-                return Ok(userService.DeleteUserById(Convert.ToInt32(roleIdClaim.Value), id));    
+                return Ok(userService.DeleteUserById(Convert.ToInt32(roleIdClaim), id));    
             }
             catch (HttpException ex)
             {
@@ -65,13 +55,9 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
         {
             try
             {
-                var roleIdClaim = HttpContext.User.FindFirst("role_id");
+                var roleIdClaim = HttpContext.User.FindFirst("role_id")?.Value;
 
-                if (roleIdClaim?.Value == null)
-                {
-                    throw new UnAuthorizedException();
-                }
-                return Ok(productService.DeleteProductByProductId(Convert.ToInt32(roleIdClaim.Value), id));
+                return Ok(productService.DeleteProductByProductId(Convert.ToInt32(roleIdClaim), id));
             }
             catch (HttpException ex)
             {

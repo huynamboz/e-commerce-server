@@ -211,7 +211,7 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                 updated_at = DateTime.Now
             };
 
-            var newProduct = productRepository.GetProductById(productRepository.AddOrUpdateProduct(product, productDto.thumbnailUrls).id);
+            var newProduct = productRepository.GetProductById(productRepository.AddOrUpdateProduct(product, productDto.thumbnailUrls).id) ?? throw new InternalException(ProductEnum.ADD_PRODUCT_FAILED);
 
             return new
             {

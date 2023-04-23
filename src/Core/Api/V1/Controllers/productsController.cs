@@ -56,14 +56,9 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
         {
             try
             {
-                var idClaim = HttpContext.User.FindFirst("id");
- 
-                if (idClaim?.Value == null)
-                {
-                    throw new UnAuthorizedException();
-                }
+                var idClaim = HttpContext.User.FindFirst("id")?.Value;
 
-                return Ok(productService.GetProductsByUserId(page, Convert.ToInt32(idClaim.Value)));
+                return Ok(productService.GetProductsByUserId(page, Convert.ToInt32(idClaim)));
             }
             catch (HttpException ex)
             {
@@ -78,14 +73,9 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
         {
             try
             {
-                var idClaim = HttpContext.User.FindFirst("id");
+                var idClaim = HttpContext.User.FindFirst("id")?.Value;
 
-                if (idClaim?.Value == null)
-                {
-                    throw new UnAuthorizedException();
-                }
-
-                return Ok(productService.AddProduct(productDto, Convert.ToInt32(idClaim.Value)));
+                return Ok(productService.AddProduct(productDto, Convert.ToInt32(idClaim)));
             } catch (HttpException ex)
             {
                 return StatusCode((int)ex.StatusCode, ex.Response);
@@ -98,14 +88,9 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
         {
             try
             {
-                var idClaim = HttpContext.User.FindFirst("id");
+                var idClaim = HttpContext.User.FindFirst("id")?.Value;
 
-                if (idClaim?.Value == null)
-                {
-                    throw new UnAuthorizedException();
-                }
-
-                return Ok(productService.GetProductByUserId(Convert.ToInt32(idClaim.Value), id));
+                return Ok(productService.GetProductByUserId(Convert.ToInt32(idClaim), id));
             } catch (HttpException ex)
             {
                 return StatusCode((int)ex.StatusCode, ex.Response);
@@ -119,14 +104,9 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
         {
             try
             {
-                var idClaim = HttpContext.User.FindFirst("id");
+                var idClaim = HttpContext.User.FindFirst("id")?.Value;
 
-                if (idClaim?.Value == null)
-                {
-                    throw new UnAuthorizedException();
-                }
-
-                return Ok(productService.EditProductById(productDto, id, Convert.ToInt32(idClaim.Value)));
+                return Ok(productService.EditProductById(productDto, id, Convert.ToInt32(idClaim)));
             } catch (HttpException ex)
             {
                 return StatusCode((int)ex.StatusCode, ex.Response);
@@ -140,14 +120,9 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
         {
             try
             {
-                var idClaim = HttpContext.User.FindFirst("id");
+                var idClaim = HttpContext.User.FindFirst("id")?.Value;
 
-                if (idClaim?.Value == null)
-                {
-                    throw new UnAuthorizedException();
-                }
-
-                return Ok(productService.DeleteProductById(Convert.ToInt32(idClaim.Value), id));
+                return Ok(productService.DeleteProductById(Convert.ToInt32(idClaim), id));
             } catch (HttpException ex)
             {
                 return StatusCode((int)ex.StatusCode, ex.Response);
@@ -156,13 +131,29 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
 
         [HttpPost("{productId}/reviews")]
         [Authorize]
-        public IActionResult ReviewProductById(int productId, ReviewProductDto reviewDto)
+        public IActionResult CreateReview(int productId, ReviewProductDto reviewDto)
         {
             try
             {
-                var userIdClaim = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var idClaim = HttpContext.User.FindFirst("id")?.Value;
 
-                return Ok(reviewService.ReviewProduct(productId, Convert.ToInt32(userIdClaim) , reviewDto));
+                return Ok(reviewService.CreateOrUpdateReview(productId, Convert.ToInt32(idClaim) , reviewDto));
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Response);
+            }
+        }
+
+        [HttpPut("{productId}/reviews")]
+        [Authorize]
+        public IActionResult UpdateReview(int productId, ReviewProductDto reviewDto)
+        {
+            try
+            {
+                var idClaim = HttpContext.User.FindFirst("id")?.Value;
+
+                return Ok(reviewService.CreateOrUpdateReview(productId, Convert.ToInt32(idClaim), reviewDto));
             }
             catch (HttpException ex)
             {

@@ -20,12 +20,12 @@ namespace e_commerce_server.src.Core.Modules.Review.Service
             userRepository = new UserRepository(context);
             reviewRepository = new ReviewRepository(context);
         }
-        public object ReviewProduct(int productId, int userId ,ReviewProductDto model)
+        public object CreateOrUpdateReview(int productId, int userId, ReviewProductDto model)
         {
             var product = productRepository.GetProductById(productId);
 
-            if (product == null) 
-            { 
+            if (product == null)
+            {
                 throw new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND);
             }
 
@@ -36,7 +36,34 @@ namespace e_commerce_server.src.Core.Modules.Review.Service
                 throw new BadRequestException(UserEnum.USER_NOT_FOUND);
             }
 
-            var review = new ReviewData
+            if (product.user_id == userId)
+            {
+                throw new ForbiddenException(ReviewEnum.CANNOT_REVIEW_OWN_PRODUCT);
+            }
+
+            var review = reviewRepository.GetReviewByIds(userId, productId);
+
+            if (review != null)
+            {
+                review.rating = model.rating;
+                review.comment = model.comment;
+                review.update_at = DateTime.Now;
+
+                reviewRepository.UpdateReview(review);
+
+                return new
+                {
+                    message = ReviewEnum.UPDATE_REVIEW_SUCCESS,
+                    data = new
+                    {
+                        review.rating,
+                        review.comment,
+                        review.update_at
+                    }
+                };
+            }
+
+            var newReview = new ReviewData
             {
                 comment = model.comment,
                 rating = model.rating,
@@ -46,11 +73,17 @@ namespace e_commerce_server.src.Core.Modules.Review.Service
                 update_at = DateTime.Now,
             };
 
-            reviewRepository.CreateReview(review);
+            reviewRepository.CreateReview(newReview);
 
             return new
             {
-                message = UserEnum.ADD_TO_FAVORITE_SUCCESS
+                message = ReviewEnum.CREATE_REVIEW_SUCCESS,
+                data = new
+                {
+                    newReview.rating,
+                    newReview.comment,
+                    newReview.update_at
+                }
             };
         }
     }

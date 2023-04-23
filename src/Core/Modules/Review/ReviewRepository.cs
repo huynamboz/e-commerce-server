@@ -24,5 +24,26 @@ namespace e_commerce_server.src.Core.Modules.Review
                 throw new InternalException(ex.Message);
             }
         }
+        public void UpdateReview(ReviewData review) {
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            }
+        } 
+        public ReviewData? GetReviewByIds(int userId, int productId)
+        {
+            try
+            {
+                return _context.Reviews.SingleOrDefault(r  => r.user_id == userId && r.product_id == productId);
+            }
+            catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            }
+        }
     }
 }
