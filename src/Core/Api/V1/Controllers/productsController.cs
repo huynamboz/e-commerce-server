@@ -160,12 +160,12 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             }
         }
 
-        [HttpGet("{id}/comparisons")]
+        [HttpGet("{id}/prices-comparison")]
         public IActionResult Get(int id)
         {
             try
             {
-                return Ok(productService.GetCompareCost(id));
+                return Ok(productService.GetPricesComparison(id));
             }
             catch (HttpException ex)
             {
