@@ -49,7 +49,7 @@ namespace e_commerce_server.src.Core.Modules.User
         {
             try
             {
-                return _context.Users.SingleOrDefault(u => u.refresh_token == refreshToken && u.delete_at != null);
+                return _context.Users.SingleOrDefault(u => u.refresh_token == refreshToken && u.delete_at == null);
             } catch (Exception ex)
             {
                 throw new InternalException(ex.Message);
