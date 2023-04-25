@@ -208,6 +208,7 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                 description = productDto.description,
                 price = productDto.price,
                 user_id = userId,
+                discount = productDto.discount,
                 status_id = productDto.status_id,
                 category_id = productDto.category_id,
                 created_at = DateTime.Now,
