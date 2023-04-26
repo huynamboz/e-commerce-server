@@ -1,12 +1,15 @@
 ﻿using e_commerce_server.src.Core.Database;
 using e_commerce_server.src.Core.Modules.Product.Dto;
 using e_commerce_server.src.Core.Modules.Product.Service;
+using e_commerce_server.src.Core.Modules.Report.Service;
 using e_commerce_server.src.Core.Modules.Review.Dto;
 using e_commerce_server.src.Core.Modules.Review.Service;
 using e_commerce_server.src.Packages.HttpExceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using e_commerce_server.src.Core.Modules.Report.Dto;
 using System.Security.Claims;
+using e_commerce_server.src.Core.Database.Data;
 
 namespace e_commerce_server.src.Core.Api.V1.Controllers
 {
@@ -16,10 +19,12 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
     {
         private readonly ProductService productService;
         private readonly ReviewService reviewService;
+        private readonly ReportService reportService;
         public productsController(MyDbContext dbContext)
         {
             productService = new ProductService(dbContext);
             reviewService = new ReviewService(dbContext);
+            reportService = new ReportService(dbContext);
         }
 
         //get all product
@@ -172,5 +177,22 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
                 return StatusCode((int)ex.StatusCode, ex.Response);
             }
         }
+
+        [HttpPost("{productId}/reports")]
+        [Authorize]
+        public IActionResult ReportProduct(int productId, ReportProductDto reportDto)
+        {
+            try
+            {
+                var idClaim = HttpContext.User.FindFirst("id")?.Value;
+
+                return Ok(reportService.ReportProduct(productId, Convert.ToInt32(idClaim), reportDto)); 
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Response);
+            }
+        }
     }
 }
+
