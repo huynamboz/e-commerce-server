@@ -186,7 +186,23 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             {
                 var idClaim = HttpContext.User.FindFirst("id")?.Value;
 
-                return Ok(reportService.ReportProduct(productId, Convert.ToInt32(idClaim), reportDto)); 
+                return Ok(reportService.CreateOrUpdateReport(productId, Convert.ToInt32(idClaim), reportDto)); 
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Response);
+            }
+        }
+
+        [HttpPut("{productId}/reports")]
+        [Authorize]
+        public IActionResult UpdateReport(int productId, ReportProductDto reportDto)
+        {
+            try
+            {
+                var idClaim = HttpContext.User.FindFirst("id")?.Value;
+
+                return Ok(reportService.CreateOrUpdateReport(productId, Convert.ToInt32(idClaim), reportDto));
             }
             catch (HttpException ex)
             {

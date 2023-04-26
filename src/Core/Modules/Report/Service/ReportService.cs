@@ -22,7 +22,7 @@ namespace e_commerce_server.src.Core.Modules.Report.Service
             userRepository = new UserRepository(context);
         }
 
-        public object ReportProduct(int productId, int userId, ReportProductDto model)
+        public object CreateOrUpdateReport(int productId, int userId, ReportProductDto model)
         {
             var product = productRepository.GetProductById(productId);
 
@@ -40,7 +40,7 @@ namespace e_commerce_server.src.Core.Modules.Report.Service
 
             if (product.user_id == userId)
             {
-                throw new ForbiddenException(ReviewEnum.CANNOT_REVIEW_OWN_PRODUCT);
+                throw new ForbiddenException(ReportEnum.CANNOT_REPORT_OWN_PRODUCT);
             }
 
             var report = reportRepository.GetReportByIds(userId, productId);
