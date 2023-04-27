@@ -20,7 +20,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             productService = new ProductService(dbContext);
         }
 
-        [HttpGet("/users")]
+        [HttpGet("users")]
         public IActionResult GetAllUser()
         {
             try
@@ -35,7 +35,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             }
         }
 
-        [HttpPatch("/users/{id}")]
+        [HttpPatch("users/{id}")]
         public IActionResult DeleteUser(int id)
         {
             try
@@ -50,7 +50,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             }
         }
 
-        [HttpDelete("/products/{id}")]
+        [HttpDelete("products/{id}")]
         public IActionResult DeleteProduct(int id) 
         {
             try
