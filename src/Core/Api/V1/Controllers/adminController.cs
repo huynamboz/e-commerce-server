@@ -1,9 +1,13 @@
 ﻿using e_commerce_server.src.Core.Database;
 using e_commerce_server.src.Core.Modules.Product.Service;
+using e_commerce_server.src.Core.Modules.Review.Service;
+using e_commerce_server.src.Core.Modules.Report.Service;
 using e_commerce_server.src.Core.Modules.User.Service;
 using e_commerce_server.src.Packages.HttpExceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using e_commerce_server.src.Core.Modules.Product.Dto;
+using e_commerce_server.src.Core.Modules.Report.Dto;
 
 namespace e_commerce_server.src.Core.Api.V1.Controllers
 {
@@ -13,9 +17,11 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
     public class adminController : ControllerBase
     {
         private UserService userService;
+        private ReportService reportService;
         private ProductService productService;
         public adminController(MyDbContext dbContext)
         {
+            reportService = new ReportService(dbContext); 
             userService = new UserService(dbContext);
             productService = new ProductService(dbContext);
         }
@@ -65,5 +71,20 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             }
         }
 
+        [HttpGet("reports")]
+        public IActionResult GetReviewsByUserId(int page = 1)
+        {
+            try
+            {
+                var roleIdClaim = HttpContext.User.FindFirst("role_id")?.Value;
+
+                return Ok(reportService.GetReportsByUserId(page, Convert.ToInt32(roleIdClaim))); 
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Response);
+            }
+        }
     }
 }
+

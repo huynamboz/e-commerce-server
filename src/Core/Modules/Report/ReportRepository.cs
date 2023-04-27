@@ -1,6 +1,8 @@
-﻿using e_commerce_server.src.Core.Database;
+﻿using e_commerce_server.src.Core.Common.Enum;
+using e_commerce_server.src.Core.Database;
 using e_commerce_server.src.Core.Database.Data;
 using e_commerce_server.src.Packages.HttpExceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace e_commerce_server.src.Core.Modules.Report
 {
@@ -22,7 +24,7 @@ namespace e_commerce_server.src.Core.Modules.Report
                 throw new InternalException(ex.Message);
             }
         }
-        public void CreateReport(ReportData report)
+        public void CreateReport(ReportData report) 
         {
             try
             {
@@ -40,6 +42,39 @@ namespace e_commerce_server.src.Core.Modules.Report
             try
             {
                 _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            }
+        }
+        public List<ReportData> GetReports()
+        {
+            try
+            {
+                return _context.Reports.ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            }
+        }
+
+        public List<object> GetReportsByPage(int page)
+        {
+            try
+            {
+                return _context.Reports
+                    .Skip((page - 1) * 10)
+                    .Take(PageSizeEnum.PAGE_SIZE)
+                    .Select(product => new 
+                    {
+                        product.user_id,
+                        product.product_id,
+                        product.description,
+                        product.create_at
+                    }
+                ).Cast<object>().ToList();
             }
             catch (Exception ex)
             {

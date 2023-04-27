@@ -7,6 +7,9 @@ using e_commerce_server.src.Core.Modules.Product;
 using e_commerce_server.src.Core.Database.Data;
 using e_commerce_server.src.Core.Modules.Report.Dto;
 using e_commerce_server.src.Core.Modules.Review.Service;
+using e_commerce_server.src.Core.Modules.Review;
+using CloudinaryDotNet.Actions;
+using e_commerce_server.src.Core.Common.Enum;
 
 namespace e_commerce_server.src.Core.Modules.Report.Service
 {
@@ -86,5 +89,29 @@ namespace e_commerce_server.src.Core.Modules.Report.Service
             };
         }
 
+        public object GetReportsByUserId(int page, int roleId)
+        { 
+            if (roleId != RoleEnum.ADMIN)
+            {
+                throw new ForbiddenException(ReportEnum.GET_ALL_REPORTS_DENY);
+            }
+
+            var reports = reportRepository.GetReports();
+
+            var paginatedReports = reportRepository.GetReportsByPage(page);
+
+            int total = (int)Math.Ceiling((double)reports.Count() / PageSizeEnum.PAGE_SIZE); //calculate total pages
+
+            return new
+            {
+                data = paginatedReports,
+                meta = new
+                {
+                    totalPages = total,
+                    totalCount = reports.Count(),
+                    currentPage = page
+                }
+            };
+        }
     }
 }
