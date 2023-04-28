@@ -87,6 +87,37 @@ namespace e_commerce_server.src.Core.Modules.Review.Service
             };
         }
 
+        public object DeleteReview(int productId, int userId)
+        {
+            var product = productRepository.GetProductById(productId);
+
+            if (product == null)
+            {
+                throw new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND);
+            }
+
+            var user = userRepository.GetUserById(userId);
+
+            if (user == null)
+            {
+                throw new BadRequestException(UserEnum.USER_NOT_FOUND);
+            }
+
+            var review = reviewRepository.GetReviewByIds(userId, productId);
+
+            if (review == null) 
+            {
+                throw new BadRequestException(ReviewEnum.REVIEW_NOT_FOUND);
+            }
+
+            reviewRepository.DeleteReview(review);
+
+            return new
+            {
+                message = ReviewEnum.DELETE_REVIEW_SUCCESS,
+            };
+        }
+
         public object GetReviewsByUserId(int userId)
         {
             var user = userRepository.GetUserById(userId);

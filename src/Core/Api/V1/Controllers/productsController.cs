@@ -178,6 +178,22 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             }
         }
 
+        [HttpDelete("{id}/reviews")]
+        [Authorize]
+        public IActionResult DeleteReview(int id)
+        {
+            try
+            {
+                var idClaim = HttpContext.User.FindFirst("id")?.Value;
+
+                return Ok(reviewService.DeleteReview(id, Convert.ToInt32(idClaim)));
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Response);
+            }
+        }
+
         [HttpPost("{productId}/reports")]
         [Authorize]
         public IActionResult ReportProduct(int productId, ReportProductDto reportDto)
