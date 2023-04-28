@@ -110,6 +110,7 @@ namespace e_commerce_server.src.Core.Modules.User
                         user.created_at,
                         user.delete_at,
                         user.active_status,
+                        user.report_count,
                         location  = Convert.ToBoolean(user.district_id) ? $"{user.district.name}, {user.district.city.name}" : null
                     }).Cast<object>().ToList();
             } catch (Exception ex)
