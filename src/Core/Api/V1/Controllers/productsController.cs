@@ -219,7 +219,6 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
                 var idClaim = HttpContext.User.FindFirst("id")?.Value;
 
                 return Ok(reportService.CreateOrUpdateReport(productId, Convert.ToInt32(idClaim), reportDto));
-                return Ok(reviewService.DeleteReview(productId, Convert.ToInt32(idClaim), reviewDto));
             }
             catch (HttpException ex)
             {

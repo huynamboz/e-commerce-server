@@ -87,7 +87,7 @@ namespace e_commerce_server.src.Core.Modules.Review.Service
             };
         }
 
-        public object DeleteReview(int productId, int userId, ReviewProductDto model)
+        public object DeleteReview(int productId, int userId)
         {
             var product = productRepository.GetProductById(productId);
 
@@ -110,7 +110,7 @@ namespace e_commerce_server.src.Core.Modules.Review.Service
                 throw new BadRequestException(ReviewEnum.REVIEW_NOT_FOUND);
             }
 
-            reviewRepository.DeleteReview(productId, userId);
+            reviewRepository.DeleteReview(review);
 
             return new
             {

@@ -81,16 +81,10 @@ namespace e_commerce_server.src.Core.Modules.Review
             }
         }
 
-        public void DeleteReview(int productId, int userId)
+        public void DeleteReview(ReviewData review)
         { 
-
-            var review = _context.Reviews.Find(productId, userId);
-
-            if (review != null)
-            {
-                _context.Reviews.Remove(review);
-                _context.SaveChanges();
-            }
+            _context.Reviews.Remove(review);
+            _context.SaveChanges();
         }
     }
 }
