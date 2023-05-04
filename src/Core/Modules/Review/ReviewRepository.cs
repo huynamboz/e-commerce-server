@@ -46,7 +46,6 @@ namespace e_commerce_server.src.Core.Modules.Review
                 throw new InternalException(ex.Message);
             }
         }
-        
         public List<object> GetReviewsByUserId (int userId)
         {
             try
@@ -80,7 +79,6 @@ namespace e_commerce_server.src.Core.Modules.Review
                 throw new InternalException(ex.Message);
             }
         }
-
         public void DeleteReview(ReviewData review)
         { 
             _context.Reviews.Remove(review);

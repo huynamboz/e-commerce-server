@@ -12,20 +12,14 @@ namespace e_commerce_server.src.Core.Config
     {
         private WebApplicationBuilder _builder;
         private readonly string _environment;
-        private AppBundle()
+        private AppBundle(WebApplicationBuilder builder)
         {
             _environment = ENV.ENVIRONMENT;
+            _builder = builder;
         }
-        public static AppBundle Builder()
+        public static AppBundle ApplyBuilderContext(WebApplicationBuilder builder)
         {
-            Console.WriteLine("AppBundle is bundling");
-            return new AppBundle();
-        }
-
-        public AppBundle ApplyBuilderContext(WebApplicationBuilder builder)
-        {
-            this._builder = builder;
-            return this;
+            return new AppBundle(builder);
         }
         public AppBundle Init() 
         {
@@ -43,7 +37,6 @@ namespace e_commerce_server.src.Core.Config
         public AppBundle ApplySwagger()
         {
             SwaggerBuilder
-                .Builder()
                 .ApplyBuilderContext(_builder)
                 .ApplyEndPoint()
                 .ApplyConfig();
@@ -52,7 +45,6 @@ namespace e_commerce_server.src.Core.Config
         public AppBundle ApplyDbContext()
         {
             _builder = DatabaseConnect
-                .Builder()
                 .ApplyBuilderContext(_builder)
                 .ApplyDbContext();
             return this;

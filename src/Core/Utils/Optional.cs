@@ -2,32 +2,33 @@
 {
     public class Optional
     {
-        private dynamic? _instance;
+        private dynamic _instance;
 
-        public Optional(dynamic? instance)
+        private Optional(dynamic instance)
         {
             _instance = instance;
         }
-
         public static Optional Of(dynamic? instance) 
         {
             return new Optional(instance);
         }
-
         public void ThrowIfPresent(Exception exception)
         {
-            if ((this._instance is List<dynamic> && this._instance.Count > 0 )|| (this._instance is not List<dynamic> && this._instance != null))
+            if ((this._instance is List<dynamic> && this._instance.Count > 0 ) || (this._instance is not List<dynamic> && this._instance != null))
             {
                 throw exception;
             }
         }
-
-        public void ThrowIfNotPresent(Exception exception)
+        public Optional ThrowIfNotPresent(Exception exception)
         {
-            if ((this._instance is List<dynamic> && this._instance.Count == 0 )|| (!(this._instance is List<dynamic>) && this._instance == null))
+            if ((this._instance is List<dynamic> && this._instance.Count == 0) || (this._instance is not List<dynamic> && this._instance == null))
             {
                 throw exception;
             }
+            return this;
+        }
+        public dynamic Get() {
+            return this._instance;
         }
     }
 }

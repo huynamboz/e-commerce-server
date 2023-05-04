@@ -7,7 +7,7 @@ using e_commerce_server.src.Packages.HttpExceptions;
 using e_commerce_server.src.Core.Database.Data;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-
+using e_commerce_server.src.Core.Utils;
 
 namespace e_commerce_server.src.Core.Modules.Product.Service
 {
@@ -25,12 +25,7 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
 
         public object GetProductsByUserId(int page, int userId)
         {
-            var user = userRepository.GetUserById(userId);
-
-            if (user == null)
-            {
-                throw new BadRequestException(UserEnum.USER_NOT_FOUND);
-            }
+            var user = Optional.Of(userRepository.GetUserById(userId)).ThrowIfNotPresent(new BadRequestException(UserEnum.USER_NOT_FOUND)).Get();
 
             if (!user.active_status)
             {
@@ -56,12 +51,7 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
         }
         public object GetProductByUserId(int userId, int productId)
         {
-            var user = userRepository.GetUserById(userId);
-
-            if (user == null)
-            {
-                throw new BadRequestException(UserEnum.USER_NOT_FOUND);
-            }
+            var user = Optional.Of(userRepository.GetUserById(userId)).ThrowIfNotPresent(new BadRequestException(UserEnum.USER_NOT_FOUND)).Get();
 
             var product = productRepository.GetProductByIdAndUserId(userId, productId);
 
@@ -95,12 +85,8 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
         }
         public object EditProductById(AddProductDto productDto, int productId, int userId)
         {
-            var user = userRepository.GetUserById(userId);
+            var user = Optional.Of(userRepository.GetUserById(userId)).ThrowIfNotPresent(new BadRequestException(UserEnum.USER_NOT_FOUND)).Get();
 
-            if (user == null)
-            {
-                throw new BadRequestException(UserEnum.USER_NOT_FOUND);
-            }
 
             if (!user.active_status)
             {
@@ -157,12 +143,7 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
         }
         public object DeleteProductById(int userId, int productId)
         {
-            var user = userRepository.GetUserById(userId);
-
-            if (user == null)
-            {
-                throw new BadRequestException(UserEnum.USER_NOT_FOUND);
-            }
+            var user = Optional.Of(userRepository.GetUserById(userId)).ThrowIfNotPresent(new BadRequestException(UserEnum.USER_NOT_FOUND)).Get();
 
             if (!user.active_status)
             {
@@ -190,12 +171,7 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
         }
         public object AddProduct(AddProductDto productDto, int userId)
         {
-            var user = userRepository.GetUserById(userId);
-
-            if (user == null)
-            {
-                throw new BadRequestException(UserEnum.USER_NOT_FOUND);
-            }
+            var user = Optional.Of(userRepository.GetUserById(userId)).ThrowIfNotPresent(new BadRequestException(UserEnum.USER_NOT_FOUND)).Get();
 
             if (!user.active_status)
             {
@@ -318,12 +294,7 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
 		}
         public List<object> GetPricesComparison(int productId)
         {
-            var product = productRepository.GetProductById(productId);
-
-			if(product == null)
-            {
-                throw new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND);
-            }
+            var product = Optional.Of(productRepository.GetProductById(productId)).ThrowIfNotPresent(new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND)).Get();
 
             var options = new ChromeOptions();// Chạy Chrome ở chế độ ẩn
 
