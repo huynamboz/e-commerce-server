@@ -367,5 +367,26 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                 driver.Quit();
 			}
         }
+
+        public List<object> SearchProduct(string query)
+        {
+            if (string.IsNullOrEmpty(query))
+            {
+                throw new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND);
+            }
+
+            var products = productRepository.GetProducts(); 
+            var matchingProducts = new List<object>();
+
+            foreach (var product in products)
+            {
+                if (product.name.Contains(query, StringComparison.OrdinalIgnoreCase))
+                {
+                    matchingProducts.Add(product); 
+                }
+            }
+
+            return matchingProducts;
+        }
     }
 }
