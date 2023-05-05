@@ -59,11 +59,11 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
         }
 
         [HttpPost("forgot-password")]
-        public IActionResult ForgotPassword(ForgotPasswordDto model)
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordDto model)
         {
             try
             {
-                return Ok(authService.RequestResetPassword(model));
+                return Ok(await authService.RequestResetPassword(model));
             }
             catch (HttpException ex)
             {
@@ -71,25 +71,12 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             }
         }
 
-        [HttpGet("reset-password/{token}")]
-        public IActionResult GetResetToken(string token)
+        [HttpPost("reset-password")]
+        public IActionResult ResetPassword(ResetPasswordDto model)
         {
             try
             {
-                return Ok(authService.GetResetToken(HttpUtility.UrlDecode(token)));
-            }
-            catch (HttpException ex)
-            {
-                return StatusCode((int)ex.StatusCode, ex.Response);
-            }
-        }
-
-        [HttpPost("update-password")]
-        public IActionResult UpdatePassword(UpdatePasswordDto model)
-        {
-            try
-            {
-                return Ok(authService.UpdatePassword(model));
+                return Ok(authService.ResetPassword(model));
             }
             catch (HttpException ex)
             {

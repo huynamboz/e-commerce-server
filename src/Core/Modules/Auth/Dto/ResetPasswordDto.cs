@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace e_commerce_server.src.Core.Modules.Auth.Dto
 {
-    public class UpdatePasswordDto
+    public class ResetPasswordDto
     {
 
         [Required]
