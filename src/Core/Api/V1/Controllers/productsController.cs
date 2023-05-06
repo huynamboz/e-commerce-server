@@ -227,12 +227,11 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
         }
 
         [HttpGet("products/search")]
-        [Authorize]
-        public IActionResult SearchProduct(string query)
+        public IActionResult SearchProducts(string name, int page = 1)
         {
             try
             {
-                return Ok(productService.SearchProduct(query));
+                return Ok(productService.SearchProducts(name, page));
             }
             catch (HttpException ex)
             {

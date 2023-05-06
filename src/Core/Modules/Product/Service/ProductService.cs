@@ -368,25 +368,24 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
 			}
         }
 
-        public List<object> SearchProduct(string query)
+        public object SearchProducts(string name, int page)
         {
-            if (string.IsNullOrEmpty(query))
-            {
-                throw new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND);
-            }
+            var products = productRepository.GetProductsByName(name); 
+            
+            var paginatedProducts = productRepository.GetProductsByNameByPage(name, page);
+            
+            int total = (int)Math.Ceiling((double)products.Count() / PageSizeEnum.PAGE_SIZE); //calculate total pages
 
-            var products = productRepository.GetProducts(); 
-            var matchingProducts = new List<object>();
-
-            foreach (var product in products)
+            return new
             {
-                if (product.name.Contains(query, StringComparison.OrdinalIgnoreCase))
+                data = paginatedProducts,
+                meta = new
                 {
-                    matchingProducts.Add(product); 
+                    totalPages = total,
+                    totalCount = products,
+                    currentPage = page
                 }
-            }
-
-            return matchingProducts;
+            };
         }
     }
 }

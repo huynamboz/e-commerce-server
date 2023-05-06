@@ -306,5 +306,56 @@ namespace e_commerce_server.src.Core.Modules.Product
                 throw new InternalException(ex.Message);
             }
         }
+        public List<ProductData> GetProductsByName(string name)
+        {
+            try {
+                return _context.Products
+                    .Where(p => EF.Functions.Collate(p.name, "Vietnamese_CI_AI").Contains(name) && p.delete_at == null)
+                    .OrderByDescending(p => p.created_at)
+                    .ToList();
+            } catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            }
+        }
+        public List<object> GetProductsByNameByPage(string name, int page)
+        {
+            try
+            {
+                return _context.Products
+                    .Where(p => EF.Functions.Collate(p.name, "Vietnamese_CI_AI").Contains(name) && p.delete_at == null)
+                    .OrderByDescending(p => p.created_at)
+                    .Skip((page -1) * 10)
+                    .Take(PageSizeEnum.PAGE_SIZE)
+                    .Include(p => p.thumbnails)
+                    .Include(p => p.user).ThenInclude(u => u.district).ThenInclude(d => d.city)
+                    .Include(p => p.category)
+                    .Include(p => p.product_status)
+                    .Select(product => new 
+                    {
+                        product.id,
+                        product.name,
+                        product.price,
+                        product.discount,
+                        product.description,
+                        product.created_at,
+                        product.updated_at,
+                        product.product_status.status,
+                        user = new
+                        {
+                            product.user.id,
+                            product.user.name,
+                            product.user.phone_number,
+                            product.user.avatar,
+                            location = Convert.ToBoolean(product.user.district_id) ? $"{product.user.district.name}, {product.user.district.city.name}" : null
+                        },
+                        thumbnails = product.thumbnails.Select(t => t.thumbnail_url),
+                        category = product.category.name,
+                    }).Cast<object>().ToList();
+            } catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            }
+        }
     }
 }
