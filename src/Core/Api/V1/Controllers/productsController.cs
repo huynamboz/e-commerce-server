@@ -225,6 +225,19 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
                 return StatusCode((int)ex.StatusCode, ex.Response);
             }
         }
+
+        [HttpGet("products/search")]
+        public IActionResult SearchProducts(string name, int page = 1)
+        {
+            try
+            {
+                return Ok(productService.SearchProducts(name, page));
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Response);
+            }
+        }
     }
 }
 

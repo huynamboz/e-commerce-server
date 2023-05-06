@@ -338,5 +338,25 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                 driver.Quit();
 			}
         }
+
+        public object SearchProducts(string name, int page)
+        {
+            var products = productRepository.GetProductsByName(name); 
+            
+            var paginatedProducts = productRepository.GetProductsByNameByPage(name, page);
+            
+            int total = (int)Math.Ceiling((double)products.Count() / PageSizeEnum.PAGE_SIZE); //calculate total pages
+
+            return new
+            {
+                data = paginatedProducts,
+                meta = new
+                {
+                    totalPages = total,
+                    totalCount = products,
+                    currentPage = page
+                }
+            };
+        }
     }
 }
