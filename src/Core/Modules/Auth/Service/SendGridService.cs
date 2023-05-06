@@ -13,7 +13,7 @@ namespace e_commerce_server.src.Core.Modules.Auth.Service
             _client = new SendGridClient(ENV.SENDGRID_API_KEY);
             _from = new EmailAddress(ENV.SENDGRID_EMAIL_ADDRESS, "Bad Supermarket");
         }
-        public async void SendMail(string email, MailContent mailContent)
+        public async Task<string> SendMail(string email, MailContent mailContent)
         {
             var to = new EmailAddress(email);
 
@@ -21,7 +21,7 @@ namespace e_commerce_server.src.Core.Modules.Auth.Service
 
             var response = await _client.SendEmailAsync(msg);
 
-            Console.WriteLine(response.StatusCode);
+            return response.StatusCode.ToString();
         }
     }
 }

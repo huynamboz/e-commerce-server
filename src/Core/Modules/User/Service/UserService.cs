@@ -7,6 +7,7 @@ using e_commerce_server.src.Core.Database;
 using e_commerce_server.src.Core.Modules.Product.Service;
 using e_commerce_server.src.Core.Modules.Product;
 using e_commerce_server.src.Core.Common.Enum;
+using e_commerce_server.src.Core.Utils;
 
 namespace e_commerce_server.src.Core.Modules.User.Service
 {
@@ -56,7 +57,7 @@ namespace e_commerce_server.src.Core.Modules.User.Service
                 }
             }
 
-            var userById = userRepository.GetUserById(userId) ?? throw new BadRequestException(UserEnum.USER_NOT_FOUND);
+            var userById = Optional.Of(userRepository.GetUserById(userId)).ThrowIfNotPresent(new BadRequestException(UserEnum.USER_NOT_FOUND)).Get();
 
             if (userById.delete_at != null)
             {
@@ -93,13 +94,13 @@ namespace e_commerce_server.src.Core.Modules.User.Service
                     userById.update_at,
                     userById.gender,
                     userById.active_status,
-                    location = Convert.ToBoolean(userById?.district_id) ? $"{userById.district?.name}, {userById.district?.city.name}" : null
+                    location = Convert.ToBoolean(userById.district_id) ? $"{userById.district.name}, {userById.district.city.name}" : null
                 }
             };
         }
         public object GetUserById(int userId)
         {
-            var user = userRepository.GetUserById(userId) ?? throw new BadRequestException(UserEnum.USER_NOT_FOUND);
+            var user = Optional.Of(userRepository.GetUserById(userId)).ThrowIfNotPresent(new BadRequestException(UserEnum.USER_NOT_FOUND)).Get();
 
             return new {
                 user.id,
@@ -119,12 +120,7 @@ namespace e_commerce_server.src.Core.Modules.User.Service
         }
         public object GetFavoriteProducts(int page, int userId)
         {
-            var user = userRepository.GetUserById(userId);
-
-            if (user == null)
-            {
-                throw new BadRequestException(UserEnum.USER_NOT_FOUND);
-            }
+            var user = Optional.Of(userRepository.GetUserById(userId)).ThrowIfNotPresent(new BadRequestException(UserEnum.USER_NOT_FOUND)).Get();
 
             var products = productRepository.GetFavoriteProductsByUserId(userId);
 

@@ -8,19 +8,15 @@ namespace e_commerce_server.src.Core.Database
         private readonly string _connectionString;
         private readonly string _environment;
         private WebApplicationBuilder _builder;
-        private DatabaseConnect()
+        private DatabaseConnect(WebApplicationBuilder builder)
         {
-            this._connectionString = ENV.CONNECTION_STRING;
-            this._environment = ENV.ENVIRONMENT;
+            _connectionString = ENV.CONNECTION_STRING;
+            _environment = ENV.ENVIRONMENT;
+            _builder = builder;
         }
-        public static DatabaseConnect Builder()
+        public static DatabaseConnect ApplyBuilderContext(WebApplicationBuilder builder)
         {
-            return new DatabaseConnect();
-        }
-        public DatabaseConnect ApplyBuilderContext(WebApplicationBuilder builder)
-        {
-            this._builder = builder;
-            return this;
+            return new DatabaseConnect(builder);
         }
         public WebApplicationBuilder ApplyDbContext()
         {
@@ -37,7 +33,7 @@ namespace e_commerce_server.src.Core.Database
         }
         public void ApplyMigration()
         {
-            this._builder.Services.BuildServiceProvider().GetService<MyDbContext>().Database.Migrate();
+            this._builder.Services.BuildServiceProvider().GetService<MyDbContext>()?.Database.Migrate();
         }
     }
 }

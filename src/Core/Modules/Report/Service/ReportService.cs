@@ -10,6 +10,7 @@ using e_commerce_server.src.Core.Modules.Review.Service;
 using e_commerce_server.src.Core.Modules.Review;
 using CloudinaryDotNet.Actions;
 using e_commerce_server.src.Core.Common.Enum;
+using e_commerce_server.src.Core.Utils;
 
 namespace e_commerce_server.src.Core.Modules.Report.Service
 {
@@ -27,19 +28,9 @@ namespace e_commerce_server.src.Core.Modules.Report.Service
 
         public object CreateOrUpdateReport(int productId, int userId, ReportProductDto model)
         {
-            var product = productRepository.GetProductById(productId);
+            var product = Optional.Of(productRepository.GetProductById(productId)).ThrowIfNotPresent(new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND)).Get();
 
-            if (product == null)
-            {
-                throw new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND);
-            }
-
-            var user = userRepository.GetUserById(userId);
-
-            if (user == null)
-            {
-                throw new BadRequestException(UserEnum.USER_NOT_FOUND);
-            }
+            var user = Optional.Of(userRepository.GetUserById(userId)).ThrowIfNotPresent(new BadRequestException(UserEnum.USER_NOT_FOUND)).Get();
 
             if (product.user_id == userId)
             {
@@ -47,7 +38,6 @@ namespace e_commerce_server.src.Core.Modules.Report.Service
             }
 
             var report = reportRepository.GetReportByIds(userId, productId);
-
 
             if (report != null)
             {
@@ -88,7 +78,6 @@ namespace e_commerce_server.src.Core.Modules.Report.Service
                 }
             };
         }
-
         public object GetReportsByUserId(int page, int roleId)
         { 
             if (roleId != RoleEnum.ADMIN)

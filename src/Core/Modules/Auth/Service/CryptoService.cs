@@ -8,10 +8,10 @@ namespace e_commerce_server.src.Core.Modules.Auth.Service
         {
             byte[] randomBytes = new byte[32];
 
-            using (var rng = new RNGCryptoServiceProvider())
-            {
-                rng.GetBytes(randomBytes);
-            }
+            RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator.Create();
+
+            randomNumberGenerator.GetBytes(randomBytes);
+
             return randomBytes;
         }
     }

@@ -6,6 +6,7 @@ using e_commerce_server.src.Core.Modules.Product.Service;
 using e_commerce_server.src.Core.Modules.Product;
 using e_commerce_server.src.Core.Modules.Review.Dto;
 using e_commerce_server.src.Core.Database.Data;
+using e_commerce_server.src.Core.Utils;
 
 namespace e_commerce_server.src.Core.Modules.Review.Service
 {
@@ -22,19 +23,9 @@ namespace e_commerce_server.src.Core.Modules.Review.Service
         }
         public object CreateOrUpdateReview(int productId, int userId, ReviewProductDto model)
         {
-            var product = productRepository.GetProductById(productId);
+            var product = Optional.Of(productRepository.GetProductById(productId)).ThrowIfNotPresent(new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND)).Get();
 
-            if (product == null)
-            {
-                throw new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND);
-            }
-
-            var user = userRepository.GetUserById(userId);
-
-            if (user == null)
-            {
-                throw new BadRequestException(UserEnum.USER_NOT_FOUND);
-            }
+            var user = Optional.Of(userRepository.GetUserById(userId)).ThrowIfNotPresent(new BadRequestException(UserEnum.USER_NOT_FOUND)).Get();
 
             if (product.user_id == userId)
             {
@@ -86,29 +77,13 @@ namespace e_commerce_server.src.Core.Modules.Review.Service
                 }
             };
         }
-
         public object DeleteReview(int productId, int userId)
         {
-            var product = productRepository.GetProductById(productId);
+            var product = Optional.Of(productRepository.GetProductById(productId)).ThrowIfNotPresent(new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND)).Get();
 
-            if (product == null)
-            {
-                throw new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND);
-            }
+            var user = Optional.Of(userRepository.GetUserById(userId)).ThrowIfNotPresent(new BadRequestException(UserEnum.USER_NOT_FOUND)).Get();
 
-            var user = userRepository.GetUserById(userId);
-
-            if (user == null)
-            {
-                throw new BadRequestException(UserEnum.USER_NOT_FOUND);
-            }
-
-            var review = reviewRepository.GetReviewByIds(userId, productId);
-
-            if (review == null) 
-            {
-                throw new BadRequestException(ReviewEnum.REVIEW_NOT_FOUND);
-            }
+            var review = Optional.Of(reviewRepository.GetReviewByIds(userId, productId)).ThrowIfNotPresent(new BadRequestException(ReviewEnum.REVIEW_NOT_FOUND)).Get();
 
             reviewRepository.DeleteReview(review);
 
@@ -120,12 +95,7 @@ namespace e_commerce_server.src.Core.Modules.Review.Service
 
         public object GetReviewsByUserId(int userId)
         {
-            var user = userRepository.GetUserById(userId);
-
-            if (user == null)
-            {
-                throw new BadRequestException(UserEnum.USER_NOT_FOUND);
-            }
+            var user = Optional.Of(userRepository.GetUserById(userId)).ThrowIfNotPresent(new BadRequestException(UserEnum.USER_NOT_FOUND)).Get();
 
             return reviewRepository.GetReviewsByUserId(userId);
         }

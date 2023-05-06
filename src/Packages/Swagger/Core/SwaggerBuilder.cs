@@ -6,15 +6,13 @@ namespace e_commerce_server.src.Packages.Swagger.Core
     public class SwaggerBuilder
     {
         private WebApplicationBuilder _builder;
-        public static SwaggerBuilder Builder()
-        {
-            Console.WriteLine("SwaggerBuilder is bundling");
-            return new SwaggerBuilder();
-        }
-        public SwaggerBuilder ApplyBuilderContext(WebApplicationBuilder builder)
+        private SwaggerBuilder(WebApplicationBuilder builder)
         {
             this._builder = builder;
-            return this;
+        }
+        public static SwaggerBuilder ApplyBuilderContext(WebApplicationBuilder builder)
+        {
+            return new SwaggerBuilder(builder);
         }
         public SwaggerBuilder ApplyEndPoint()
         {

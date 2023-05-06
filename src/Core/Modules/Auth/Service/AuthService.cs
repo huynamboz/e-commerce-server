@@ -3,6 +3,7 @@ using e_commerce_server.src.Core.Modules.Auth.Dto;
 using e_commerce_server.src.Core.Modules.User;
 using e_commerce_server.src.Packages.HttpExceptions;
 using e_commerce_server.src.Core.Database;
+using e_commerce_server.src.Core.Utils;
 
 namespace e_commerce_server.src.Core.Modules.Auth.Service
 {
@@ -116,14 +117,9 @@ namespace e_commerce_server.src.Core.Modules.Auth.Service
             }
             throw new UnAuthorizedException(AuthEnum.INVALID_REFRESH_TOKEN);
         }
-        public object RequestResetPassword(ForgotPasswordDto model)
+        public async Task<object> RequestResetPassword(ForgotPasswordDto model)
         {
-            var user = userRepository.GetUserByEmail(model.email);
-
-            if (user == null)
-            {
-                throw new BadRequestException(AuthEnum.NOT_FOUND_EMAIL);
-            }
+            var user = Optional.Of(userRepository.GetUserByEmail(model.email)).ThrowIfNotPresent(new BadRequestException(AuthEnum.NOT_FOUND_EMAIL)).Get();
 
             if (user.delete_at != null)
             {
@@ -131,67 +127,50 @@ namespace e_commerce_server.src.Core.Modules.Auth.Service
             }
 
             string token = Convert.ToBase64String(CryptoService.GetRandomBytes());
-            Console.WriteLine(token);
 
             user.reset_token = token;
             user.reset_token_expiration_date = DateTime.Now.AddHours(1);
 
             userRepository.CreateOrUpdateUser(user);
 
-            sendGridService.SendMail(model.email, MailContent.REQUEST_RESET_PASSWORD(token));
-            
-            return new
+            try
             {
-                message = AuthEnum.REQUEST_RESET_PASSWORD_SUCCESS
-            };
-        }
-        public object GetResetToken(string token)
-        {
-            var user = userRepository.GetUserByResetToken(token);
+                await sendGridService.SendMail(model.email, MailContent.REQUEST_RESET_PASSWORD(token));
 
-            if (user != null)
-            {
-                if (user.reset_token_expiration_date > DateTime.Now)
+                return new
                 {
-                    return new
-                    {
-                        message = AuthEnum.VALID_TOKEN,
-                        reset_token = token,
-                    };
-                }
-                throw new BadRequestException(AuthEnum.EXPIRED_TOKEN);
+                    message = AuthEnum.REQUEST_RESET_PASSWORD_SUCCESS
+                };
+            } catch(Exception ex)
+            {
+                throw new InternalException(ex.Message);
             }
-            throw new BadRequestException(AuthEnum.INVALID_TOKEN);
         }
-        public object UpdatePassword(UpdatePasswordDto model)
+        public object ResetPassword(ResetPasswordDto model)
         {
             if (model.password != model.confirm_password)
             {
                 throw new BadRequestException(AuthEnum.PASSWORDS_NOT_MATCH);
             }
 
-            var user = userRepository.GetUserByResetToken(model.reset_token);
+            var user = Optional.Of(userRepository.GetUserByResetToken(model.reset_token)).ThrowIfNotPresent(new BadRequestException(AuthEnum.INVALID_TOKEN)).Get();
 
-            if (user != null)
+            if (user.reset_token_expiration_date > DateTime.Now)
             {
-                if (user.reset_token_expiration_date > DateTime.Now)
+                user.password = bCryptService.Hash(model.password);
+                user.reset_token = null;
+                user.reset_token_expiration_date = null;
+                user.refresh_token = null;
+                user.update_at = DateTime.Now;
+
+                userRepository.CreateOrUpdateUser(user);
+
+                return new
                 {
-                    user.password = bCryptService.Hash(model.password);
-                    user.reset_token = null;
-                    user.reset_token_expiration_date = null;
-                    user.refresh_token = null;
-                    user.update_at = DateTime.Now;
-
-                    userRepository.CreateOrUpdateUser(user);
-
-                    return new
-                    {
-                        message = AuthEnum.UPDATE_PASSWORD_SUCCESS
-                    };
-                }
-                throw new BadRequestException(AuthEnum.EXPIRED_TOKEN);
+                    message = AuthEnum.UPDATE_PASSWORD_SUCCESS
+                };
             }
-            throw new BadRequestException(AuthEnum.INVALID_TOKEN);
+            throw new BadRequestException(AuthEnum.EXPIRED_TOKEN);
         }
     }
 }
