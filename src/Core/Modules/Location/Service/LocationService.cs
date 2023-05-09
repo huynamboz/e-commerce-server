@@ -7,7 +7,7 @@ namespace e_commerce_server.src.Core.Modules.Location.Service
     public class LocationService
     {
         private LocationRepository cityRepository;
-        public LocationService(MyDbContext context)
+        public LocationService(AppDbContext context)
         {
             cityRepository = new LocationRepository(context);
         }

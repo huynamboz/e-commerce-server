@@ -18,7 +18,7 @@ namespace e_commerce_server.src.Core.Modules.User.Service
         private readonly UserRepository userRepository;
         private readonly BCryptService bCryptService;
         private readonly MediaService mediaService;
-        public UserService(MyDbContext context)
+        public UserService(AppDbContext context)
         {
             productRepository = new ProductRepository(context);
             userRepository = new UserRepository(context);

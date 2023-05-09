@@ -8,8 +8,8 @@ namespace e_commerce_server.src.Core.Modules.Report
 {
     public class ReportRepository
     {
-        private readonly MyDbContext _context;
-        public ReportRepository(MyDbContext context)
+        private readonly AppDbContext _context;
+        public ReportRepository(AppDbContext context)
         {
             _context = context;
         }

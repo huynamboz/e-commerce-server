@@ -6,8 +6,6 @@ using e_commerce_server.src.Core.Modules.User.Service;
 using e_commerce_server.src.Packages.HttpExceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using e_commerce_server.src.Core.Modules.Product.Dto;
-using e_commerce_server.src.Core.Modules.Report.Dto;
 
 namespace e_commerce_server.src.Core.Api.V1.Controllers
 {
@@ -19,7 +17,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
         private UserService userService;
         private ReportService reportService;
         private ProductService productService;
-        public adminController(MyDbContext dbContext)
+        public adminController(AppDbContext dbContext)
         {
             reportService = new ReportService(dbContext); 
             userService = new UserService(dbContext);

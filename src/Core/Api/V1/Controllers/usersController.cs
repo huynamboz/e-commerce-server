@@ -1,5 +1,4 @@
 using e_commerce_server.src.Core.Database;
-using e_commerce_server.src.Core.Modules.Media;
 using e_commerce_server.src.Core.Modules.Review.Service;
 using e_commerce_server.src.Core.Modules.User.Dto;
 using e_commerce_server.src.Core.Modules.User.Service;
@@ -15,7 +14,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
     {
         private readonly UserService userService;
         private readonly ReviewService reviewService;
-        public usersController(MyDbContext dbContext)
+        public usersController(AppDbContext dbContext)
         {
             userService = new UserService(dbContext);
             reviewService = new ReviewService(dbContext);

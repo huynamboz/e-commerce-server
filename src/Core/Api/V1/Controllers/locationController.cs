@@ -10,7 +10,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
     public class locationController : ControllerBase
     {
         private readonly LocationService locationService;
-        public locationController(MyDbContext dbContext)
+        public locationController(AppDbContext dbContext)
         {
             locationService = new LocationService(dbContext);
         }

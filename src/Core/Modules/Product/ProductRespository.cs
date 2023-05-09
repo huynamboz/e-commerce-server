@@ -8,8 +8,8 @@ namespace e_commerce_server.src.Core.Modules.Product
 {
     public class ProductRepository
     {
-        private readonly MyDbContext _context;
-        public ProductRepository(MyDbContext context)
+        private readonly AppDbContext _context;
+        public ProductRepository(AppDbContext context)
         {
             _context = context;
         }

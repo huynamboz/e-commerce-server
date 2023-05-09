@@ -8,8 +8,6 @@ using e_commerce_server.src.Packages.HttpExceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using e_commerce_server.src.Core.Modules.Report.Dto;
-using System.Security.Claims;
-using e_commerce_server.src.Core.Database.Data;
 
 namespace e_commerce_server.src.Core.Api.V1.Controllers
 {
@@ -20,7 +18,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
         private readonly ProductService productService;
         private readonly ReviewService reviewService;
         private readonly ReportService reportService;
-        public productsController(MyDbContext dbContext)
+        public productsController(AppDbContext dbContext)
         {
             productService = new ProductService(dbContext);
             reviewService = new ReviewService(dbContext);
