@@ -5,8 +5,8 @@ namespace e_commerce_server.src.Core.Modules.Location
 {
     public class LocationRepository 
     {
-        private readonly MyDbContext _context;
-        public LocationRepository(MyDbContext context)
+        private readonly AppDbContext _context;
+        public LocationRepository(AppDbContext context)
         {
             _context = context;
         }

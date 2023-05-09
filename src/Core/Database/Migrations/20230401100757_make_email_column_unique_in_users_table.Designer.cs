@@ -11,7 +11,7 @@ using e_commerce_server.src.Core.Database;
 
 namespace e_commerce_server.src.Core.Database.Migrations
 {
-    [DbContext(typeof(MyDbContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20230401100757_make_email_column_unique_in_users_table")]
     partial class make_email_column_unique_in_users_table
     {

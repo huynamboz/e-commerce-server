@@ -20,7 +20,7 @@ namespace e_commerce_server.src.Core.Database
         }
         public WebApplicationBuilder ApplyDbContext()
         {
-            this._builder.Services.AddDbContext<MyDbContext>(option => {
+            this._builder.Services.AddDbContext<AppDbContext>(option => {
                 option.UseSqlServer(this._connectionString);
             });
 
@@ -33,7 +33,7 @@ namespace e_commerce_server.src.Core.Database
         }
         public void ApplyMigration()
         {
-            this._builder.Services.BuildServiceProvider().GetService<MyDbContext>()?.Database.Migrate();
+            this._builder.Services.BuildServiceProvider().GetService<AppDbContext>()?.Database.Migrate();
         }
     }
 }

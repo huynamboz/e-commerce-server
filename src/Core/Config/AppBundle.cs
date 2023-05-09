@@ -82,7 +82,7 @@ namespace e_commerce_server.src.Core.Config
                 app.UseSwagger();
                 app.UseSwaggerUI(options =>
                 {
-                    options.HeadContent = "<link rel='stylesheet' type='text/css' href='/files/swagger-ui.css'>";
+                    options.HeadContent = "<link rel='stylesheet' type='text/css' href='/files/css/swagger-ui.css'>";
                 });
 
             }

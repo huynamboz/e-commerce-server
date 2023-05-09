@@ -15,7 +15,7 @@ namespace e_commerce_server.src.Core.Modules.Review.Service
         private readonly ProductRepository productRepository;
         private readonly UserRepository userRepository;
         private readonly ReviewRepository reviewRepository;
-        public ReviewService(MyDbContext context)
+        public ReviewService(AppDbContext context)
         {
             productRepository = new ProductRepository(context);
             userRepository = new UserRepository(context);

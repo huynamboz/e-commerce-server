@@ -2,7 +2,6 @@
 using e_commerce_server.src.Packages.HttpExceptions;
 using e_commerce_server.src.Core.Modules.Auth.Dto;
 using e_commerce_server.src.Core.Modules.Auth.Service;
-using System.Web;
 using e_commerce_server.src.Core.Database;
 
 namespace e_commerce_server.src.Core.Api.V1.Controllers
@@ -14,7 +13,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
 
         private readonly AuthService authService;
 
-        public authController(MyDbContext context)
+        public authController(AppDbContext context)
         {
             authService = new AuthService(context);
         }

@@ -11,7 +11,7 @@ using e_commerce_server.src.Core.Database;
 
 namespace e_commerce_server.src.Core.Database.Migrations
 {
-    [DbContext(typeof(MyDbContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20230420071005_create_reports_table")]
     partial class create_reports_table
     {

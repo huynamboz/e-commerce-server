@@ -11,7 +11,7 @@ using e_commerce_server.src.Core.Database;
 
 namespace e_commerce_server.src.Core.Database.Migrations
 {
-    [DbContext(typeof(MyDbContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20230415185443_set_delete_at_columns_to_nullable")]
     partial class set_delete_at_columns_to_nullable
     {

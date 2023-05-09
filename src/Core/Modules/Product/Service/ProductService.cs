@@ -16,7 +16,7 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
         private readonly UserRepository userRepository;
         private readonly ProductRepository productRepository;
         private readonly UserService userService;
-        public ProductService(MyDbContext context)
+        public ProductService(AppDbContext context)
         {
             productRepository = new ProductRepository(context);
             userRepository = new UserRepository(context);

@@ -13,7 +13,7 @@ namespace e_commerce_server.src.Core.Modules.Auth.Service
         private readonly UserRepository userRepository;
         private readonly JwtService jwtService;
         private readonly SendGridService sendGridService;
-        public AuthService(MyDbContext context)
+        public AuthService(AppDbContext context)
         {
             bCryptService = new BCryptService();
             jwtService = new JwtService();

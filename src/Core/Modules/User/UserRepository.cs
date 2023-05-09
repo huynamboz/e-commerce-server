@@ -8,8 +8,8 @@ namespace e_commerce_server.src.Core.Modules.User
 {
     public class UserRepository
     {
-        private readonly MyDbContext _context;
-        public UserRepository(MyDbContext context)
+        private readonly AppDbContext _context;
+        public UserRepository(AppDbContext context)
         {
             _context = context;
         }

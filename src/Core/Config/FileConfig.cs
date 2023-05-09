@@ -5,8 +5,8 @@ namespace e_commerce_server.src.Core.Config
         public static string ApplyUploadFilesPath(string? fileName = null)
         {
             return string.IsNullOrEmpty(fileName) ? 
-                Path.Combine(Directory.GetCurrentDirectory(), "src", "Core", "Uploads", "Media") :
-                Path.Combine(Directory.GetCurrentDirectory(), "src", "Core", "Uploads", "Media", fileName);
+                Path.Combine(Directory.GetCurrentDirectory(), "src", "Core", "Files", "Uploads", "Media") :
+                Path.Combine(Directory.GetCurrentDirectory(), "src", "Core", "Files", "Uploads", "Media", fileName);
         }
         public static string ApplyRequestPath()
         {
@@ -14,7 +14,7 @@ namespace e_commerce_server.src.Core.Config
         }
         public static string ApplyFileProviderPath()
         {
-            return Path.Combine(Directory.GetCurrentDirectory(), "src", "Core", "Uploads", "Static");
+            return Path.Combine(Directory.GetCurrentDirectory(), "src", "Core", "Files", "Statics");
         }
         public static List<string> ApplyExtensions()
         {

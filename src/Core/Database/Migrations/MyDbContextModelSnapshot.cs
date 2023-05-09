@@ -10,7 +10,7 @@ using e_commerce_server.src.Core.Database;
 
 namespace e_commerce_server.src.Core.Database.Migrations
 {
-    [DbContext(typeof(MyDbContext))]
+    [DbContext(typeof(AppDbContext))]
     partial class MyDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
@@ -1838,12 +1838,6 @@ namespace e_commerce_server.src.Core.Database.Migrations
                             id = 270900,
                             city_id = 270000,
                             name = "Huyện Quảng Uyên"
-                        },
-                        new
-                        {
-                            id = 270500,
-                            city_id = 270000,
-                            name = "Huyện Trà Lĩnh"
                         },
                         new
                         {

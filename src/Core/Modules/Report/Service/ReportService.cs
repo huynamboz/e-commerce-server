@@ -6,9 +6,6 @@ using e_commerce_server.src.Core.Modules.Product.Service;
 using e_commerce_server.src.Core.Modules.Product;
 using e_commerce_server.src.Core.Database.Data;
 using e_commerce_server.src.Core.Modules.Report.Dto;
-using e_commerce_server.src.Core.Modules.Review.Service;
-using e_commerce_server.src.Core.Modules.Review;
-using CloudinaryDotNet.Actions;
 using e_commerce_server.src.Core.Common.Enum;
 using e_commerce_server.src.Core.Utils;
 
@@ -19,7 +16,7 @@ namespace e_commerce_server.src.Core.Modules.Report.Service
         private readonly ProductRepository productRepository;
         private readonly UserRepository userRepository;
         private readonly ReportRepository reportRepository;
-        public ReportService(MyDbContext context)
+        public ReportService(AppDbContext context)
         {
             reportRepository = new ReportRepository(context);
             productRepository = new ProductRepository(context);

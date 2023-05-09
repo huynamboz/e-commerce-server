@@ -11,7 +11,7 @@ using e_commerce_server.src.Core.Database;
 
 namespace e_commerce_server.src.Core.Database.Migrations
 {
-    [DbContext(typeof(MyDbContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20230404064452_init_data_tb_thumbnail")]
     partial class init_data_tb_thumbnail
     {

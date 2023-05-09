@@ -7,8 +7,8 @@ namespace e_commerce_server.src.Core.Modules.Review
 {
     public class ReviewRepository
     {
-        private readonly MyDbContext _context;
-        public ReviewRepository(MyDbContext context)
+        private readonly AppDbContext _context;
+        public ReviewRepository(AppDbContext context)
         {
             _context = context;
         }
