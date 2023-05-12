@@ -35,6 +35,17 @@ namespace e_commerce_server.src.Core.Modules.Product
                 throw new InternalException(ex.Message);
             }
         }
+        public List<CategoryData> GetCategories()
+        {
+            try
+            {
+                return _context.Categories.ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            }
+        }
         public List<object> GetProductsByPage(int page)
         {
             try

@@ -236,6 +236,19 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
                 return StatusCode((int)ex.StatusCode, ex.Response);
             }
         }
+
+        [HttpGet("categories")]
+        public IActionResult GetCategories()
+        {
+            try
+            {
+                return Ok(productService.GetCategories());
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Response);
+            }
+        }
     }
 }
 

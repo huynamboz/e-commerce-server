@@ -358,5 +358,15 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                 }
             };
         }
+        
+        public object GetCategories()
+        {
+            var categories = productRepository.GetCategories();
+
+            return new
+            {
+                data = categories
+            };
+        }
     }
 }
