@@ -97,7 +97,29 @@ namespace e_commerce_server.src.Core.Modules.Review.Service
         {
             var user = Optional.Of(userRepository.GetUserById(userId)).ThrowIfNotPresent(new BadRequestException(UserEnum.USER_NOT_FOUND)).Get();
 
-            return reviewRepository.GetReviewsByUserId(userId);
+            return new {
+                data = reviewRepository
+                    .GetReviewsByUserId(userId)
+                    .Select(r => new
+                    {
+                        product = new
+                        {
+                            r.product.id,
+                            r.product.name,
+                            thumbnails = r.product.thumbnails.Select(t => t.thumbnail_url)
+                        },
+                        user = new
+                        {
+                            r.user.id,
+                            r.user.name,
+                            r.user.avatar
+                        },
+                        r.rating,
+                        r.comment,
+                        r.create_at,
+                        r.update_at
+                    })
+            };
         }
 
     }

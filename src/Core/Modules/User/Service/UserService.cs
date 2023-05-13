@@ -130,7 +130,28 @@ namespace e_commerce_server.src.Core.Modules.User.Service
 
             return new
             {
-                data = paginatedProducts,
+                data = paginatedProducts.Select(p => new
+                    {
+                        p.product.id,
+                        p.product.name,
+                        p.product.price,
+                        p.product.discount,
+                        p.product.description,
+                        p.product.created_at,
+                        p.product.updated_at,
+                        p.product.product_status.status,
+                        user = new
+                        {
+                            p.product.user.id,
+                            p.product.user.name,
+                            p.product.user.phone_number,
+                            p.product.user.avatar,
+                            location = Convert.ToBoolean(p.user.district_id) ? $"{p.user.district.name}, {p.user.district.city.name}" : null
+                        },
+                        thumbnails = p.product.thumbnails.Select(t => t.thumbnail_url),
+                        category = p.product.category.name,
+                    }
+                ),
                 meta = new
                 {
                     totalPages = total,
@@ -203,18 +224,31 @@ namespace e_commerce_server.src.Core.Modules.User.Service
         {
             if(roleId == RoleEnum.ADMIN)
             {
-                return userRepository.GetAllUsers();
+                return new {
+                    data = userRepository.GetAllUsers().Select(user => new
+                    {
+                        user.id,
+                        user.email,
+                        user.name,
+                        user.phone_number,
+                        user.address,
+                        user.gender,
+                        user.birthday,
+                        user.avatar,
+                        user.role_id,
+                        user.created_at,
+                        user.delete_at,
+                        user.active_status,
+                        user.report_count,
+                        location  = Convert.ToBoolean(user.district_id) ? $"{user.district.name}, {user.district.city.name}" : null
+                    })
+                };
             }
             throw new ForbiddenException(UserEnum.GET_ALL_USERS_DENIED);
         }
         public object DeleteUserById(int roleId, int userId)
         {
-            var user = userRepository.GetUserById(userId);
-
-            if(user == null)
-            {
-                throw new BadRequestException(UserEnum.USER_NOT_FOUND);
-            }
+            var user = Optional.Of(userRepository.GetUserById(userId)).ThrowIfNotPresent(new BadRequestException(UserEnum.USER_NOT_FOUND)).Get();
 
             if (roleId != RoleEnum.ADMIN || user.role_id == RoleEnum.ADMIN)
             {

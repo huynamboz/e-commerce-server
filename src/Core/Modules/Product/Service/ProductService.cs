@@ -40,7 +40,28 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
 
             return new
             {
-                data = paginatedProducts,
+                data = paginatedProducts.Select(product => new
+                    {
+                        product.id,
+                        product.name,
+                        product.price,
+                        product.discount,
+                        product.description,
+                        product.created_at,
+                        product.updated_at,
+                        product.product_status.status,
+                        user = new
+                        {
+                            product.user.id,
+                            product.user.name,
+                            product.user.phone_number,
+                            product.user.avatar,
+                            location = Convert.ToBoolean(product.user.district_id) ? $"{product.user.district.name}, {product.user.district.city.name}" : null
+                        },
+                        thumbnails = product.thumbnails.Select(t => t.thumbnail_url),
+                        category = product.category.name,
+                    }
+                ),
                 meta = new
                 {
                     totalPages = total,
@@ -230,7 +251,27 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
 
             return new
             {
-                data = paginatedProducts,
+                data = paginatedProducts.Select(product => new 
+                    {
+                        product.id,
+                        product.name,
+                        product.price,
+                        product.discount,
+                        product.description,
+                        product.created_at,
+                        product.updated_at,
+                        product.product_status.status,
+                        user = new
+                        {
+                            product.user.id,
+                            product.user.name,
+                            product.user.phone_number,
+                            product.user.avatar,
+                            location = Convert.ToBoolean(product.user.district_id) ? $"{product.user.district.name}, {product.user.district.city.name}" : null
+                        },
+                        thumbnails = product.thumbnails.Select(t => t.thumbnail_url),
+                        category = product.category.name,
+                    }),
                 meta = new
                 {
                     totalPages = total,
@@ -349,7 +390,27 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
 
             return new
             {
-                data = paginatedProducts,
+                data = paginatedProducts.Select(product => new 
+                    {
+                        product.id,
+                        product.name,
+                        product.price,
+                        product.discount,
+                        product.description,
+                        product.created_at,
+                        product.updated_at,
+                        product.product_status.status,
+                        user = new
+                        {
+                            product.user.id,
+                            product.user.name,
+                            product.user.phone_number,
+                            product.user.avatar,
+                            location = Convert.ToBoolean(product.user.district_id) ? $"{product.user.district.name}, {product.user.district.city.name}" : null
+                        },
+                        thumbnails = product.thumbnails.Select(t => t.thumbnail_url),
+                        category = product.category.name,
+                    }),
                 meta = new
                 {
                     totalPages = total,
@@ -365,7 +426,11 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
 
             return new
             {
-                data = categories
+                data = categories.Select(category => new
+                {
+                    category.id,
+                    category.name
+                })
             };
         }
     }

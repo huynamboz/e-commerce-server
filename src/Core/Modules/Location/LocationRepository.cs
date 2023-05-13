@@ -1,4 +1,5 @@
 ﻿using e_commerce_server.src.Core.Database;
+using e_commerce_server.src.Core.Database.Data;
 using e_commerce_server.src.Packages.HttpExceptions;
 
 namespace e_commerce_server.src.Core.Modules.Location
@@ -10,16 +11,11 @@ namespace e_commerce_server.src.Core.Modules.Location
         {
             _context = context;
         }
-        public List<object>? GetAllCities()
+        public List<CityData> GetAllCities()
         {
             try
             {
-                return _context.Cities
-                    .Select(city => new
-                    {
-                        city.id,
-                        city.name,
-                    }).Cast<object>().ToList();
+                return _context.Cities.ToList();
             }
             catch (Exception ex)
             {
@@ -27,18 +23,13 @@ namespace e_commerce_server.src.Core.Modules.Location
             }
         }
 
-        public List<object>? GetDistrictsByCityId(int cityId)
+        public List<DistrictData> GetDistrictsByCityId(int cityId)
         {
             try
             {
                 return _context.Districts
                     .Where(d => d.city_id == cityId)
-                    .Select(district => new
-                    {
-                        district.id,
-                        district.name,
-                    }).Cast<object>().ToList();
-
+                    .ToList();
             }
             catch (Exception ex)
             {
