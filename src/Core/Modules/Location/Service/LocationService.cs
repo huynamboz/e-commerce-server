@@ -11,18 +11,31 @@ namespace e_commerce_server.src.Core.Modules.Location.Service
         {
             cityRepository = new LocationRepository(context);
         }
-        public object? GetAllCities()
+        public object GetAllCities()
         {
-            return cityRepository.GetAllCities();
+            return new {
+                data = cityRepository.GetAllCities()
+                .Select(city => new
+                    {
+                        city.id,
+                        city.name,
+                    })
+            };
         }
 
-        public object? GetDistrictsByCityId(int cityId)
+        public object GetDistrictsByCityId(int cityId)
         {
             var districts = cityRepository.GetDistrictsByCityId(cityId);
 
             Optional.Of(districts).ThrowIfNotPresent(new BadRequestException(LocationEnum.LOCATION_NOT_FOUND));
 
-            return districts;
+            return new {
+                data = districts.Select(district => new
+                    {
+                        district.id,
+                        district.name,
+                    })
+            };
         }
 
     }

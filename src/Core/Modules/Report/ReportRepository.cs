@@ -60,21 +60,14 @@ namespace e_commerce_server.src.Core.Modules.Report
             }
         }
 
-        public List<object> GetReportsByPage(int page)
+        public List<ReportData> GetReportsByPage(int page)
         {
             try
             {
                 return _context.Reports
                     .Skip((page - 1) * 10)
                     .Take(PageSizeEnum.PAGE_SIZE)
-                    .Select(product => new 
-                    {
-                        product.user_id,
-                        product.product_id,
-                        product.description,
-                        product.create_at
-                    }
-                ).Cast<object>().ToList();
+                    .ToList();
             }
             catch (Exception ex)
             {

@@ -89,30 +89,14 @@ namespace e_commerce_server.src.Core.Modules.User
                 throw new InternalException(ex.Message);
             }
         }
-        public List<object> GetAllUsers()
+        public List<UserData> GetAllUsers()
         {
             try
             {
                 return _context.Users
                     .Where(u => u.role_id == RoleEnum.USER)
                     .Include(u => u.district).ThenInclude(d => d.city)
-                    .Select(user => new
-                    {
-                        user.id,
-                        user.email,
-                        user.name,
-                        user.phone_number,
-                        user.address,
-                        user.gender,
-                        user.birthday,
-                        user.avatar,
-                        user.role_id,
-                        user.created_at,
-                        user.delete_at,
-                        user.active_status,
-                        user.report_count,
-                        location  = Convert.ToBoolean(user.district_id) ? $"{user.district.name}, {user.district.city.name}" : null
-                    }).Cast<object>().ToList();
+                    .ToList();
             } catch (Exception ex)
             {
                 throw new InternalException(ex.Message);

@@ -35,7 +35,18 @@ namespace e_commerce_server.src.Core.Modules.Product
                 throw new InternalException(ex.Message);
             }
         }
-        public List<object> GetProductsByPage(int page)
+        public List<CategoryData> GetCategories()
+        {
+            try
+            {
+                return _context.Categories.ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            }
+        }
+        public List<ProductData> GetProductsByPage(int page)
         {
             try
             {
@@ -47,27 +58,7 @@ namespace e_commerce_server.src.Core.Modules.Product
                     .Include(p => p.user).ThenInclude(u => u.district).ThenInclude(d => d.city)
                     .Include(p => p.category)
                     .Include(p => p.product_status)
-                    .Select(product => new 
-                    {
-                        product.id,
-                        product.name,
-                        product.price,
-                        product.discount,
-                        product.description,
-                        product.created_at,
-                        product.updated_at,
-                        product.product_status.status,
-                        user = new
-                        {
-                            product.user.id,
-                            product.user.name,
-                            product.user.phone_number,
-                            product.user.avatar,
-                            location = Convert.ToBoolean(product.user.district_id) ? $"{product.user.district.name}, {product.user.district.city.name}" : null
-                        },
-                        thumbnails = product.thumbnails.Select(t => t.thumbnail_url),
-                        category = product.category.name,
-                    }).Cast<object>().ToList();
+                    .ToList();
             } catch (Exception ex)
             {
                 throw new InternalException(ex.Message);
@@ -89,7 +80,7 @@ namespace e_commerce_server.src.Core.Modules.Product
                 throw new InternalException(ex.Message);
             }
         }
-        public List<object> GetProductsByUserIdByPage(int page, int userId)
+        public List<ProductData> GetProductsByUserIdByPage(int page, int userId)
         {
             try
             {
@@ -101,28 +92,7 @@ namespace e_commerce_server.src.Core.Modules.Product
                     .Include(p => p.user).ThenInclude(u => u.district).ThenInclude(d => d.city)
                     .Include(p => p.category)
                     .Include(p => p.product_status)
-                    .Select(product => new
-                    {
-                        product.id,
-                        product.name,
-                        product.price,
-                        product.discount,
-                        product.description,
-                        product.created_at,
-                        product.updated_at,
-                        product.product_status.status,
-                        user = new
-                        {
-                            product.user.id,
-                            product.user.name,
-                            product.user.phone_number,
-                            product.user.avatar,
-                            location = Convert.ToBoolean(product.user.district_id) ? $"{product.user.district.name}, {product.user.district.city.name}" : null
-                        },
-                        thumbnails = product.thumbnails.Select(t => t.thumbnail_url),
-                        category = product.category.name,
-                    }
-                ).Cast<object>().ToList();
+                    .ToList();
             } catch (Exception ex)
             {
                 throw new InternalException(ex.Message);
@@ -248,7 +218,7 @@ namespace e_commerce_server.src.Core.Modules.Product
                 throw new InternalException(ex.Message);
             }
         }
-        public List<object> GetFavoriteProductsByUserIdByPage(int page, int userId)
+        public List<FavoriteData> GetFavoriteProductsByUserIdByPage(int page, int userId)
         {
             try
             {
@@ -258,28 +228,7 @@ namespace e_commerce_server.src.Core.Modules.Product
                     .Take(PageSizeEnum.PAGE_SIZE)
                     .Include(p => p.product).ThenInclude(p => p.category)
                     .Include(p => p.product).ThenInclude(p => p.product_status)
-                    .Select(p => new
-                    {
-                        p.product.id,
-                        p.product.name,
-                        p.product.price,
-                        p.product.discount,
-                        p.product.description,
-                        p.product.created_at,
-                        p.product.updated_at,
-                        p.product.product_status.status,
-                        user = new
-                        {
-                            p.product.user.id,
-                            p.product.user.name,
-                            p.product.user.phone_number,
-                            p.product.user.avatar,
-                            location = Convert.ToBoolean(p.user.district_id) ? $"{p.user.district.name}, {p.user.district.city.name}" : null
-                        },
-                        thumbnails = p.product.thumbnails.Select(t => t.thumbnail_url),
-                        category = p.product.category.name,
-                    }
-                ).Cast<object>().ToList();
+                    .ToList();
             } catch (Exception ex)
             {
                 throw new InternalException(ex.Message);
@@ -318,7 +267,7 @@ namespace e_commerce_server.src.Core.Modules.Product
                 throw new InternalException(ex.Message);
             }
         }
-        public List<object> GetProductsByNameByPage(string name, int page)
+        public List<ProductData> GetProductsByNameByPage(string name, int page)
         {
             try
             {
@@ -331,27 +280,7 @@ namespace e_commerce_server.src.Core.Modules.Product
                     .Include(p => p.user).ThenInclude(u => u.district).ThenInclude(d => d.city)
                     .Include(p => p.category)
                     .Include(p => p.product_status)
-                    .Select(product => new 
-                    {
-                        product.id,
-                        product.name,
-                        product.price,
-                        product.discount,
-                        product.description,
-                        product.created_at,
-                        product.updated_at,
-                        product.product_status.status,
-                        user = new
-                        {
-                            product.user.id,
-                            product.user.name,
-                            product.user.phone_number,
-                            product.user.avatar,
-                            location = Convert.ToBoolean(product.user.district_id) ? $"{product.user.district.name}, {product.user.district.city.name}" : null
-                        },
-                        thumbnails = product.thumbnails.Select(t => t.thumbnail_url),
-                        category = product.category.name,
-                    }).Cast<object>().ToList();
+                    .ToList();
             } catch (Exception ex)
             {
                 throw new InternalException(ex.Message);

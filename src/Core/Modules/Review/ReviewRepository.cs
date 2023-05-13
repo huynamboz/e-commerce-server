@@ -46,34 +46,15 @@ namespace e_commerce_server.src.Core.Modules.Review
                 throw new InternalException(ex.Message);
             }
         }
-        public List<object> GetReviewsByUserId (int userId)
+        public List<ReviewData> GetReviewsByUserId (int userId)
         {
             try
             {
-                var reviews = _context.Reviews
+                return _context.Reviews
                     .Where(r => r.product.user_id == userId)
                     .Include(r => r.product).ThenInclude(p => p.thumbnails)
                     .Include(r => r.user)
-                    .Select(r => new
-                    {
-                        product = new
-                        {
-                            r.product.id,
-                            r.product.name,
-                            thumbnails = r.product.thumbnails.Select(t => t.thumbnail_url)
-                        },
-                        user = new
-                        {
-                            r.user.id,
-                            r.user.name,
-                            r.user.avatar
-                        },
-                        r.rating,
-                        r.comment,
-                        r.create_at,
-                        r.update_at
-                    }).Cast<object>().ToList(); 
-                return reviews;
+                    .ToList();
             } catch (Exception ex)
             {
                 throw new InternalException(ex.Message);
