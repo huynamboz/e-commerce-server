@@ -351,7 +351,9 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
             driverService.HideCommandPromptWindow = true;
 
             driverService.Port = 3003;
+
             var driver = new ChromeDriver(driverService, options);
+
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
 
             driver.ExecuteScript("Object.defineProperty(navigator, 'webdriver', { get: () => undefined })");
