@@ -67,7 +67,6 @@ namespace e_commerce_server.src.Core.Modules.User.Service
             userById.name = updateUserDto.name;
             userById.email = updateUserDto.email;
             userById.phone_number = updateUserDto.phone_number;
-            userById.password = bCryptService.Hash(updateUserDto.password);
             userById.gender = updateUserDto.gender;
             userById.birthday = updateUserDto.birthday;
             userById.address = updateUserDto.address;
