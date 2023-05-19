@@ -434,11 +434,11 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                         },
                         thumbnails = product.thumbnails.Select(t => t.thumbnail_url),
                         category = product.category.name,
-                    }),
+                }),
                 meta = new
                 {
                     totalPages = total,
-                    totalCount = products,
+                    totalCount = products.Count,
                     currentPage = page
                 }
             };
