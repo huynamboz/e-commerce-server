@@ -224,7 +224,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             }
         }
 
-        [HttpGet("products/search")]
+        [HttpGet("search")]
         public IActionResult SearchProducts(string name, int page = 1)
         {
             try
