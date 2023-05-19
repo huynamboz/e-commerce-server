@@ -1,0 +1,14 @@
+name: CI/CD on merge to Develop
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Build and test
+        run: echo "Build and test"
