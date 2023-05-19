@@ -15,10 +15,14 @@ jobs:
 
       - name: SSH to VPS and Execute Build
         uses: appleboy/ssh-action@master
+        env :
+            a : ${{ secrets.IP_VPS }}
+            b : $ Mona  
+            c : ${{ ssecrets.PASSWORD_VPS }}
         with:
-          host: ${{ secrets.IP_VPS }}
+          host: $a
           username: root
-          password: ${{ secrets.PASSWORD_VPS }}
+          password: $c
           script: |
             # Add your commands to be executed on VPS here
             ./build.sh
