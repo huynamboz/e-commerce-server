@@ -8,6 +8,7 @@ using e_commerce_server.src.Core.Database.Data;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using e_commerce_server.src.Core.Utils;
+using OpenQA.Selenium.Support.UI;
 
 namespace e_commerce_server.src.Core.Modules.Product.Service
 {
@@ -339,23 +340,43 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
 
             var options = new ChromeOptions();// Chạy Chrome ở chế độ ẩn
 
-            var driver = new ChromeDriver(options);
+            options.AddArgument("--headless");
+            options.AddArgument("--no-sandbox");
+            options.AddArgument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36 Edge/16.16299");
+            options.AddArgument("--disable-blink-features=AutomationControlled");
+            options.AddArgument("disable-blink-features=AutomationControlled");
 
-            driver.Navigate().GoToUrl("https://shopee.vn/search?keyword=" + product.name);
-    
+            var driverService = ChromeDriverService.CreateDefaultService();
+
+            driverService.HideCommandPromptWindow = true;
+
+            driverService.Port = 3003;
+
+            var driver = new ChromeDriver(driverService, options);
+
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+
+            driver.ExecuteScript("Object.defineProperty(navigator, 'webdriver', { get: () => undefined })");
+
+            driver.Navigate().GoToUrl("https://beecost.vn");
+
+            IWebElement input = driver.FindElement(By.ClassName("focus:outline-none"));
+
+            input.SendKeys(product.name);
+
+            input.SendKeys(Keys.Enter);
             try
             {
-                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
 
-                var productElements = driver.FindElements(By.CssSelector(".shopee-search-item-result__item"));
+                var productElements = driver.FindElements(By.CssSelector(".product-item"));
 
                 List<object> ListProduct = new List<object>();
 
                 for (int i = 0; i < 4; i++)
                 {
-                    var nameElement = productElements[i].FindElement(By.CssSelector(".Cve6sh"));
+                    var nameElement = productElements[i].FindElement(By.CssSelector(".line-clamp__2"));
 
-                    var cost = productElements[i].FindElement(By.CssSelector(".ZEgDH9"));
+                    var cost = productElements[i].FindElement(By.CssSelector(".text-red-500"));
 
                     var imgElement = productElements[i].FindElement(By.CssSelector("img"));
 
@@ -371,13 +392,16 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                     ListProduct.Add(item);
                 }
                 return ListProduct;
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new InternalException(ex.Message);
-            } finally
+            }
+            finally
             {
                 driver.Quit();
-			}
+            }
         }
 
         public object SearchProducts(string name, int page)
@@ -410,11 +434,11 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                         },
                         thumbnails = product.thumbnails.Select(t => t.thumbnail_url),
                         category = product.category.name,
-                    }),
+                }),
                 meta = new
                 {
                     totalPages = total,
-                    totalCount = products,
+                    totalCount = products.Count,
                     currentPage = page
                 }
             };

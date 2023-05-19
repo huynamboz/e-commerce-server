@@ -145,7 +145,7 @@ namespace e_commerce_server.src.Core.Modules.User.Service
                             p.product.user.name,
                             p.product.user.phone_number,
                             p.product.user.avatar,
-                            location = Convert.ToBoolean(p.user.district_id) ? $"{p.user.district.name}, {p.user.district.city.name}" : null
+                            location = Convert.ToBoolean(p.product.user.district_id) ? $"{p.product.user.district.name}, {p.product.user.district.city.name}" : null
                         },
                         thumbnails = p.product.thumbnails.Select(t => t.thumbnail_url),
                         category = p.product.category.name,
