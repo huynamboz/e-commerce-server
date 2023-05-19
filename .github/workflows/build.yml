@@ -1,14 +1,24 @@
-name: CI/CD on merge to Develop
+name: SSH Login and Execute Build
 
 on:
   push:
     branches:
-      - develop
+      - feat/init-cicd
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Build and test
-        run: echo "Build and test"
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: SSH to VPS and Execute Build
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.IP_VPS }}
+          username: root
+          password: ${{ secrets.PASSWORD_VPS }}
+          script: |
+            # Add your commands to be executed on VPS here
+            ./build.sh
