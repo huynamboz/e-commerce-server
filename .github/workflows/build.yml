@@ -18,7 +18,7 @@ jobs:
         env :
             a : ${{ secrets.IP_VPS }}
             b : $ Mona  
-            c : ${{ ssecrets.PASSWORD_VPS }}
+            c : ${{ secrets.PASSWORD_VPS }}
         with:
           host: $a
           username: root
