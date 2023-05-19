@@ -20,9 +20,9 @@ jobs:
             b : $ Mona  
             c : ${{ secrets.PASSWORD_VPS }}
         with:
-          host: $a
+          host: ${{ env.a }}
           username: root
-          password: $c
+          password: ${{ env.c }}
           script: |
             # Add your commands to be executed on VPS here
             ./build.sh
