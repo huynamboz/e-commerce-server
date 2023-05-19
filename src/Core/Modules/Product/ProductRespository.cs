@@ -228,6 +228,7 @@ namespace e_commerce_server.src.Core.Modules.Product
                     .Take(PageSizeEnum.PAGE_SIZE)
                     .Include(p => p.product).ThenInclude(p => p.category)
                     .Include(p => p.product).ThenInclude(p => p.product_status)
+                    .Include(p => p.product).ThenInclude(p => p.thumbnails)
                     .Include(p => p.product).ThenInclude(p => p.user).ThenInclude(u => u.district).ThenInclude(d => d.city)
                     .ToList();
             } catch (Exception ex)
