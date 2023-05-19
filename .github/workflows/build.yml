@@ -25,4 +25,5 @@ jobs:
           password: ${{ env.c }}
           script: |
             # Add your commands to be executed on VPS here
+            pwd
             ./build.sh
