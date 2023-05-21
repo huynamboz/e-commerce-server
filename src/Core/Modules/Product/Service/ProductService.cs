@@ -354,19 +354,19 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
 
             var driver = new ChromeDriver(driverService, options);
 
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-
-            driver.ExecuteScript("Object.defineProperty(navigator, 'webdriver', { get: () => undefined })");
-
-            driver.Navigate().GoToUrl("https://beecost.vn");
-
-            IWebElement input = driver.FindElement(By.ClassName("focus:outline-none"));
-
-            input.SendKeys(product.name);
-
-            input.SendKeys(Keys.Enter);
             try
             {
+                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+
+                driver.ExecuteScript("Object.defineProperty(navigator, 'webdriver', { get: () => undefined })");
+
+                driver.Navigate().GoToUrl("https://beecost.vn");
+
+                IWebElement input = driver.FindElement(By.ClassName("focus:outline-none"));
+
+                input.SendKeys(product.name);
+
+                input.SendKeys(Keys.Enter);
 
                 var productElements = driver.FindElements(By.CssSelector(".product-item"));
 
