@@ -11,7 +11,7 @@ using e_commerce_server.src.Core.Modules.Report.Dto;
 
 namespace e_commerce_server.src.Core.Api.V1.Controllers
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/")]
     [ApiController]
     public class productsController : ControllerBase
     {
@@ -26,7 +26,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
         }
 
         //get all product
-        [HttpGet]
+        [HttpGet("[controller]")]
         public IActionResult GetAllProducts(int page = 1)
         {
             try
@@ -40,7 +40,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
         }
 
         //get product by id
-        [HttpGet("{id}")]
+        [HttpGet("[controller]/{id}")]
         public IActionResult GetProductById(int id)
         {
             try
@@ -53,7 +53,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             }
         }
 
-        [HttpGet("my-products")]
+        [HttpGet("users/me/[controller]")]
         [Authorize]
         public IActionResult GetMyProducts(int page = 1)
         {
@@ -70,7 +70,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
         }
 
         //add new product
-        [HttpPost("my-products")]
+        [HttpPost("users/me/[controller]")]
         [Authorize]
         public IActionResult AddProduct(AddProductDto productDto)
         {
@@ -84,24 +84,8 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
                 return StatusCode((int)ex.StatusCode, ex.Response);
             }
         }
-
-        [HttpGet("my-products/{id}")]
-        [Authorize]
-        public IActionResult GetProductByUserId(int id)
-        {
-            try
-            {
-                var idClaim = HttpContext.User.FindFirst("id")?.Value;
-
-                return Ok(productService.GetProductByUserId(Convert.ToInt32(idClaim), id));
-            } catch (HttpException ex)
-            {
-                return StatusCode((int)ex.StatusCode, ex.Response);
-            }
-        }
-
         //update product by id
-        [HttpPut("my-products/{id}")]
+        [HttpPut("users/me/[controller]/{id}")]
         [Authorize]
         public IActionResult EditProduct(AddProductDto productDto, int id)
         {
@@ -117,7 +101,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
         }
 
         //delete product by id
-        [HttpDelete("my-products/{id}")]
+        [HttpDelete("users/me/[controller]/{id}")]
         [Authorize]
         public IActionResult DeleteProduct(int id)
         {
@@ -132,7 +116,19 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             }
         }
 
-        [HttpPost("{productId}/reviews")]
+        [HttpGet("users/{id}/[controller]")]
+        public IActionResult GetProductsByUser(int id, int page = 1)
+        {
+            try
+            {
+                return Ok(productService.GetProductsByUserId(page, id));
+            } catch (HttpException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Response);
+            }
+        }
+
+        [HttpPost("[controller]/{productId}/reviews")]
         [Authorize]
         public IActionResult CreateReview(int productId, ReviewProductDto reviewDto)
         {
@@ -148,7 +144,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             }
         }
 
-        [HttpPut("{productId}/reviews")]
+        [HttpPut("[controller]/{productId}/reviews")]
         [Authorize]
         public IActionResult UpdateReview(int productId, ReviewProductDto reviewDto)
         {
@@ -163,7 +159,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             }
         }
 
-        [HttpGet("{id}/prices-comparison")]
+        [HttpGet("[controller]/{id}/prices-comparison")]
         public IActionResult Get(int id)
         {
             try
@@ -176,7 +172,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             }
         }
 
-        [HttpDelete("{id}/reviews")]
+        [HttpDelete("[controller]/{id}/reviews")]
         [Authorize]
         public IActionResult DeleteReview(int id)
         {
@@ -192,7 +188,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             }
         }
 
-        [HttpPost("{productId}/reports")]
+        [HttpPost("[controller]/{productId}/reports")]
         [Authorize]
         public IActionResult ReportProduct(int productId, ReportProductDto reportDto)
         {
@@ -208,7 +204,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             }
         }
 
-        [HttpPut("{productId}/reports")]
+        [HttpPut("[controller]/{productId}/reports")]
         [Authorize]
         public IActionResult UpdateReport(int productId, ReportProductDto reportDto)
         {
@@ -224,7 +220,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             }
         }
 
-        [HttpGet("search")]
+        [HttpGet("[controller]/search")]
         public IActionResult SearchProducts(string name, int page = 1)
         {
             try
@@ -237,7 +233,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             }
         }
 
-        [HttpGet("categories")]
+        [HttpGet("[controller]/categories")]
         public IActionResult GetCategories()
         {
             try

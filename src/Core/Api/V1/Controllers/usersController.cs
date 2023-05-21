@@ -104,7 +104,6 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize]
         public IActionResult GetUserById(int id)
         {
             try
