@@ -52,7 +52,7 @@ namespace e_commerce_server.src.Core.Modules.Product
             {
                 return _context.Products
                     .Where(p => p.user.active_status == true && p.delete_at == null)
-                    .Skip((page -1) * 10)
+                    .Skip((page -1) * PageSizeEnum.PAGE_SIZE)
                     .Take(PageSizeEnum.PAGE_SIZE)
                     .Include(p => p.thumbnails)
                     .Include(p => p.user).ThenInclude(u => u.district).ThenInclude(d => d.city)
