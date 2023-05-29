@@ -58,6 +58,7 @@ namespace e_commerce_server.src.Core.Modules.Product
                     .Include(p => p.user).ThenInclude(u => u.district).ThenInclude(d => d.city)
                     .Include(p => p.category)
                     .Include(p => p.product_status)
+                    .OrderByDescending(p => p.created_at)
                     .ToList();
             } catch (Exception ex)
             {
