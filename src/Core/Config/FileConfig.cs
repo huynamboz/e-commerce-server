@@ -18,7 +18,7 @@ namespace e_commerce_server.src.Core.Config
         }
         public static List<string> ApplyExtensions()
         {
-            return new List<string> { ".jpg", ".png", ".jpeg", "webp" };
+            return new List<string> { ".jpg", ".png", ".jpeg", ".webp" };
         }
     }
 }

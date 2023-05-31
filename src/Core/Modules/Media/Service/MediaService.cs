@@ -41,7 +41,7 @@ namespace e_commerce_server.src.Core.Modules.Media.Service
                 fileSystemService.DeleteFile(filePath);
             }
         }
-        public List<string> UploadMany(List<string> filePaths, string? folderPath = null, string? publicId = null) 
+        public object UploadMany(List<string> filePaths, string? folderPath = null, string? publicId = null) 
         {
             List<string> urls = new List<string>();
 
@@ -52,7 +52,13 @@ namespace e_commerce_server.src.Core.Modules.Media.Service
                     urls.Add(this.UploadOne(filePath, folderPath, publicId));
                 }
 
-                return urls;
+                return new 
+                {
+                    data = new
+                    {
+                        urls
+                    }
+                };
             } catch (Exception ex)
             {
                 fileSystemService.DeleteFiles(filePaths);
