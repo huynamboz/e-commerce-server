@@ -453,7 +453,8 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                 data = categories.Select(category => new
                 {
                     category.id,
-                    category.name
+                    category.name,
+                    category.thumbnail
                 })
             };
         }
