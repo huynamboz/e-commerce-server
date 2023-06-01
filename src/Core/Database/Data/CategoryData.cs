@@ -11,6 +11,7 @@ namespace e_commerce_server.src.Core.Database.Data
         [Required]
         [StringLength(50)]
         public string name { get; set; }
+        public string thumbnail { get; set; }
         public virtual ICollection<ProductData> products { get; set; }
         public CategoryData()
         {

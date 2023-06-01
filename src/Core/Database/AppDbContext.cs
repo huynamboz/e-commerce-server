@@ -55,10 +55,146 @@ namespace e_commerce_server.src.Core.Database
             }
 
             modelBuilder.Entity<CategoryData>().HasData(
-                new CategoryData
+                new CategoryData[]
                 {
-                    id = 1,
-                    name = "Đồ điện tử",
+                    new CategoryData
+                    {
+                        id = 1,
+                        name = "Điện thoại",
+                        thumbnail = "https://cdn11.dienmaycholon.vn/filewebdmclnew/public/userupload/files/mtsp/di-dong/lua-chon-mua-dien-thoai-di-dong-phu-hop.jpg"
+                    },
+                    new CategoryData
+                    {
+                        id = 2,
+                        name = "Máy tính & laptop",
+                        thumbnail = "https://phuonghoangtv.com/wp-content/uploads/2020/09/nen-mua-lap-top-hang-nao-tot.jpg"
+                    },
+                    new CategoryData
+                    {
+                        id = 3,
+                        name = "Máy ảnh & máy quay",
+                        thumbnail = "https://images2.thanhnien.vn/528068263637045248/2023/5/25/canon-eos-r100-1684979537624432755196.jpg"
+                    },
+                    new CategoryData
+                    {
+                        id = 4,
+                        name = "Đồng hồ",
+                        thumbnail = "https://product.hstatic.net/1000223154/product/z3618907692798_de826ce083ece5970076a2f86e1fd7f8__1__095576c58e414d51aca229831f895982_master.jpg"
+                    },
+                    new CategoryData
+                    {
+                        id = 5,
+                        name = "Giày dép nam",
+                        thumbnail = "https://salt.tikicdn.com/cache/w1200/ts/product/56/96/c3/a8037ee5af3afe4df0ed8fabbde729d7.jpg"
+                    },
+                    new CategoryData
+                    {
+                        id = 6,
+                        name = "Tablet",
+                        thumbnail = "https://cdn.mos.cms.futurecdn.net/LTkjzWfU6NNdMd4EibvpDV.jpg"
+                    },
+                    new CategoryData
+                    {
+                        id = 7,
+                        name = "Đồ thể thao & du lịch",
+                        thumbnail = "https://media3.scdn.vn/img4/2023/03_24/JdIylfqMqfcmckdhhhzT.jpg"
+                    },
+                    new CategoryData
+                    {
+                        id = 8,
+                        name = "Ô tô & xe máy & xe đạp",
+                        thumbnail = "https://cdnimg.vietnamplus.vn/uploaded/qrndqxjwp/2022_01_15/5c13378d057c480a8e98c64a413e20613682161636517973.jpg"
+                    },
+                    new CategoryData
+                    {
+                        id = 9,
+                        name = "Balo & túi ví nam",
+                        thumbnail = "https://agiare.vn/wp-content/uploads/2020/01/vi-da-bo-nam.jpg"
+                    },
+                    new CategoryData
+                    {
+                        id = 10,
+                        name = "Đồ chơi",
+                        thumbnail = "https://www.moby.com.vn/data/bt8/do-choi-xep-hinh-tuoi-tho-110-chi-tiet-4_1644893165.png"
+                    },
+                    new CategoryData
+                    {
+                        id = 11,
+                        name = "Đồ cho thú cưng",
+                        thumbnail = "https://vuongquocloaivat.com/wp-content/uploads/2020/06/banh-donut-cho-thu-cung-compressed.jpg"
+                    },
+                    new CategoryData
+                    {
+                        id = 12,
+                        name = "Dụng cụ và thiết bị",
+                        thumbnail = "https://nikatei.com.vn/image/catalog/do-dien-tu.jpg"
+                    },
+                    new CategoryData
+                    {
+                        id = 13,
+                        name = "Thời trang nữ",
+                        thumbnail = "https://image-us.eva.vn/upload/1-2021/images/2021-02-26/min-house---shop-thoi-trang-nu-duoc-yeu-thich-thoi-trang-nu-1-1614307605-24-width600height600.jpg"
+                    },
+                    new CategoryData
+                    {
+                        id = 14,
+                        name = "Mẹ và bé",
+                        thumbnail = "https://thuthuatnhanh.com/wp-content/uploads/2022/06/Anh-me-va-be.jpg"
+                    },
+                    new CategoryData
+                    {
+                        id = 15,
+                        name = "Nhà cửa và đời sống",
+                        thumbnail = "https://thietkenoithat.com/Portals/0/xNews/uploads/2018/6/20/nha-dep-1.jpg"
+                    },
+                    new CategoryData
+                    {
+                        id = 16,
+                        name = "Mỹ phẩm",
+                        thumbnail = "https://cdn.tgdd.vn/Files/2021/10/08/1388863/my-pham-thuan-chay-my-pham-sach-va-my-pham-huu-co-co-phai-la-mot-202110082321000878.jpg"
+                    },
+                    new CategoryData
+                    {
+                        id = 17,
+                        name = "Sức khỏe",
+                        thumbnail = "https://suckhoedoisong.qltns.mediacdn.vn/324455921873985536/2022/8/30/uong-thuoc-thoi-diem-nao-16618466465071926930931.png"
+                    },
+                    new CategoryData
+                    {
+                        id = 18,
+                        name = "Giày dép nữ",
+                        thumbnail = "https://img.mwc.com.vn/giay-thoi-trang?w=480&h=510&FileInput=//Upload/2022/08/z3682162219081-b6287f86835b1a448ea12308528ea450.jpg"
+                    },
+                    new CategoryData
+                    {
+                        id = 19,
+                        name = "Túi ví nữ",
+                        thumbnail = "https://mikaystore.r.worldssl.net/wp-content/uploads/2021/03/tui-xach-nu-thich-hop-mang-di-su-kien.png"
+                    },
+                    new CategoryData
+                    {
+                        id = 20,
+                        name = "Sách báo",
+                        thumbnail = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVaOQolKo7VhPR_egYxV_QQxgLko8BBZnfEQ&usqp=CAU"
+                    },
+                    new CategoryData
+                    {
+                        id = 21,
+                        name = "Thời trang cho bé",
+                        thumbnail = "https://salt.tikicdn.com/cache/w1200/ts/product/8a/a4/19/22f686157264d6a2b8cdc1511997c5ca.jpg"
+                    },
+                    new CategoryData
+                    {
+                        id = 22,
+                        name = "Giặt giũ",
+                        thumbnail = "https://cdn.tgdd.vn/Files/2015/10/17/722583/su-dung-bot-giat-cho-may-giat-nhu-the-nao-dung-cach-8.jpg"
+                    },
+                    new CategoryData
+                    {
+                        id = 23,
+                        name = "Thiết bị điện gia dụng",
+                        thumbnail = "https://www.dienlamhong.com/wp-content/uploads/2021/02/cong-ty-thiet-bi-dien-lam-hong.png"
+                    },
                 }
             );
 
