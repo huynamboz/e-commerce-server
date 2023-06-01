@@ -8,6 +8,7 @@ using e_commerce_server.src.Packages.HttpExceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using e_commerce_server.src.Core.Modules.Report.Dto;
+using e_commerce_server.src.Core.Database.Data;
 
 namespace e_commerce_server.src.Core.Api.V1.Controllers
 {
@@ -239,6 +240,22 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             try
             {
                 return Ok(productService.GetCategories());
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Response);
+            }
+        }
+
+        [HttpPost("[controller]/category")]
+        [Authorize]
+        public IActionResult AddNewCategory(AddCategoryDto category)
+        {
+            try
+            {
+                var roleClaim = HttpContext.User.FindFirst("role_id")?.Value;
+
+                return Ok(productService.AddNewCategory(Convert.ToInt32(roleClaim), category));
             }
             catch (HttpException ex)
             {

@@ -9,6 +9,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using e_commerce_server.src.Core.Utils;
 using OpenQA.Selenium.Support.UI;
+using CloudinaryDotNet.Actions;
 
 namespace e_commerce_server.src.Core.Modules.Product.Service
 {
@@ -456,6 +457,31 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                     category.name
                 })
             };
+        }
+
+        public object AddNewCategory(int roleId, AddCategoryDto newCategory)
+        {
+            if (roleId != RoleEnum.ADMIN)
+            {
+                throw new BadRequestException(ProductEnum.NOT_HAVE_PERMISSION_ADD_CATEGORY);
+            }
+
+            CategoryData category = new CategoryData
+            {
+                name = newCategory.name
+            };
+
+            var newData = productRepository.AddNewCategory(category);
+
+            return new
+            {
+                data = new
+                {
+                    id = newData.id,
+                    name = newData.name
+                }
+            };
+
         }
     }
 }

@@ -289,5 +289,18 @@ namespace e_commerce_server.src.Core.Modules.Product
                 throw new InternalException(ex.Message);
             }
         }
+
+        public CategoryData? AddNewCategory(CategoryData category)
+        {
+            try
+            {
+                _context.Categories.Add(category);
+                _context.SaveChanges();
+                return category;
+            } catch (Exception ex) 
+            {
+                throw new InternalException(ex.Message);
+            }
+        }
     }
 }
