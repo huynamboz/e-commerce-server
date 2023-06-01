@@ -51,6 +51,7 @@ namespace e_commerce_server.src.Core.Modules.Product
             try
             {
                 return _context.Products
+                    .OrderByDescending(p => p.created_at)
                     .Where(p => p.user.active_status == true && p.delete_at == null)
                     .Skip((page -1) * PageSizeEnum.PAGE_SIZE)
                     .Take(PageSizeEnum.PAGE_SIZE)
@@ -58,7 +59,6 @@ namespace e_commerce_server.src.Core.Modules.Product
                     .Include(p => p.user).ThenInclude(u => u.district).ThenInclude(d => d.city)
                     .Include(p => p.category)
                     .Include(p => p.product_status)
-                    .OrderByDescending(p => p.created_at)
                     .ToList();
             } catch (Exception ex)
             {
