@@ -75,13 +75,8 @@ namespace e_commerce_server.src.Core.Modules.Report.Service
                 }
             };
         }
-        public object GetReportsByUserId(int page, int roleId)
+        public object GetReportsByUserId(int page)
         { 
-            if (roleId != RoleEnum.ADMIN)
-            {
-                throw new ForbiddenException(ReportEnum.GET_ALL_REPORTS_DENY);
-            }
-
             var reports = reportRepository.GetReports();
 
             var paginatedReports = reportRepository.GetReportsByPage(page);
@@ -90,19 +85,20 @@ namespace e_commerce_server.src.Core.Modules.Report.Service
 
             return new
             {
-                data = paginatedReports.Select(product => new 
+                data = new {
+                    reports = paginatedReports.Select(product => new 
                     {
                         product.user_id,
                         product.product_id,
                         product.description,
                         product.create_at
+                    }),
+                    meta = new
+                    {
+                        totalPages = total,
+                        totalCount = reports.Count(),
+                        currentPage = page
                     }
-                ),
-                meta = new
-                {
-                    totalPages = total,
-                    totalCount = reports.Count(),
-                    currentPage = page
                 }
             };
         }

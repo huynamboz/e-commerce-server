@@ -23,7 +23,7 @@ namespace e_commerce_server.src.Core.Config
         {
             return new OpenApiSecurityScheme
             {
-               BearerFormat = "JWT",
+                BearerFormat = "JWT",
                 Name = "JWT Authentication",
                 In = ParameterLocation.Header,
                 Type = SecuritySchemeType.Http,
