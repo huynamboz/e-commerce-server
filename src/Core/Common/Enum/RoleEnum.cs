@@ -2,7 +2,7 @@
 {
     public static class RoleEnum
     {
-        public const int ADMIN = 1;
-        public const int USER = 2;
+        public const string ADMIN = "1";
+        public const string USER = "2";
     }
 }

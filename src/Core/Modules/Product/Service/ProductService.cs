@@ -323,19 +323,9 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
             };
         }
 
-        public object DeleteProductByProductId(int roleId, int productId)
+        public object DeleteProductById(int productId)
         {
-            var product = productRepository.GetProductById(productId);
-
-            if (product == null)
-            {
-                throw new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND);
-            }
-
-            if (roleId != RoleEnum.ADMIN)
-            {
-                throw new BadRequestException(ProductEnum.DELETE_PRODUCT_DENIED);
-            }
+            var product = Optional.Of(productRepository.GetProductById(productId)).ThrowIfNotPresent(new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND)).Get();
 
             productRepository.DeleteProduct(product);
 

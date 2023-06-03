@@ -24,21 +24,24 @@ namespace e_commerce_server.src.Core.Modules.Auth.Service
 
             var secretKeyBytes = Encoding.UTF8.GetBytes(_secret);
 
-            var tokenDescription = new SecurityTokenDescriptor
+            List<Claim> claims = new List<Claim>
             {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim(ClaimTypes.Email, user.email),
-                    new Claim("id", user.id.ToString()),
-                    new Claim("role_id", user.role_id.ToString())
-                }),
-                Expires = DateTime.UtcNow.AddMinutes(_expireMinute),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytes), SecurityAlgorithms.HmacSha256Signature)
-
+                new Claim(ClaimTypes.Email, user.email),
+                new Claim("id", user.id.ToString()),
+                new Claim(ClaimTypes.Role, user.role_id.ToString())
             };
-            var token = jwtTokenHandler.CreateToken(tokenDescription);
 
-            return jwtTokenHandler.WriteToken(token);
+            var SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytes), SecurityAlgorithms.HmacSha256Signature);
+
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(_expireMinute),
+                signingCredentials: SigningCredentials
+            );
+
+            var jwt = jwtTokenHandler.WriteToken(token);
+
+            return jwt;
         }
 
         public string GenerateRefreshToken(UserData user)

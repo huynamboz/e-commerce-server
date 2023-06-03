@@ -220,12 +220,13 @@ namespace e_commerce_server.src.Core.Modules.User.Service
                 message = UserEnum.REMOVE_FROM_FAVORITE_SUCCESS
             };
         }
-        public object GetAllUsers(int roleId) 
+        public object GetAllUsers() 
         {
-            if(roleId == RoleEnum.ADMIN)
+            return new
             {
-                return new {
-                    data = userRepository.GetAllUsers().Select(user => new
+                data = new
+                {
+                    users = userRepository.GetAllUsers().Select(user => new
                     {
                         user.id,
                         user.email,
@@ -242,15 +243,14 @@ namespace e_commerce_server.src.Core.Modules.User.Service
                         user.report_count,
                         location  = Convert.ToBoolean(user.district_id) ? $"{user.district.name}, {user.district.city.name}" : null
                     })
-                };
-            }
-            throw new ForbiddenException(UserEnum.GET_ALL_USERS_DENIED);
+                }
+            };
         }
-        public object DeleteUserById(int roleId, int userId)
+        public object DeleteUserById(int userId)
         {
             var user = Optional.Of(userRepository.GetUserById(userId)).ThrowIfNotPresent(new BadRequestException(UserEnum.USER_NOT_FOUND)).Get();
 
-            if (roleId != RoleEnum.ADMIN || user.role_id == RoleEnum.ADMIN)
+            if (user.role_id == Convert.ToInt32(RoleEnum.ADMIN))
             {
                 throw new BadRequestException(UserEnum.DELETE_USER_DENIED);
             }

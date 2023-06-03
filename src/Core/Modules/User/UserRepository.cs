@@ -94,7 +94,7 @@ namespace e_commerce_server.src.Core.Modules.User
             try
             {
                 return _context.Users
-                    .Where(u => u.role_id == RoleEnum.USER)
+                    .Where(u => u.role_id == Convert.ToInt32(RoleEnum.USER))
                     .Include(u => u.district).ThenInclude(d => d.city)
                     .ToList();
             } catch (Exception ex)
