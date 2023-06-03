@@ -46,6 +46,29 @@ namespace e_commerce_server.src.Core.Modules.Product
                 throw new InternalException(ex.Message);
             }
         }
+        public CategoryData? GetCategoryById(int id)
+        {
+            try
+            {
+                return _context.Categories.SingleOrDefault(c => c.id == id);
+            }
+            catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            }
+        }
+
+        public List<ProductData> GetProductsByCategories(int id)
+        {
+            try
+            {
+                return _context.Products.Where(p => p.category_id == id).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            } 
+        }
         public List<ProductData> GetProductsByPage(int page)
         {
             try
@@ -99,6 +122,27 @@ namespace e_commerce_server.src.Core.Modules.Product
                 throw new InternalException(ex.Message);
             }
         }
+
+        public List<ProductData> GetProductsByCategoryIdByPage(int page, int categoryId)
+        {
+            try
+            {
+                return _context.Products
+                    .Where(p => p.category_id == categoryId && p.delete_at == null)
+                    .Skip((page - 1) * 10)
+                    .Take(PageSizeEnum.PAGE_SIZE)
+                    .Include(p => p.thumbnails)
+                    .Include(p => p.user).ThenInclude(u => u.district).ThenInclude(d => d.city)
+                    .Include(p => p.category)
+                    .Include(p => p.product_status)
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            }
+        }
+
         public ProductData AddOrUpdateProduct(ProductData product, List<string> thumbnailUrls)
         {
             using var transaction = _context.Database.BeginTransaction();
