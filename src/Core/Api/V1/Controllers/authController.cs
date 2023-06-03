@@ -3,6 +3,7 @@ using e_commerce_server.src.Packages.HttpExceptions;
 using e_commerce_server.src.Core.Modules.Auth.Dto;
 using e_commerce_server.src.Core.Modules.Auth.Service;
 using e_commerce_server.src.Core.Database;
+using Microsoft.AspNetCore.Authorization;
 
 namespace e_commerce_server.src.Core.Api.V1.Controllers
 {
@@ -80,6 +81,21 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             catch (HttpException ex)
             {
                 return StatusCode((int)ex.StatusCode, ex.Response);
+            }
+        }
+
+        [HttpPost("change-password")]
+        [Authorize]
+        public IActionResult ChangePassword(ChangePasswordDto model)
+        {
+            try
+            {
+                var idClaim = HttpContext.User.FindFirst("id")?.Value;
+                return Ok(authService.ChangePassword(model, Convert.ToInt32(idClaim)));
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int) ex.StatusCode, ex.Response);
             }
         }
     }

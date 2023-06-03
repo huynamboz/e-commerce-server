@@ -172,5 +172,30 @@ namespace e_commerce_server.src.Core.Modules.Auth.Service
             }
             throw new BadRequestException(AuthEnum.EXPIRED_TOKEN);
         }
+        public object ChangePassword(ChangePasswordDto model, int id)
+        {
+            var user = userRepository.GetUserById(id);
+
+            if (!bCryptService.Verify(model.password, user.password))
+            {
+                throw new BadRequestException(AuthEnum.PASSWORDS_NOT_MATCH);
+            }
+            else
+            {
+                if (model.newpassword != model.confirmnewpassword)
+                {
+                    throw new BadRequestException(AuthEnum.PASSWORDS_NOT_MATCH);
+                }
+                user.update_at = DateTime.Now;
+                user.password = bCryptService.Hash(model.newpassword);
+            }
+            
+            userRepository.CreateOrUpdateUser(user);
+
+            return new
+            {
+                message = AuthEnum.UPDATE_PASSWORD_SUCCESS
+            };
+        }
     }
 }
