@@ -57,6 +57,8 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                             product.user.name,
                             product.user.phone_number,
                             product.user.avatar,
+                            product.user.district_id,
+                            city_id = product.user.district.city.id,
                             location = Convert.ToBoolean(product.user.district_id) ? $"{product.user.district.name}, {product.user.district.city.name}" : null
                         },
                         thumbnails = product.thumbnails.Select(t => t.thumbnail_url),
@@ -99,6 +101,8 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                     product.user.phone_number,
                     product.user.avatar,
                     product.user.active_status,
+                    product.user.district_id,
+                    city_id = product.user.district.city.id,
                     location = Convert.ToBoolean(product.user.district_id) ? $"{product.user.district.name}, {product.user.district.city.name}" : null
                 },
                 thumbnails = product.thumbnails.Select(t => t.thumbnail_url),
@@ -155,6 +159,8 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                         product.user.name,
                         product.user.phone_number,
                         product.user.avatar,
+                        product.user.district_id,
+                        city_id = product.user.district.city.id,
                         location = Convert.ToBoolean(product.user.district_id) ? $"{product.user.district.name}, {product.user.district.city.name}" : null
                     },
                     thumbnails = product.thumbnails.Select(t => t.thumbnail_url),
@@ -268,6 +274,8 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                             product.user.name,
                             product.user.phone_number,
                             product.user.avatar,
+                            product.user.district_id,
+                            city_id = product.user.district.city.id,
                             location = Convert.ToBoolean(product.user.district_id) ? $"{product.user.district.name}, {product.user.district.city.name}" : null
                         },
                         thumbnails = product.thumbnails.Select(t => t.thumbnail_url),
@@ -306,6 +314,8 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                     product.user.name,
                     product.user.phone_number,
                     product.user.avatar,
+                    product.user.district_id,
+                    city_id = product.user.district.city.id,
                     location = Convert.ToBoolean(product.user.district_id) ? $"{product.user.district.name}, {product.user.district.city.name}" : null
                 },
                 thumbnails = product.thumbnails.Select(t => t.thumbnail_url),
@@ -404,11 +414,11 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
             }
         }
 
-        public object SearchProducts(string name, int page)
+        public object SearchProducts(string name, int district_id, int city_id, int category, int page)
         {
-            var products = productRepository.GetProductsByName(name); 
+            var products = productRepository.GetProductsBySearch(name, district_id, city_id, category); 
             
-            var paginatedProducts = productRepository.GetProductsByNameByPage(name, page);
+            var paginatedProducts = productRepository.GetProductsBySearchByPage(name, district_id, city_id, category, page);
             
             int total = (int)Math.Ceiling((double)products.Count() / PageSizeEnum.PAGE_SIZE); //calculate total pages
 
@@ -430,6 +440,8 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                             product.user.name,
                             product.user.phone_number,
                             product.user.avatar,
+                            product.user.district_id,
+                            city_id = product.user.district.city.id,
                             location = Convert.ToBoolean(product.user.district_id) ? $"{product.user.district.name}, {product.user.district.city.name}" : null
                         },
                         thumbnails = product.thumbnails.Select(t => t.thumbnail_url),
@@ -489,6 +501,8 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                             product.user.name,
                             product.user.phone_number,
                             product.user.avatar,
+                            product.user.district_id,
+                            city_id = product.user.district.city.id,
                             location = Convert.ToBoolean(product.user.district_id) ? $"{product.user.district.name}, {product.user.district.city.name}" : null
                         },
                         thumbnails = product.thumbnails.Select(t => t.thumbnail_url),

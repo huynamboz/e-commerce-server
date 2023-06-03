@@ -222,11 +222,11 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
         }
 
         [HttpGet("[controller]/search")]
-        public IActionResult SearchProducts(string name, int page = 1)
+        public IActionResult SearchProducts(string name, int district_id, int city_id, int category, int page = 1)
         {
             try
             {
-                return Ok(productService.SearchProducts(name, page));
+                return Ok(productService.SearchProducts(name, district_id, city_id, category, page));
             }
             catch (HttpException ex)
             {

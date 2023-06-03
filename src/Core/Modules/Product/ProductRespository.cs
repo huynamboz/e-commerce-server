@@ -302,11 +302,16 @@ namespace e_commerce_server.src.Core.Modules.Product
                 throw new InternalException(ex.Message);
             }
         }
-        public List<ProductData> GetProductsByName(string name)
+        public List<ProductData> GetProductsBySearch(string name, int district_id, int city_id, int category)
         {
             try {
                 return _context.Products
-                    .Where(p => EF.Functions.Collate(p.name, "Vietnamese_CI_AI").Contains(name) && p.delete_at == null)
+                    .Where(p => EF.Functions.Collate(p.name, "Vietnamese_CI_AI").Contains(name) 
+                        && p.delete_at == null
+                        && p.user.active_status == true
+                        && (district_id == 0 || p.user.district_id == district_id)
+                        && (city_id == 0 || p.user.district.city_id == city_id)
+                        && (category == 0 || p.category_id == category))
                     .OrderByDescending(p => p.created_at)
                     .ToList();
             } catch (Exception ex)
@@ -314,12 +319,18 @@ namespace e_commerce_server.src.Core.Modules.Product
                 throw new InternalException(ex.Message);
             }
         }
-        public List<ProductData> GetProductsByNameByPage(string name, int page)
+        public List<ProductData> GetProductsBySearchByPage(string name, int district_id, int city_id, int category, int page)
         {
             try
             {
                 return _context.Products
-                    .Where(p => EF.Functions.Collate(p.name, "Vietnamese_CI_AI").Contains(name) && p.delete_at == null)
+                    .Where(p => EF.Functions.Collate(p.name, "Vietnamese_CI_AI").Contains(name) 
+                        && p.delete_at == null
+                        && p.delete_at == null
+                        && p.user.active_status == true
+                        && (district_id == 0 || p.user.district_id == district_id)
+                        && (city_id == 0 || p.user.district.city_id == city_id)
+                        && (category == 0 || p.category_id == category))
                     .OrderByDescending(p => p.created_at)
                     .Skip((page -1) * 10)
                     .Take(PageSizeEnum.PAGE_SIZE)
