@@ -126,7 +126,7 @@ namespace e_commerce_server.src.Core.Modules.Auth.Service
                 throw new ForbiddenException(AuthEnum.USER_BANNED);
             }
 
-            string token = Convert.ToBase64String(CryptoService.GetRandomBytes());
+            string token = CryptoService.GetRandomString();
 
             user.reset_token = token;
             user.reset_token_expiration_date = DateTime.Now.AddHours(1);

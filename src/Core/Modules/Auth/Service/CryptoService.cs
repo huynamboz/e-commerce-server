@@ -1,18 +1,14 @@
-﻿using System.Security.Cryptography;
-
-namespace e_commerce_server.src.Core.Modules.Auth.Service
+﻿namespace e_commerce_server.src.Core.Modules.Auth.Service
 {
     public class CryptoService
     {
-        public static byte[] GetRandomBytes()
+        public static string GetRandomString()
         {
-            byte[] randomBytes = new byte[32];
+            Random random = new Random();
 
-            RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator.Create();
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-            randomNumberGenerator.GetBytes(randomBytes);
-
-            return randomBytes;
+            return new string(Enumerable.Repeat(chars, 64).Select(s => s[random.Next(s.Length)]).ToArray());
         }
     }
 }

@@ -18,8 +18,8 @@ namespace e_commerce_server.src.Core.Modules.Auth.Service
         {
             return new MailContent(
                 "Password recovery",
-                $"Click this link to reset your password: {_host}/api/v1/auth/reset-password/{token}",
-                $"Click this <a href=\"{_host}/api/v1/auth/reset-password/{token}\">link</a> to reset your password."
+                $"Click this link to reset your password: {_host}/password/reset?token={token}",
+                $"Click this <a href=\"{_host}/password/reset?token={token}\">link</a> to reset your password."
             );
         }
     }
