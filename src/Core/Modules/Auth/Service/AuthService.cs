@@ -55,7 +55,7 @@ namespace e_commerce_server.src.Core.Modules.Auth.Service
         {
             if (model.password != model.confirm_password)
             {
-                throw new BadRequestException(AuthEnum.PASSWORDS_NOT_MATCH);
+                throw new BadRequestException(AuthEnum.CONFIRM_PASSWORDS_NOT_MATCH);
             }
 
             var existingUser = userRepository.GetUserByEmail(model.email);
@@ -150,7 +150,7 @@ namespace e_commerce_server.src.Core.Modules.Auth.Service
         {
             if (model.password != model.confirm_password)
             {
-                throw new BadRequestException(AuthEnum.PASSWORDS_NOT_MATCH);
+                throw new BadRequestException(AuthEnum.CONFIRM_PASSWORDS_NOT_MATCH);
             }
 
             var user = Optional.Of(userRepository.GetUserByResetToken(model.reset_token)).ThrowIfNotPresent(new BadRequestException(AuthEnum.INVALID_TOKEN)).Get();

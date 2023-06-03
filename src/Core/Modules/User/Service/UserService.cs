@@ -8,6 +8,7 @@ using e_commerce_server.src.Core.Modules.Product.Service;
 using e_commerce_server.src.Core.Modules.Product;
 using e_commerce_server.src.Core.Common.Enum;
 using e_commerce_server.src.Core.Utils;
+using e_commerce_server.src.Core.Modules.Auth.Dto;
 
 namespace e_commerce_server.src.Core.Modules.User.Service
 {
@@ -267,6 +268,30 @@ namespace e_commerce_server.src.Core.Modules.User.Service
             return new
             {
                 message = UserEnum.DELETE_USER_SUCCESS
+            };
+        }
+        public object ChangePassword(ChangePasswordDto model, int id)
+        {
+            var user = Optional.Of(userRepository.GetUserById(id)).ThrowIfNotPresent(new BadRequestException(UserEnum.USER_NOT_FOUND)).Get();
+
+            if (!bCryptService.Verify(model.current_password, user.password))
+            {
+                throw new BadRequestException(AuthEnum.PASSWORDS_NOT_MATCH);
+            }
+
+            if (model.new_password != model.confirm_password)
+            {
+                throw new BadRequestException(AuthEnum.CONFIRM_PASSWORDS_NOT_MATCH);
+            }
+
+            user.update_at = DateTime.Now;
+            user.password = bCryptService.Hash(model.new_password);
+
+            userRepository.CreateOrUpdateUser(user);
+
+            return new
+            {
+                message = AuthEnum.UPDATE_PASSWORD_SUCCESS
             };
         }
     }

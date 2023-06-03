@@ -1,6 +1,5 @@
 ﻿using e_commerce_server.src.Core.Database;
 using e_commerce_server.src.Core.Modules.Product.Service;
-using e_commerce_server.src.Core.Modules.Review.Service;
 using e_commerce_server.src.Core.Modules.Report.Service;
 using e_commerce_server.src.Core.Modules.User.Service;
 using e_commerce_server.src.Packages.HttpExceptions;
