@@ -36,7 +36,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
         {
             try
             {
-                return Ok(authService.Register(model));
+                return Created("CREATED", authService.Register(model));
             }
             catch (HttpException ex)
             {

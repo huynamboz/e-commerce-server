@@ -46,8 +46,11 @@ namespace e_commerce_server.src.Core.Modules.Auth.Service
             return new
             {
                 message = AuthEnum.LOGIN_SUCCESS,
-                accessToken,
-                refreshToken,
+                data = new 
+                {
+                    accessToken,
+                    refreshToken,
+                }
             };
         }
 
@@ -109,8 +112,11 @@ namespace e_commerce_server.src.Core.Modules.Auth.Service
 
                         return new
                         {
-                            accessToken,
-                            refreshToken,
+                            data = new 
+                            {
+                                accessToken,
+                                refreshToken,
+                            }
                         };
                     }
                 }

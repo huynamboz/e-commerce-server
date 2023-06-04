@@ -85,20 +85,18 @@ namespace e_commerce_server.src.Core.Modules.Report.Service
 
             return new
             {
-                data = new {
-                    reports = paginatedReports.Select(product => new 
-                    {
-                        product.user_id,
-                        product.product_id,
-                        product.description,
-                        product.create_at
-                    }),
-                    meta = new
-                    {
-                        totalPages = total,
-                        totalCount = reports.Count(),
-                        currentPage = page
-                    }
+                data = paginatedReports.Select(product => new 
+                {
+                    product.user_id,
+                    product.product_id,
+                    product.description,
+                    product.create_at
+                }),
+                meta = new
+                {
+                    totalPages = total,
+                    totalCount = reports.Count(),
+                    currentPage = page
                 }
             };
         }

@@ -8,7 +8,6 @@ using e_commerce_server.src.Packages.HttpExceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using e_commerce_server.src.Core.Modules.Report.Dto;
-using Microsoft.AspNetCore.Http;
 
 namespace e_commerce_server.src.Core.Api.V1.Controllers
 {
@@ -79,7 +78,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             {
                 var idClaim = HttpContext.User.FindFirst("id")?.Value;
 
-                return Ok(productService.AddProduct(productDto, Convert.ToInt32(idClaim)));
+                return Created("CREATED", productService.AddProduct(productDto, Convert.ToInt32(idClaim)));
             } catch (HttpException ex)
             {
                 return StatusCode((int)ex.StatusCode, ex.Response);
@@ -137,7 +136,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             {
                 var idClaim = HttpContext.User.FindFirst("id")?.Value;
 
-                return Ok(reviewService.CreateOrUpdateReview(productId, Convert.ToInt32(idClaim), reviewDto));
+                return Created("CREATED", reviewService.CreateOrUpdateReview(productId, Convert.ToInt32(idClaim), reviewDto));
             }
             catch (HttpException ex)
             {
@@ -197,7 +196,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             {
                 var idClaim = HttpContext.User.FindFirst("id")?.Value;
 
-                return Ok(reportService.CreateOrUpdateReport(productId, Convert.ToInt32(idClaim), reportDto));
+                return Created("CREATED", reportService.CreateOrUpdateReport(productId, Convert.ToInt32(idClaim), reportDto));
             }
             catch (HttpException ex)
             {
