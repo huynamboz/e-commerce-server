@@ -86,27 +86,30 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
 
             return new
             {
-                product.id,
-                product.name,
-                product.price,
-                product.discount,
-                product.description,
-                product.created_at,
-                product.updated_at,
-                product.product_status.status,
-                user = new
+                data = new
                 {
-                    product.user.id,
-                    product.user.name,
-                    product.user.phone_number,
-                    product.user.avatar,
-                    product.user.active_status,
-                    product.user.district_id,
-                    city_id = product.user.district.city.id,
-                    location = Convert.ToBoolean(product.user.district_id) ? $"{product.user.district.name}, {product.user.district.city.name}" : null
-                },
-                thumbnails = product.thumbnails.Select(t => t.thumbnail_url),
-                category = product.category.name,
+                    product.id,
+                    product.name,
+                    product.price,
+                    product.discount,
+                    product.description,
+                    product.created_at,
+                    product.updated_at,
+                    product.product_status.status,
+                    user = new
+                    {
+                        product.user.id,
+                        product.user.name,
+                        product.user.phone_number,
+                        product.user.avatar,
+                        product.user.active_status,
+                        product.user.district_id,
+                        city_id = product.user.district.city.id,
+                        location = Convert.ToBoolean(product.user.district_id) ? $"{product.user.district.name}, {product.user.district.city.name}" : null
+                    },
+                    thumbnails = product.thumbnails.Select(t => t.thumbnail_url),
+                    category = product.category.name,
+                }
             };
         }
         public object EditProductById(AddProductDto productDto, int productId, int userId)
@@ -165,7 +168,6 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                     },
                     thumbnails = product.thumbnails.Select(t => t.thumbnail_url),
                     category = product.category.name,
-                    
                 }
             };
         }
@@ -244,7 +246,6 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                     },
                     thumbnails = newProduct.thumbnails.Select(t => t.thumbnail_url),
                     category = newProduct.category.name,
-                    
                 }
             };
         }
@@ -300,26 +301,29 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
 
             return new
             {
-                product.id,
-                product.name,
-                product.price,
-                product.discount,
-                product.description,
-                product.created_at,
-                product.updated_at,
-                product.product_status.status,
-                user = new
+                data = new
                 {
-                    product.user.id,
-                    product.user.name,
-                    product.user.phone_number,
-                    product.user.avatar,
-                    product.user.district_id,
-                    city_id = product.user.district.city.id,
-                    location = Convert.ToBoolean(product.user.district_id) ? $"{product.user.district.name}, {product.user.district.city.name}" : null
-                },
-                thumbnails = product.thumbnails.Select(t => t.thumbnail_url),
-                category = product.category.name,
+                    product.id,
+                    product.name,
+                    product.price,
+                    product.discount,
+                    product.description,
+                    product.created_at,
+                    product.updated_at,
+                    product.product_status.status,
+                    user = new
+                    {
+                        product.user.id,
+                        product.user.name,
+                        product.user.phone_number,
+                        product.user.avatar,
+                        product.user.district_id,
+                        city_id = product.user.district.city.id,
+                        location = Convert.ToBoolean(product.user.district_id) ? $"{product.user.district.name}, {product.user.district.city.name}" : null
+                    },
+                    thumbnails = product.thumbnails.Select(t => t.thumbnail_url),
+                    category = product.category.name,
+                }
             };
         }
 
@@ -334,7 +338,7 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                 message = ProductEnum.DELETE_PRODUCT_SUCCESS
             };
 		}
-        public List<object> GetPricesComparison(int productId)
+        public object GetPricesComparison(int productId)
         {
             var product = Optional.Of(productRepository.GetProductById(productId)).ThrowIfNotPresent(new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND)).Get();
 
@@ -391,7 +395,11 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
 
                     ListProduct.Add(item);
                 }
-                return ListProduct;
+
+                return new
+                {
+                    data = ListProduct
+                };
             }
             catch (Exception ex)
             {
@@ -473,38 +481,35 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
 
             return new
             {
-                data = new
+                data = paginatedProducts.Select(product => new
                 {
-                    product = paginatedProducts.Select(product => new
+                    product.id,
+                    product.name,
+                    product.price,
+                    product.discount,
+                    product.description,
+                    product.created_at,
+                    product.updated_at,
+                    product.product_status.status,
+                    user = new
                     {
-                        product.id,
-                        product.name,
-                        product.price,
-                        product.discount,
-                        product.description,
-                        product.created_at,
-                        product.updated_at,
-                        product.product_status.status,
-                        user = new
-                        {
-                            product.user.id,
-                            product.user.name,
-                            product.user.phone_number,
-                            product.user.avatar,
-                            product.user.district_id,
-                            city_id = product.user.district.city.id,
-                            location = Convert.ToBoolean(product.user.district_id) ? $"{product.user.district.name}, {product.user.district.city.name}" : null
-                        },
-                        thumbnails = product.thumbnails.Select(t => t.thumbnail_url),
-                        category = product.category.name,
-                    }),
-                    meta = new
-                    {
-                        totalPages = total,
-                        totalCount = products.Count(),
-                        currentPage = page
-                    }
-                },
+                        product.user.id,
+                        product.user.name,
+                        product.user.phone_number,
+                        product.user.avatar,
+                        product.user.district_id,
+                        city_id = product.user.district.city.id,
+                        location = Convert.ToBoolean(product.user.district_id) ? $"{product.user.district.name}, {product.user.district.city.name}" : null
+                    },
+                    thumbnails = product.thumbnails.Select(t => t.thumbnail_url),
+                    category = product.category.name,
+                }),
+                meta = new
+                {
+                    totalPages = total,
+                    totalCount = products.Count(),
+                    currentPage = page
+                }
             };
         }
     }

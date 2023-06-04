@@ -102,20 +102,24 @@ namespace e_commerce_server.src.Core.Modules.User.Service
         {
             var user = Optional.Of(userRepository.GetUserById(userId)).ThrowIfNotPresent(new BadRequestException(UserEnum.USER_NOT_FOUND)).Get();
 
-            return new {
-                user.id,
-                user.name,
-                user.email,
-                user.phone_number,
-                user.address,
-                user.avatar,
-                user.birthday,
-                user.created_at,
-                user.update_at,
-                user.delete_at,
-                user.gender,
-                user.active_status,
-                location = Convert.ToBoolean(user.district_id) ? $"{user.district.name}, {user.district.city.name}" : null
+            return new
+            {
+                data = new
+                {
+                    user.id,
+                    user.name,
+                    user.email,
+                    user.phone_number,
+                    user.address,
+                    user.avatar,
+                    user.birthday,
+                    user.created_at,
+                    user.update_at,
+                    user.delete_at,
+                    user.gender,
+                    user.active_status,
+                    location = Convert.ToBoolean(user.district_id) ? $"{user.district.name}, {user.district.city.name}" : null
+                }
             };
         }
         public object GetFavoriteProducts(int page, int userId)
@@ -169,12 +173,7 @@ namespace e_commerce_server.src.Core.Modules.User.Service
                 throw new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND);
             }
 
-            var user = userRepository.GetUserById(userId);
-
-            if (user == null)
-            {
-                throw new BadRequestException(UserEnum.USER_NOT_FOUND);
-            }
+            var user = Optional.Of(userRepository.GetUserById(userId)).ThrowIfNotPresent(new BadRequestException(UserEnum.USER_NOT_FOUND)).Get();
 
             var existingFavoriteProduct = productRepository.GetFavoriteProductByUserIdAndProductId(userId, model.product_id);
 
@@ -199,12 +198,7 @@ namespace e_commerce_server.src.Core.Modules.User.Service
         }
         public object RemoveProductFromFavorite(int userId, int productId)
         {
-            var user = userRepository.GetUserById(userId);
-
-            if (user == null)
-            {
-                throw new BadRequestException(UserEnum.USER_NOT_FOUND);
-            }
+            var user = Optional.Of(userRepository.GetUserById(userId)).ThrowIfNotPresent(new BadRequestException(UserEnum.USER_NOT_FOUND)).Get();
 
             var existingFavoriteProduct = productRepository.GetFavoriteProductByUserIdAndProductId(userId, productId);
 
@@ -224,26 +218,23 @@ namespace e_commerce_server.src.Core.Modules.User.Service
         {
             return new
             {
-                data = new
+                data = userRepository.GetAllUsers().Select(user => new
                 {
-                    users = userRepository.GetAllUsers().Select(user => new
-                    {
-                        user.id,
-                        user.email,
-                        user.name,
-                        user.phone_number,
-                        user.address,
-                        user.gender,
-                        user.birthday,
-                        user.avatar,
-                        user.role_id,
-                        user.created_at,
-                        user.delete_at,
-                        user.active_status,
-                        user.report_count,
-                        location  = Convert.ToBoolean(user.district_id) ? $"{user.district.name}, {user.district.city.name}" : null
-                    })
-                }
+                    user.id,
+                    user.email,
+                    user.name,
+                    user.phone_number,
+                    user.address,
+                    user.gender,
+                    user.birthday,
+                    user.avatar,
+                    user.role_id,
+                    user.created_at,
+                    user.delete_at,
+                    user.active_status,
+                    user.report_count,
+                    location  = Convert.ToBoolean(user.district_id) ? $"{user.district.name}, {user.district.city.name}" : null
+                })
             };
         }
         public object DeleteUserById(int userId)

@@ -29,7 +29,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
 
                 var idClaim = HttpContext.User.FindFirst("id");
 
-                return Ok(mediaService.UploadMany(filePaths, "BadSuperMarket"));
+                return Created("CREATED", mediaService.UploadMany(filePaths, "BadSuperMarket"));
             } catch (HttpException ex)
             {
                 return StatusCode((int)ex.StatusCode, ex.Response);

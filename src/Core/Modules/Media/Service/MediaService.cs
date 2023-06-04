@@ -54,10 +54,7 @@ namespace e_commerce_server.src.Core.Modules.Media.Service
 
                 return new 
                 {
-                    data = new
-                    {
-                        urls
-                    }
+                    data = urls
                 };
             } catch (Exception ex)
             {
