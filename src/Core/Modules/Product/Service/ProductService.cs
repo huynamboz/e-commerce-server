@@ -404,11 +404,28 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
             }
         }
 
-        public object SearchProducts(string name, int district_id, int city_id, int category, int page)
+        public object SearchProducts(string name, int district_id, int city_id, int category, string price, string time, int page)
         {
-            var products = productRepository.GetProductsBySearch(name, district_id, city_id, category); 
+            string sortOption = "0";
+            int count = 0;
+
+            if (price == "cheapeast")
+            {
+                sortOption = "price";
+                count++;
+            }
+            if (time == "newest")
+            {
+                sortOption = "time";
+                count++;
+            }
+            if (count == 2)
+            {
+                sortOption = "both";
+            }
+            var products = productRepository.GetProductsBySearch(name, district_id, city_id, category, sortOption); 
             
-            var paginatedProducts = productRepository.GetProductsBySearchByPage(name, district_id, city_id, category, page);
+            var paginatedProducts = productRepository.GetProductsBySearchByPage(name, district_id, city_id, category, sortOption, page);
             
             int total = (int)Math.Ceiling((double)products.Count() / PageSizeEnum.PAGE_SIZE); //calculate total pages
 
@@ -445,7 +462,7 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                 }
             };
         }
-        
+
         public object GetCategories()
         {
             var categories = productRepository.GetCategories();

@@ -3,6 +3,7 @@ using e_commerce_server.src.Core.Database.Data;
 using e_commerce_server.src.Core.Common.Enum;
 using e_commerce_server.src.Packages.HttpExceptions;
 using Microsoft.EntityFrameworkCore;
+using CloudinaryDotNet;
 
 namespace e_commerce_server.src.Core.Modules.Product
 {
@@ -302,43 +303,72 @@ namespace e_commerce_server.src.Core.Modules.Product
                 throw new InternalException(ex.Message);
             }
         }
-        public List<ProductData> GetProductsBySearch(string name, int district_id, int city_id, int category)
+        public List<ProductData> GetProductsBySearch(string name, int district_id, int city_id, int category, string sortOption)
         {
             try {
-                return _context.Products
-                    .Where(p => EF.Functions.Collate(p.name, "Vietnamese_CI_AI").Contains(name) 
+                IQueryable<ProductData> query = _context.Products
+                    .Where(p => EF.Functions.Collate(p.name, "Vietnamese_CI_AI").Contains(name)
                         && p.delete_at == null
                         && p.user.active_status == true
                         && (district_id == 0 || p.user.district_id == district_id)
                         && (city_id == 0 || p.user.district.city_id == city_id)
-                        && (category == 0 || p.category_id == category))
-                    .OrderByDescending(p => p.created_at)
-                    .ToList();
+                        && (category == 0 || p.category_id == category));
+
+                switch (sortOption.ToLower())
+                {
+                    case "price":
+                        query = query.OrderByDescending(p => p.price);
+                        break;
+                    case "time":
+                        query = query.OrderByDescending(p => p.created_at);
+                        break;
+                    case "both":
+                        query = query.OrderByDescending(p => p.created_at).ThenByDescending(p => p.created_at);
+                        break;
+                    default:
+                        break;
+                }
+
+                return query.ToList();
             } catch (Exception ex)
             {
                 throw new InternalException(ex.Message);
             }
         }
-        public List<ProductData> GetProductsBySearchByPage(string name, int district_id, int city_id, int category, int page)
+        public List<ProductData> GetProductsBySearchByPage(string name, int district_id, int city_id, int category, string sortOption, int page)
         {
             try
             {
-                return _context.Products
-                    .Where(p => EF.Functions.Collate(p.name, "Vietnamese_CI_AI").Contains(name) 
-                        && p.delete_at == null
+                IQueryable<ProductData> query = _context.Products
+                    .Where(p => EF.Functions.Collate(p.name, "Vietnamese_CI_AI").Contains(name)
                         && p.delete_at == null
                         && p.user.active_status == true
                         && (district_id == 0 || p.user.district_id == district_id)
                         && (city_id == 0 || p.user.district.city_id == city_id)
                         && (category == 0 || p.category_id == category))
-                    .OrderByDescending(p => p.created_at)
-                    .Skip((page -1) * 10)
+                    .Skip((page - 1) * 10)
                     .Take(PageSizeEnum.PAGE_SIZE)
                     .Include(p => p.thumbnails)
                     .Include(p => p.user).ThenInclude(u => u.district).ThenInclude(d => d.city)
                     .Include(p => p.category)
-                    .Include(p => p.product_status)
-                    .ToList();
+                    .Include(p => p.product_status);
+                    
+                switch (sortOption.ToLower())
+                {
+                    case "price":
+                        query = query.OrderByDescending(p => p.price);
+                        break;
+                    case "time":
+                        query = query.OrderByDescending(p => p.created_at);
+                        break;
+                    case "both":
+                        query = query.OrderByDescending(p => p.created_at).ThenByDescending(p => p.created_at);
+                        break;
+                    default:
+                        break;
+                }
+
+                return query.ToList();
             } catch (Exception ex)
             {
                 throw new InternalException(ex.Message);
