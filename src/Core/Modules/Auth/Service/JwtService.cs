@@ -28,7 +28,8 @@ namespace e_commerce_server.src.Core.Modules.Auth.Service
             {
                 new Claim(ClaimTypes.Email, user.email),
                 new Claim("id", user.id.ToString()),
-                new Claim(ClaimTypes.Role, user.role_id.ToString())
+                new Claim(ClaimTypes.Role, user.role_id.ToString()),
+                new Claim("role_id", user.role_id.ToString()),
             };
 
             var SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytes), SecurityAlgorithms.HmacSha256Signature);
