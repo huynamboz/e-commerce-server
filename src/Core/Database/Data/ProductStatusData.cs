@@ -15,7 +15,7 @@ namespace e_commerce_server.src.Core.Database.Data
         public string status { get; set; }
         public ProductStatusData()
         {
-            this.products = new HashSet<ProductData>();
+            products = new HashSet<ProductData>();
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace e_commerce_server.src.Core.Modules.User.Dto
+﻿namespace e_commerce_server.src.Core.Modules.User.Dto
 {
     public class AddProductToFavoriteDto
     {

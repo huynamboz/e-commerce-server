@@ -30,10 +30,10 @@ namespace e_commerce_server.src.Core.Database.Data
         public virtual ICollection<ReportData> reports { get; set ; }
         public ProductData()
         {
-            this.thumbnails = new List<ThumbnailData>();
-            this.favorites = new List<FavoriteData>();
-            this.reviews = new List<ReviewData>();
-            this.reports = new List<ReportData>();
+            thumbnails = new List<ThumbnailData>();
+            favorites = new List<FavoriteData>();
+            reviews = new List<ReviewData>();
+            reports = new List<ReportData>();
         }
     }
 }
