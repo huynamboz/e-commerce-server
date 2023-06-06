@@ -4,7 +4,7 @@
     {
         public int id {get; set;}
         public string name {get; set;}
-         public List<DistrictModel> districts {get; set;}
+        public List<DistrictModel> districts {get; set;}
     }
 
     public class DistrictModel

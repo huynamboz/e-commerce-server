@@ -3,6 +3,6 @@
     public class ReviewProductDto
     {
         public int rating { get; set; }
-        public string comment { get; set; } 
+        public string comment { get; set; } = string.Empty;
     }
 }

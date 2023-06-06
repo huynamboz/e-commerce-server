@@ -41,11 +41,14 @@ namespace e_commerce_server.src.Core.Modules.User.Service
 
         public object UpdateUserById(UpdateUserDto updateUserDto, int userId)
         {
-            var userByEmail = userRepository.GetUserByEmail(updateUserDto.email);
-        
-            if (userByEmail != null && userByEmail.id != userId)
+            if (!String.IsNullOrEmpty(updateUserDto.email))
             {
-                throw new BadRequestException(AuthEnum.DUPLICATE_EMAIL);
+                var userByEmail = userRepository.GetUserByEmail(updateUserDto.email);
+
+                if (userByEmail != null && userByEmail.id != userId)
+                {
+                    throw new DuplicateException(AuthEnum.DUPLICATE_EMAIL);
+                }
             }
 
             if (!String.IsNullOrEmpty(updateUserDto.phone_number))
@@ -54,19 +57,19 @@ namespace e_commerce_server.src.Core.Modules.User.Service
 
                 if (userByPhone != null && userByPhone.id != userId)
                 {
-                    throw new BadRequestException(AuthEnum.DUPLICATE_PHONE_NUMBER);
+                    throw new DuplicateException(AuthEnum.DUPLICATE_PHONE_NUMBER);
                 }
             }
 
-            var userById = Optional.Of(userRepository.GetUserById(userId)).ThrowIfNotPresent(new BadRequestException(UserEnum.USER_NOT_FOUND)).Get();
+            UserData userById = Optional.Of(userRepository.GetUserById(userId)).ThrowIfNotPresent(new BadRequestException(UserEnum.USER_NOT_FOUND)).Get();
 
             if (userById.delete_at != null)
             {
                 throw new ForbiddenException(AuthEnum.USER_BANNED);
             }
 
-            userById.name = updateUserDto.name;
-            userById.email = updateUserDto.email;
+            userById.name = updateUserDto.name ?? userById.name;
+            userById.email = updateUserDto.email ?? userById.email;
             userById.phone_number = updateUserDto.phone_number;
             userById.gender = updateUserDto.gender;
             userById.birthday = updateUserDto.birthday;

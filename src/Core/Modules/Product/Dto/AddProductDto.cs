@@ -7,10 +7,10 @@ namespace e_commerce_server.src.Core.Modules.Product.Dto
     {
         [Required]
         [StringLength(50)]
-        public string name { get; set; }
+        public string name { get; set; } = string.Empty;
         [Required]
         [StringLength(5000)]
-        public string description { get; set; }
+        public string description { get; set; } = string.Empty;
         [Required]
         public int price { get; set; }
         [Required]
@@ -22,6 +22,6 @@ namespace e_commerce_server.src.Core.Modules.Product.Dto
         [DefaultValue(1)]
         public int category_id { get; set; }
         [Required]
-        public List<string> thumbnailUrls { get; set; }
+        public List<string> thumbnailUrls { get; set; } = new List<string>();
     }
 }

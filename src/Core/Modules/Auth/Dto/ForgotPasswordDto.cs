@@ -8,6 +8,6 @@ namespace e_commerce_server.src.Core.Modules.Auth.Dto
         [Required]
         [MaxLength(100)]
         [DefaultValue("user@example.com")]
-        public string email { get; set; }
+        public string email { get; set; } = string.Empty;
     }
 }

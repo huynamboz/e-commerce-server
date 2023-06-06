@@ -38,10 +38,10 @@ namespace e_commerce_server.src.Core.Database.Data
         public virtual ICollection<ReportData> reports { get; set; }
         public UserData()
         {
-            this.products = new List<ProductData>();
-            this.favorites = new List<FavoriteData>();
-            this.reviews = new List<ReviewData>();
-            this.reports = new List<ReportData>();
+            products = new List<ProductData>();
+            favorites = new List<FavoriteData>();
+            reviews = new List<ReviewData>();
+            reports = new List<ReportData>();
         }
     }
 }

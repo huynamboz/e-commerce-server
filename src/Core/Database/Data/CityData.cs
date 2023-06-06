@@ -13,7 +13,7 @@ namespace e_commerce_server.src.Core.Database.Data
         public virtual ICollection<DistrictData> districts { get; set; }
         public CityData()
         {
-            this.districts = new List<DistrictData>();
+            districts = new List<DistrictData>();
         }
     }
 }
