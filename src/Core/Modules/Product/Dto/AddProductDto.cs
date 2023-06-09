@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using e_commerce_server.src.Core.Common.Enum;
 
 namespace e_commerce_server.src.Core.Modules.Product.Dto
 {
@@ -14,7 +15,8 @@ namespace e_commerce_server.src.Core.Modules.Product.Dto
         [Required]
         public int price { get; set; }
         [Required]
-        public int discount { get; set; }
+        [Range(0, 100, ErrorMessage = InterceptorEnum.INVALID_DISCOUNT_NUMBER)]
+        public int discount { get; set; }   
         [Required]
         [DefaultValue(1)]
         public int status_id { get; set; }
