@@ -267,11 +267,6 @@ namespace e_commerce_server.src.Core.Modules.User.Service
         {
             var user = Optional.Of(userRepository.GetUserById(userId)).ThrowIfNotPresent(new BadRequestException(UserEnum.USER_NOT_FOUND)).Get();
 
-            if (user.role_id == Convert.ToInt32(RoleEnum.ADMIN))
-            {    
-                throw new BadRequestException(UserEnum.DELETE_USER_DENIED);
-            }
-
             if (user.delete_at == null)
             {
                 throw new BadRequestException(UserEnum.USER_NOT_DELETED);
