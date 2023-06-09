@@ -254,7 +254,6 @@ namespace e_commerce_server.src.Core.Modules.User.Service
             }
 
             user.delete_at = DateTime.Now;
-            user.active_status = false;
             user.refresh_token = null;
 
             userRepository.CreateOrUpdateUser(user);
@@ -262,6 +261,24 @@ namespace e_commerce_server.src.Core.Modules.User.Service
             return new
             {
                 message = UserEnum.DELETE_USER_SUCCESS
+            };
+        }
+        public object UnbanUserById(int userId)
+        {
+            var user = Optional.Of(userRepository.GetUserById(userId)).ThrowIfNotPresent(new BadRequestException(UserEnum.USER_NOT_FOUND)).Get();
+
+            if (user.delete_at == null)
+            {
+                throw new BadRequestException(UserEnum.USER_NOT_DELETED);
+            }
+
+            user.delete_at = null;
+
+            userRepository.CreateOrUpdateUser(user);
+
+            return new
+            {
+                message = UserEnum.USER_UNBAN
             };
         }
         public object ChangePassword(ChangePasswordDto model, int id)
