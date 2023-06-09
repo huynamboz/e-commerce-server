@@ -15,6 +15,7 @@ namespace e_commerce_server.src.Core.Database.Data
         public string description { get; set; }
         public int price { get; set; }
         public int discount { get; set; }
+        public bool active_status { get; set; }
         public DateTime created_at { get; set; }
         public DateTime updated_at { get; set;}
         public DateTime? delete_at { get; set; }
