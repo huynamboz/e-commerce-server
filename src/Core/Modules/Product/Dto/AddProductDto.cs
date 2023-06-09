@@ -14,6 +14,7 @@ namespace e_commerce_server.src.Core.Modules.Product.Dto
         [Required]
         public int price { get; set; }
         [Required]
+        [Range(0, 100, ErrorMessage = "Discount must be between 0 and 100.")]
         public int discount { get; set; }
         [Required]
         [DefaultValue(1)]
