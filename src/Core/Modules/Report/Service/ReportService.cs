@@ -8,6 +8,9 @@ using e_commerce_server.src.Core.Database.Data;
 using e_commerce_server.src.Core.Modules.Report.Dto;
 using e_commerce_server.src.Core.Common.Enum;
 using e_commerce_server.src.Core.Utils;
+using OpenQA.Selenium.Firefox;
+using e_commerce_server.src.Core.Modules.Review;
+using System.Security.Cryptography;
 
 namespace e_commerce_server.src.Core.Modules.Report.Service
 {
@@ -98,6 +101,28 @@ namespace e_commerce_server.src.Core.Modules.Report.Service
                     totalCount = reports.Count(),
                     currentPage = page
                 }
+            };
+        }
+
+        public object DeleteReport(int productId)
+        {
+            var product = productRepository.GetProductById(productId);
+            var userId = product.user_id;
+            var report = reportRepository.GetReportByIds(userId, productId);
+            reportRepository.DeleteReports(report);
+            return new
+            {
+                message = ReportEnum.DELETE_REPORT_SUCCESS,
+            };
+        }     
+
+        public object DeleteProduct(int productId)
+        {
+            var product = productRepository.GetProductById(productId);
+            productRepository.DeleteProduct(product); 
+            return new 
+            {
+                message = ProductEnum.DELETE_PRODUCT_SUCCESS,
             };
         }
     }

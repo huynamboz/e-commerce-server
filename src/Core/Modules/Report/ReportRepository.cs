@@ -74,5 +74,17 @@ namespace e_commerce_server.src.Core.Modules.Report
                 throw new InternalException(ex.Message);
             }
         }
+        public void DeleteReports(ReportData report)
+        {
+            try
+            {
+                _context.Reports.Remove(report);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            }
+        }
     }
 }

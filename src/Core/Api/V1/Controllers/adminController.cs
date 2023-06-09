@@ -75,6 +75,31 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
                 return StatusCode((int)ex.StatusCode, ex.Response);
             }
         }
+
+        [HttpPost("reports/{productId}/accept")]
+        public IActionResult AcceptReports(int productId)
+        {
+            try
+            {
+                return Ok(reportService.DeleteProduct(productId)); 
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Response);
+            }
+        }
+
+        [HttpPost("reports/{productId}/reject")]
+        public IActionResult RejectReports(int productId)
+        {
+            try
+            {
+                return Ok(reportService.DeleteReport(productId));
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Response);
+            }
+        }
     }
 }
-
