@@ -82,6 +82,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             try
             {
                 return Ok(userService.UnbanUserById(id));
+			}
 			catch (HttpException ex)
             {
                 return StatusCode((int)ex.StatusCode, ex.Response);
