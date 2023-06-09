@@ -75,6 +75,18 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
                 return StatusCode((int)ex.StatusCode, ex.Response);
             }
         }
+
+        [HttpPatch("users/{id}")]
+        public IActionResult UnbanUser(int id)
+        {
+            try
+            {
+                return Ok(userService.UnbanUserById(id));
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Response);
+            }
+        }
     }
 }
-

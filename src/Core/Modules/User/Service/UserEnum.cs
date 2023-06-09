@@ -12,5 +12,7 @@ namespace e_commerce_server.src.Core.Modules.User.Service
         public const string GET_ALL_USERS_DENIED = "You are not allowed to get all users";
         public const string DELETE_USER_DENIED = "You are not allowed to delete user";
         public const string USER_ALREADY_DELETED = "User is already deleted";
+        public const string USER_NOT_DELETED = "User is not deleted";
+        public const string USER_UNBAN = "User is unbaned";
     }
 }
