@@ -82,6 +82,31 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             try
             {
                 return Ok(userService.UnbanUserById(id));
+			catch (HttpException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Response);
+            }
+        }
+
+        [HttpGet("products/waiting")]
+        public IActionResult GetListProductWaiting(int page = 1)
+        {
+            try
+            {
+                return Ok(productService.GetAllProductsWaiting(page));
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Response);
+            }
+        }
+		
+        [HttpPatch("products/{id}/accept")]
+        public IActionResult AcceptPublishProduct(int id)
+        {
+            try
+            {
+                return Ok(productService.AcceptPublishProduct(id));
             }
             catch (HttpException ex)
             {
