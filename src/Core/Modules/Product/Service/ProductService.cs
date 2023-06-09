@@ -538,7 +538,7 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
         }
         public object GetAllPendingProduct(int page)
         {
-            var products = productRepository.GetProducts();
+            var products = productRepository.GetPendingProducts();
 
             var paginatedProducts = productRepository.GetPendingProductsByPage(page);
 
