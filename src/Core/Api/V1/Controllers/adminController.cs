@@ -90,11 +90,11 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
         }
 
         [HttpGet("products/waiting")]
-        public IActionResult GetListProductWaiting(int page = 1)
+        public IActionResult GetListPendingProduct(int page = 1)
         {
             try
             {
-                return Ok(productService.GetAllProductsWaiting(page));
+                return Ok(productService.GetAllPendingProduct(page));
             }
             catch (HttpException ex)
             {

@@ -536,11 +536,11 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                 message = ProductEnum.ACCEPT_PRODUCT_SUCCESS
             };
         }
-        public object GetAllProductsWaiting(int page)
+        public object GetAllPendingProduct(int page)
         {
             var products = productRepository.GetProducts();
 
-            var paginatedProducts = productRepository.GetProductsWaitingByPage(page);
+            var paginatedProducts = productRepository.GetPendingProductsByPage(page);
 
             int total = (int)Math.Ceiling((double)products.Count() / PageSizeEnum.PAGE_SIZE); //calculate total pages
 

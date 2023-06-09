@@ -88,7 +88,7 @@ namespace e_commerce_server.src.Core.Modules.Product
                 throw new InternalException(ex.Message);
             }
         }
-        public List<ProductData> GetProductsWaitingByPage(int page)
+        public List<ProductData> GetPendingProductsByPage(int page)
         {
             try
             {
@@ -289,7 +289,7 @@ namespace e_commerce_server.src.Core.Modules.Product
         {
             try
             {
-                return _context.Favorites.Where(p => p.user_id == userId && p.user.active_status).ToList();
+                return _context.Favorites.Where(p => p.user_id == userId && p.product.active_status && p.user.active_status).ToList();
             }
             catch (Exception ex)
             {
@@ -301,7 +301,10 @@ namespace e_commerce_server.src.Core.Modules.Product
             try
             {
                 return _context.Favorites
-                    .Where(p => p.user_id == userId && p.product.user.active_status && p.product.delete_at == null)
+                    .Where(p => p.user_id == userId 
+                    && p.product.user.active_status 
+                    && p.product.delete_at == null
+                    && p.product.active_status )
                     .Skip((page -1) * 10)
                     .Take(PageSizeEnum.PAGE_SIZE)
                     .Include(p => p.product).ThenInclude(p => p.category)
