@@ -50,6 +50,7 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                         product.description,
                         product.created_at,
                         product.updated_at,
+                        product.active_status,
                         product.product_status.status,
                         user = new
                         {
@@ -140,6 +141,7 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
             product.status_id = productDto.status_id;
             product.category_id = productDto.category_id;
             product.updated_at = DateTime.Now;
+            product.active_status = false;
 
             productRepository.AddOrUpdateProduct(product, productDto.thumbnailUrls);
 
@@ -156,6 +158,7 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                     product.created_at,
                     product.updated_at,
                     product.product_status.status,
+                    product.active_status,
                     user = new
                     {
                         product.user.id,
@@ -217,6 +220,7 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                 discount = productDto.discount,
                 status_id = productDto.status_id,
                 category_id = productDto.category_id,
+                active_status = false,
                 created_at = DateTime.Now,
                 updated_at = DateTime.Now
             };
@@ -236,6 +240,7 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                     newProduct.created_at,
                     newProduct.updated_at,
                     newProduct.product_status.status,
+                    newProduct.active_status,
                     user = new
                     {
                         newProduct.user.id,
@@ -294,7 +299,7 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
         {
             var product = productRepository.GetProductById(id);
 
-            if(product == null)
+            if(product == null || !product.active_status)
             {
                 throw new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND);
             }
@@ -310,6 +315,8 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                     product.description,
                     product.created_at,
                     product.updated_at,
+                    product.category_id,
+                    product.status_id,
                     product.product_status.status,
                     user = new
                     {
@@ -476,6 +483,64 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
             var products = productRepository.GetProductsByCategories(id);
 
             var paginatedProducts = productRepository.GetProductsByCategoryIdByPage(page, id);
+
+            int total = (int)Math.Ceiling((double)products.Count() / PageSizeEnum.PAGE_SIZE); //calculate total pages
+
+            return new
+            {
+                data = paginatedProducts.Select(product => new
+                {
+                    product.id,
+                    product.name,
+                    product.price,
+                    product.discount,
+                    product.description,
+                    product.created_at,
+                    product.updated_at,
+                    product.product_status.status,
+                    user = new
+                    {
+                        product.user.id,
+                        product.user.name,
+                        product.user.phone_number,
+                        product.user.avatar,
+                        product.user.district_id,
+                        city_id = product.user.district.city.id,
+                        location = Convert.ToBoolean(product.user.district_id) ? $"{product.user.district.name}, {product.user.district.city.name}" : null
+                    },
+                    thumbnails = product.thumbnails.Select(t => t.thumbnail_url),
+                    category = product.category.name,
+                }),
+                meta = new
+                {
+                    totalPages = total,
+                    totalCount = products.Count(),
+                    currentPage = page
+                }
+            };
+        }
+        public object AcceptPublishProduct(int productId)
+        {
+
+            var product = productRepository.GetProductById(productId);
+
+            if (product == null)
+            {
+                throw new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND);
+            }
+
+            productRepository.AcceptProduct(product);
+
+            return new
+            {
+                message = ProductEnum.ACCEPT_PRODUCT_SUCCESS
+            };
+        }
+        public object GetAllPendingProduct(int page)
+        {
+            var products = productRepository.GetProducts();
+
+            var paginatedProducts = productRepository.GetPendingProductsByPage(page);
 
             int total = (int)Math.Ceiling((double)products.Count() / PageSizeEnum.PAGE_SIZE); //calculate total pages
 

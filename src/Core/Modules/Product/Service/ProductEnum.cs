@@ -11,5 +11,6 @@
         public const string DELETE_PRODUCT_SUCCESS = "Deleted product successfully";
         public const string DELETE_PRODUCT_DENIED = "You are not allowed to delete product";
         public const string CATEGORY_NOT_FOUND = "Category not found";
+        public const string ACCEPT_PRODUCT_SUCCESS = "Accept product successfully";
     }
 }

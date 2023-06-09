@@ -171,7 +171,7 @@ namespace e_commerce_server.src.Core.Modules.User.Service
         {
             var product = productRepository.GetProductById(model.product_id);
 
-            if (product == null)
+            if (product == null || !product.active_status)
             {
                 throw new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND);
             }

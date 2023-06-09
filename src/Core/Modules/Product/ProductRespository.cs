@@ -17,7 +17,7 @@ namespace e_commerce_server.src.Core.Modules.Product
         {
             try
             {
-                return _context.Products.Where(p => p.user.active_status == true && p.delete_at == null).ToList();
+                return _context.Products.Where(p => p.user.active_status == true && p.active_status && p.delete_at == null).ToList();
             }
             catch (Exception ex)
             {
@@ -62,7 +62,7 @@ namespace e_commerce_server.src.Core.Modules.Product
         {
             try
             {
-                return _context.Products.Where(p => p.category_id == id).ToList();
+                return _context.Products.Where(p => p.category_id == id && p.active_status == true).ToList();
             }
             catch (Exception ex)
             {
@@ -75,7 +75,7 @@ namespace e_commerce_server.src.Core.Modules.Product
             {
                 return _context.Products
                     .OrderByDescending(p => p.created_at)
-                    .Where(p => p.user.active_status == true && p.delete_at == null)
+                    .Where(p => p.user.active_status == true && p.delete_at == null && p.active_status == true)
                     .Skip((page -1) * PageSizeEnum.PAGE_SIZE)
                     .Take(PageSizeEnum.PAGE_SIZE)
                     .Include(p => p.thumbnails)
@@ -84,6 +84,26 @@ namespace e_commerce_server.src.Core.Modules.Product
                     .Include(p => p.product_status)
                     .ToList();
             } catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            }
+        }
+        public List<ProductData> GetPendingProductsByPage(int page)
+        {
+            try
+            {
+                return _context.Products
+                    .OrderByDescending(p => p.created_at)
+                    .Where(p => p.user.active_status == true && p.delete_at == null && !p.active_status)
+                    .Skip((page - 1) * PageSizeEnum.PAGE_SIZE)
+                    .Take(PageSizeEnum.PAGE_SIZE)
+                    .Include(p => p.thumbnails)
+                    .Include(p => p.user).ThenInclude(u => u.district).ThenInclude(d => d.city)
+                    .Include(p => p.category)
+                    .Include(p => p.product_status)
+                    .ToList();
+            }
+            catch (Exception ex)
             {
                 throw new InternalException(ex.Message);
             }
@@ -128,7 +148,7 @@ namespace e_commerce_server.src.Core.Modules.Product
             try
             {
                 return _context.Products
-                    .Where(p => p.category_id == categoryId && p.delete_at == null)
+                    .Where(p => p.category_id == categoryId && p.delete_at == null && p.active_status == true)
                     .Skip((page - 1) * 10)
                     .Take(PageSizeEnum.PAGE_SIZE)
                     .Include(p => p.thumbnails)
@@ -225,6 +245,19 @@ namespace e_commerce_server.src.Core.Modules.Product
                 throw new InternalException(e.Message);
             }
         }
+        public void AcceptProduct(ProductData product)
+        {
+            try
+            {
+                product.active_status = true;
+
+                _context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                throw new InternalException(e.Message);
+            }
+        }
         public ProductData? GetProductById(int id)
         {
             try
@@ -256,7 +289,7 @@ namespace e_commerce_server.src.Core.Modules.Product
         {
             try
             {
-                return _context.Favorites.Where(p => p.user_id == userId && p.user.active_status).ToList();
+                return _context.Favorites.Where(p => p.user_id == userId && p.product.active_status && p.user.active_status).ToList();
             }
             catch (Exception ex)
             {
@@ -268,7 +301,10 @@ namespace e_commerce_server.src.Core.Modules.Product
             try
             {
                 return _context.Favorites
-                    .Where(p => p.user_id == userId && p.product.user.active_status && p.product.delete_at == null)
+                    .Where(p => p.user_id == userId 
+                    && p.product.user.active_status 
+                    && p.product.delete_at == null
+                    && p.product.active_status )
                     .Skip((page -1) * 10)
                     .Take(PageSizeEnum.PAGE_SIZE)
                     .Include(p => p.product).ThenInclude(p => p.category)
@@ -311,6 +347,7 @@ namespace e_commerce_server.src.Core.Modules.Product
                         && p.user.active_status == true
                         && (district_id == 0 || p.user.district_id == district_id)
                         && (city_id == 0 || p.user.district.city_id == city_id)
+                        && p.active_status == true
                         && (category == 0 || p.category_id == category))
                     .OrderByDescending(p => p.created_at)
                     .ToList();
@@ -328,6 +365,7 @@ namespace e_commerce_server.src.Core.Modules.Product
                         && p.delete_at == null
                         && p.delete_at == null
                         && p.user.active_status == true
+                        && p.active_status == true
                         && (district_id == 0 || p.user.district_id == district_id)
                         && (city_id == 0 || p.user.district.city_id == city_id)
                         && (category == 0 || p.category_id == category))
