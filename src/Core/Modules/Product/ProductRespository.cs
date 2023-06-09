@@ -24,6 +24,19 @@ namespace e_commerce_server.src.Core.Modules.Product
                 throw new InternalException(ex.Message);
             }
         }
+
+        public List<ProductData> GetPendingProducts()
+        {
+            try
+            {
+                return _context.Products.Where(p => p.user.active_status == true && !p.active_status && p.delete_at == null).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new InternalException(ex.Message);
+            }
+        }
+
         public List<ProductData> GetProductsByUserId(int userId)
         {
             try
