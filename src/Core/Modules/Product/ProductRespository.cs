@@ -142,6 +142,7 @@ namespace e_commerce_server.src.Core.Modules.Product
             try
             {
                 return _context.Products
+                    .OrderByDescending(p => p.created_at)
                     .Where(p => p.user_id == userId && p.user.active_status == true && p.delete_at == null)
                     .Skip((page -1) * 10)
                     .Take(PageSizeEnum.PAGE_SIZE)
