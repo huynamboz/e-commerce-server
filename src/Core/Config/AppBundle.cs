@@ -36,7 +36,7 @@ namespace e_commerce_server.src.Core.Config
         }
         public AppBundle ApplySwagger()
         {
-            SwaggerBuilder
+            _builder = SwaggerBuilder
                 .ApplyBuilderContext(_builder)
                 .ApplyEndPoint()
                 .ApplyConfig();
@@ -49,7 +49,6 @@ namespace e_commerce_server.src.Core.Config
                 .ApplyDbContext();
             return this;
         }
-
         public AppBundle AddCors()
         {
             _builder.Services
