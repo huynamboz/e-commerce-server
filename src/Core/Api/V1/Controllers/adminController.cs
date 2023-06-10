@@ -76,7 +76,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             }
         }
 
-        [HttpPost("reports/{productId}/accept")]
+        [HttpDelete("reports/{productId}/accept")]
         public IActionResult AcceptReports(int productId)
         {
             try
@@ -89,7 +89,7 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             }
         }
 
-        [HttpPost("products/{productId}/reports/{userId}/reject}")]
+        [HttpDelete("products/{productId}/reports/{userId}/reject")]
         public IActionResult RejectReport(int productId, int userId)
         {
             try
@@ -115,12 +115,12 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
             }
         }
 
-        [HttpGet("products/waiting")]
-        public IActionResult GetListPendingProduct(int page = 1)
+        [HttpGet("products/pending-products")]
+        public IActionResult GetAllPendingProducts(int page = 1)
         {
             try
             {
-                return Ok(productService.GetAllPendingProduct(page));
+                return Ok(productService.GetAllPendingProducts(page));
             }
             catch (HttpException ex)
             {
