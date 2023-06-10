@@ -64,11 +64,37 @@ namespace e_commerce_server.src.Core.Api.V1.Controllers
         }
 
         [HttpGet("reports")]
-        public IActionResult GetReportsByUserId(int page = 1)
+        public IActionResult GetReports(int page = 1)
         {
             try
             {
-                return Ok(reportService.GetReportsByUserId(page)); 
+                return Ok(reportService.GetReports(page)); 
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Response);
+            }
+        }
+
+        [HttpPost("reports/{productId}/accept")]
+        public IActionResult AcceptReports(int productId)
+        {
+            try
+            {
+                return Ok(reportService.DeleteProduct(productId)); 
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Response);
+            }
+        }
+
+        [HttpPost("products/{productId}/reports/{userId}/reject}")]
+        public IActionResult RejectReport(int productId, int userId)
+        {
+            try
+            {
+                return Ok(reportService.DeleteReport(productId, userId));
             }
             catch (HttpException ex)
             {

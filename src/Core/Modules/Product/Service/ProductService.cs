@@ -1,14 +1,13 @@
-﻿using e_commerce_server.src.Core.Database;
+﻿using e_commerce_server.src.Core.Common.Enum;
+using e_commerce_server.src.Core.Database;
+using e_commerce_server.src.Core.Database.Data;
 using e_commerce_server.src.Core.Modules.Product.Dto;
-using e_commerce_server.src.Core.Common.Enum;
 using e_commerce_server.src.Core.Modules.User;
 using e_commerce_server.src.Core.Modules.User.Service;
+using e_commerce_server.src.Core.Utils;
 using e_commerce_server.src.Packages.HttpExceptions;
-using e_commerce_server.src.Core.Database.Data;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using e_commerce_server.src.Core.Utils;
-using OpenQA.Selenium.Support.UI;
 
 namespace e_commerce_server.src.Core.Modules.Product.Service
 {

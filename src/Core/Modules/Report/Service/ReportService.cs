@@ -8,6 +8,9 @@ using e_commerce_server.src.Core.Database.Data;
 using e_commerce_server.src.Core.Modules.Report.Dto;
 using e_commerce_server.src.Core.Common.Enum;
 using e_commerce_server.src.Core.Utils;
+using OpenQA.Selenium.Firefox;
+using e_commerce_server.src.Core.Modules.Review;
+using System.Security.Cryptography;
 
 namespace e_commerce_server.src.Core.Modules.Report.Service
 {
@@ -75,7 +78,7 @@ namespace e_commerce_server.src.Core.Modules.Report.Service
                 }
             };
         }
-        public object GetReportsByUserId(int page)
+        public object GetReports(int page)
         { 
             var reports = reportRepository.GetReports();
 
@@ -98,6 +101,31 @@ namespace e_commerce_server.src.Core.Modules.Report.Service
                     totalCount = reports.Count(),
                     currentPage = page
                 }
+            };
+        }
+
+        public object DeleteReport(int productId, int userId)
+        {
+            var product = Optional.Of(productRepository.GetProductById(productId)).ThrowIfNotPresent(new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND)).Get();
+
+            var report = Optional.Of(reportRepository.GetReportByIds(userId, productId)).ThrowIfNotPresent(new BadRequestException(ReportEnum.REPORT_NOT_FOUND)).Get();
+
+            reportRepository.DeleteReport(report);
+            return new
+            {
+                message = ReportEnum.DELETE_REPORT_SUCCESS,
+            };
+        }     
+
+        public object DeleteProduct(int productId)
+        {
+            var product = Optional.Of(productRepository.GetProductById(productId)).ThrowIfNotPresent(new BadRequestException(ProductEnum.PRODUCT_NOT_FOUND)).Get();
+
+            productRepository.DeleteProduct(product);
+
+            return new 
+            {
+                message = ProductEnum.DELETE_PRODUCT_SUCCESS,
             };
         }
     }
