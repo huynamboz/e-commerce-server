@@ -216,7 +216,7 @@ namespace e_commerce_server.src.Core.Modules.Product
         {
             try
             {
-                product.delete_at = DateTime.Now;
+                _context.Products.Remove(product);
 
                 _context.SaveChanges();
             }
