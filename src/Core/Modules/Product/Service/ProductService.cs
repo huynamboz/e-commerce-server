@@ -51,6 +51,8 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                         product.created_at,
                         product.updated_at,
                         product.active_status,
+                        product.category_id,
+                        product.status_id,
                         product.product_status.status,
                         user = new
                         {
@@ -96,6 +98,8 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                     product.description,
                     product.created_at,
                     product.updated_at,
+                    product.category_id,
+                    product.status_id,
                     product.product_status.status,
                     user = new
                     {
