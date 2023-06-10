@@ -539,7 +539,7 @@ namespace e_commerce_server.src.Core.Modules.Product.Service
                 message = ProductEnum.ACCEPT_PRODUCT_SUCCESS
             };
         }
-        public object GetAllPendingProduct(int page)
+        public object GetAllPendingProducts(int page)
         {
             var products = productRepository.GetPendingProducts();
 
